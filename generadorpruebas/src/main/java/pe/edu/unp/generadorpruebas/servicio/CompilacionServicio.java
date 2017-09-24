@@ -1,10 +1,13 @@
 package pe.edu.unp.generadorpruebas.servicio;
 
-import pe.edu.unp.generadorpruebas.modelo.Proyecto;
-import pe.edu.unp.generadorpruebas.util.CompilacionException;
+import pe.edu.unp.generadorpruebas.modelo.RecursoJava;
+import pe.edu.unp.generadorpruebas.exception.CompilacionException;
+import pe.edu.unp.generadorpruebas.exception.GeneradorException;
 
 public interface CompilacionServicio {
 
-    public Boolean compilar(Proyecto proyecto)throws CompilacionException;
+    public void validarProgramaSeleccionado(String rutaPrograma) throws GeneradorException;
+
+    public Boolean compilar(RecursoJava proyecto) throws CompilacionException;
 
 }

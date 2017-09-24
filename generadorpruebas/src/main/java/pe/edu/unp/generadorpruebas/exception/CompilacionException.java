@@ -1,4 +1,4 @@
-package pe.edu.unp.generadorpruebas.util;
+package pe.edu.unp.generadorpruebas.exception;
 
 public class CompilacionException extends Exception {
 

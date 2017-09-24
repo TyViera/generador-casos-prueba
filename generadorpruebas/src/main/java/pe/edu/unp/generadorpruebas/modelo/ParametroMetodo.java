@@ -1,20 +1,24 @@
 package pe.edu.unp.generadorpruebas.modelo;
 
 import java.io.Serializable;
+import java.lang.reflect.Parameter;
 
 public class ParametroMetodo implements Serializable {
 
     private String nombre;
     private Object value;
     private Class type;
+    private final Parameter parametroEjecutable;
 
-    public ParametroMetodo() {
+    public ParametroMetodo(Parameter parametroEjecutable) {
+        this(parametroEjecutable.getName(), null, parametroEjecutable.getType(), parametroEjecutable);
     }
 
-    public ParametroMetodo(String nombre, Object value, Class type) {
+    public ParametroMetodo(String nombre, Object value, Class type, Parameter parametroEjecutable) {
         this.nombre = nombre;
         this.value = value;
         this.type = type;
+        this.parametroEjecutable = parametroEjecutable;
     }
 
     public String getNombre() {
@@ -39,6 +43,10 @@ public class ParametroMetodo implements Serializable {
 
     public void setType(Class type) {
         this.type = type;
+    }
+
+    public Parameter getParametroEjecutable() {
+        return parametroEjecutable;
     }
 
 }

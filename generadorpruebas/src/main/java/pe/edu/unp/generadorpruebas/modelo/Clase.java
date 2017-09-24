@@ -3,29 +3,24 @@ package pe.edu.unp.generadorpruebas.modelo;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class Clase implements Serializable {
+public class Clase extends RecursoJava implements Serializable {
 
-    private String rutaArchivo;
-    private String nombre;
     private String nombreCompleto;
 
     public Clase() {
     }
 
-    public String getRutaArchivo() {
-        return rutaArchivo;
+    public Clase(String rutaArchivo) {
+        super(rutaArchivo);
     }
 
-    public void setRutaArchivo(String rutaArchivo) {
-        this.rutaArchivo = rutaArchivo;
+    public Clase(String rutaArchivo, String nombre) {
+        super(rutaArchivo, nombre);
     }
 
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public Clase(String rutaArchivo, String nombre, String nombreCompleto) {
+        super(rutaArchivo, nombre);
+        this.nombreCompleto = nombreCompleto;
     }
 
     public String getNombreCompleto() {
@@ -39,7 +34,7 @@ public class Clase implements Serializable {
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 29 * hash + Objects.hashCode(this.rutaArchivo);
+        hash = 29 * hash + Objects.hashCode(this.getRutaBase());
         hash = 29 * hash + Objects.hashCode(this.nombreCompleto);
         return hash;
     }
@@ -53,7 +48,7 @@ public class Clase implements Serializable {
             return false;
         }
         final Clase other = (Clase) obj;
-        if (!Objects.equals(this.rutaArchivo, other.rutaArchivo)) {
+        if (!Objects.equals(getRutaBase(), other.getRutaBase())) {
             return false;
         }
         if (!Objects.equals(this.nombreCompleto, other.nombreCompleto)) {

@@ -1,15 +1,13 @@
 package pe.edu.unp.generadorpruebas.servicio;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import pe.edu.unp.generadorpruebas.util.ResultadoComando;
+
 public interface EjecutorComandoServicio {
 
-    public void clean();
+    public ResultadoComando ejecutarComando(String comando, String rutaBase) throws IOException, InterruptedException;
 
-    public void install();
-
-    public void tests();
-
-    public void build();
-
-    public void compile();
+    public ResultadoComando ejecutarComando(String comando, String rutaBase, OutputStream flujoSalida) throws IOException, InterruptedException;
 
 }

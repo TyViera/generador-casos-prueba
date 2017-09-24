@@ -2,7 +2,7 @@ package pe.edu.unp.generadorpruebas.servicio;
 
 import pe.edu.unp.generadorpruebas.modelo.CasoDePrueba;
 import pe.edu.unp.generadorpruebas.modelo.Prueba;
-import pe.edu.unp.generadorpruebas.util.EjecucionPruebaException;
+import pe.edu.unp.generadorpruebas.exception.EjecucionPruebaException;
 
 public interface PruebaServicio {
 

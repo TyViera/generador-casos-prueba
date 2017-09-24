@@ -1,20 +1,28 @@
 package pe.edu.unp.generadorpruebas.modelo;
 
 import java.io.Serializable;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Metodo implements Serializable {
 
     private Clase clase;
     private String nombre;
+    private final Method metodoEjecutable;
     private List<ParametroMetodo> listaParametros;
 
-    public Metodo() {
-    }
-
-    public Metodo(Clase clase, String nombre, List<ParametroMetodo> listaParametros) {
+    public Metodo(Clase clase, String nombre, Method metodoEjecutable) {
         this.clase = clase;
         this.nombre = nombre;
+        this.metodoEjecutable = metodoEjecutable;
+        listaParametros = new ArrayList<>();
+    }
+
+    public Metodo(Clase clase, String nombre, Method metodoEjecutable, List<ParametroMetodo> listaParametros) {
+        this.clase = clase;
+        this.nombre = nombre;
+        this.metodoEjecutable = metodoEjecutable;
         this.listaParametros = listaParametros;
     }
 
@@ -34,6 +42,10 @@ public class Metodo implements Serializable {
         this.nombre = nombre;
     }
 
+    public Method getMetodoEjecutable() {
+        return metodoEjecutable;
+    }
+
     public List<ParametroMetodo> getListaParametros() {
         return listaParametros;
     }
@@ -42,4 +54,8 @@ public class Metodo implements Serializable {
         this.listaParametros = listaParametros;
     }
 
+    public Boolean agregarParametro(ParametroMetodo parametroMetodo){
+        return this.listaParametros.add(parametroMetodo);
+    }
+    
 }

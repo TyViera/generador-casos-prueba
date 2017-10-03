@@ -9,6 +9,7 @@ public class Metodo implements Serializable {
 
     private Clase clase;
     private String nombre;
+    private String codigoJava;
     private final Method metodoEjecutable;
     private List<ParametroMetodo> listaParametros;
 
@@ -46,6 +47,14 @@ public class Metodo implements Serializable {
         return metodoEjecutable;
     }
 
+    public String getCodigoJava() {
+        return codigoJava;
+    }
+
+    public void setCodigoJava(String codigoJava) {
+        this.codigoJava = codigoJava;
+    }
+
     public List<ParametroMetodo> getListaParametros() {
         return listaParametros;
     }
@@ -54,8 +63,8 @@ public class Metodo implements Serializable {
         this.listaParametros = listaParametros;
     }
 
-    public Boolean agregarParametro(ParametroMetodo parametroMetodo){
+    public Boolean agregarParametro(ParametroMetodo parametroMetodo) {
         return this.listaParametros.add(parametroMetodo);
     }
-    
+
 }

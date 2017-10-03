@@ -5,7 +5,6 @@
  */
 package pe.edu.unp.generadorpruebas.vista;
 
-import java.io.File;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pe.edu.unp.generadorpruebas.modelo.Clase;
@@ -13,7 +12,6 @@ import pe.edu.unp.generadorpruebas.modelo.Metodo;
 import pe.edu.unp.generadorpruebas.modelo.RecursoJava;
 import pe.edu.unp.generadorpruebas.servicio.CompilacionServicio;
 import pe.edu.unp.generadorpruebas.servicio.ModeladoServicio;
-import pe.edu.unp.generadorpruebas.util.GeneradorUtil;
 
 @Component
 public class FormularioPrincipal extends javax.swing.JFrame {
@@ -91,7 +89,7 @@ public class FormularioPrincipal extends javax.swing.JFrame {
             Boolean compilar = compilacionServicio.compilar(proyecto);
             System.out.println(compilar);
             
-            //
+            //2.- modelado
             Clase clase = (Clase) proyecto;
             Metodo metodo = modeladoServicio.obtenerMetodoEjecucion(clase, nombreMetodo);
         } catch (Exception ex) {

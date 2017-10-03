@@ -12,6 +12,7 @@ import pe.edu.unp.generadorpruebas.servicio.EjecutorComandoMavenServicio;
 import pe.edu.unp.generadorpruebas.servicio.EjecutorComandoServicio;
 import pe.edu.unp.generadorpruebas.exception.CompilacionException;
 import pe.edu.unp.generadorpruebas.exception.GeneradorException;
+import pe.edu.unp.generadorpruebas.util.Constantes;
 import pe.edu.unp.generadorpruebas.util.ResultadoComando;
 
 @Service
@@ -60,7 +61,7 @@ public class CompilacionServicioImpl implements CompilacionServicio {
             ResultadoComando resultado;
             if (proyecto instanceof Clase) {
                 Clase clase = (Clase) proyecto;
-                resultado = ejecutorComandoServicio.ejecutarComando("javac " + clase.getNombre() + ".java", clase.getRutaBase());
+                resultado = ejecutorComandoServicio.ejecutarComando("javac -g -parameters " + clase.getNombre() + Constantes.EXTENSION_JAVA, clase.getRutaBase());
             } else {
                 resultado = ejecutorComandoMavenServicio.compile((Proyecto) proyecto);
             }

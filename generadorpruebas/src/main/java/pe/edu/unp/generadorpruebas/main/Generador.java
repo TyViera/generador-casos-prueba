@@ -18,7 +18,7 @@ import pe.edu.unp.generadorpruebas.exception.GeneradorException;
  */
 public class Generador {
 
-    public static void main(String[] args) {
+    public static void main2(String[] args) {
 //        String rutaArchivo = "/home/nazaret/pruebas_generador/Programa.java";
 //        String rutaArchivo = "/home/nazaret/pruebas_generador/nomiproject";//<-exit value = 1
         String rutaArchivo = "/home/nazaret/pruebas_generador/miproject";//<-exit value = 0

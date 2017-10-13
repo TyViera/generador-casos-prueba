@@ -75,12 +75,14 @@ public class FormularioPrincipal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        String rutaArchivo = "/home/nazaret/pruebas_generador/Programa.java";
+//        String rutaArchivo = "/home/nazaret/pruebas_generador/Programa.java";
+        String rutaArchivo = "/home/nazaret/pruebas_generador/SegundaPrueba.java";
 //        String rutaArchivo = "/home/nazaret/pruebas_generador/nomiproject";//<-exit value = 1
 //        String rutaArchivo = "/home/nazaret/pruebas_generador/miproject";//<-exit value = 0
 
 //        String nombreMetodo = "wait";
-        String nombreMetodo = "sumar";
+//        String nombreMetodo = "sumar";
+        String nombreMetodo = "metodo3";
         RecursoJava proyecto = modeladoServicio.obtenerProyecto(rutaArchivo);
 
         try {

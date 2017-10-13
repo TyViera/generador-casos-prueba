@@ -9,6 +9,7 @@ import pe.edu.unp.generadorpruebas.util.StreamGobbler;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.regex.*;
 import pe.edu.unp.generadorpruebas.modelo.Proyecto;
 import pe.edu.unp.generadorpruebas.exception.GeneradorException;
 
@@ -18,6 +19,39 @@ import pe.edu.unp.generadorpruebas.exception.GeneradorException;
  */
 public class Generador {
 
+    public static void main(String[] args) {
+        String a = "public\\s*void\\s*metodo2\\s*\\(\\s*\\)\\s*.*";
+        String b = "    public void metodo2(){";
+        System.out.println("");
+    }
+    
+    public static void main3(String[] args) {
+        String cadena = "{1}{2}{3{4}}}";
+        String pat = "[^{]*\\{(.*)\\}[^}]";
+        System.out.println(Pattern.matches(pat, cadena));
+        aplicar(pat, cadena);
+//        Pattern patron = Pattern.compile(pat);
+//        Matcher matcher = patron.matcher(cadena);
+//        System.out.println(matcher.find());
+//        System.out.println(matcher.groupCount());
+//        for (int i = 0; i < matcher.groupCount(); i++) {
+//            System.out.println(matcher.group(i + 1));
+//        }
+    }
+
+    private static void aplicar(String pat, String cadena) {
+        Pattern patron = Pattern.compile(pat);
+        Matcher matcher = patron.matcher(cadena);
+        if (Pattern.matches(pat, cadena)) {
+            System.out.println(matcher.find());
+            System.out.println(matcher.groupCount());
+            for (int i = 0; i < matcher.groupCount(); i++) {
+                System.out.println(matcher.group(i + 1));
+                aplicar(pat, matcher.group(i + 1));
+            }
+        }
+    }
+
     public static void main2(String[] args) {
 //        String rutaArchivo = "/home/nazaret/pruebas_generador/Programa.java";
 //        String rutaArchivo = "/home/nazaret/pruebas_generador/nomiproject";//<-exit value = 1
@@ -25,19 +59,16 @@ public class Generador {
 //        System.out.println("1");
 //        SpringRunner.main(args);
 //        System.out.println("2");
-        
+
 //        try {
 //            validarProgramaSeleccionado(rutaArchivo);
 //            compilarPrograma(rutaArchivo);
 //        } catch (Exception ex) {
 //            ex.printStackTrace();
 //        }
-
         Proyecto proyecto = new Proyecto();
         proyecto.setNombre("");
         proyecto.setRutaBase(rutaArchivo);
-        
-        
 
     }
 

@@ -8,7 +8,8 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
-import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import pe.edu.unp.generadorpruebas.modelo.Clase;
 import pe.edu.unp.generadorpruebas.modelo.Metodo;
@@ -57,19 +58,8 @@ public class ModeladoServicioImpl implements ModeladoServicio {
             if (metodo == null) {
                 throw new ModeladoException("Método no encontrado.");
             }
-            System.out.println(metodo.getMetodoEjecutable().toGenericString());
-            System.out.println(metodo.getMetodoEjecutable().toString());
-            System.out.println(obtenerCodigoFuenteDeMetodo(metodo));
-//            System.out.println(metodo.getMetodoEjecutable().getModifiers());
-//            System.out.println(Modifier.isPublic(metodo.getMetodoEjecutable().getModifiers()));
-//            System.out.println(Modifier.PRIVATE);
-//            System.out.println(Modifier.PUBLIC);
-//            System.out.println(Modifier.PROTECTED);
-//            System.out.println(Modifier.STATIC);
-//            System.out.println(metodo.getMetodoEjecutable().toGenericString());
-//            Class<?> returnType = metodo.getMetodoEjecutable().getReturnType();
-//            Void a;
-//            System.out.println(returnType.getName());
+            metodo.setCodigoJava(obtenerCodigoFuenteDeMetodo(metodo));
+            obtenerComplejidadCiclomatica(metodo);
 
             Parameter[] parameters = metodo.getMetodoEjecutable().getParameters();
             for (Parameter parameter : parameters) {
@@ -91,11 +81,16 @@ public class ModeladoServicioImpl implements ModeladoServicio {
         String rutaClase, linea, cabecera;
         BufferedReader br;
         Boolean encontro;
+        int numeroLlaves, numerocomillas;
+        String codigo;
+        Object[] obtenerLineaMetodo;
+        boolean cabMetodo;
+
+        codigo = "";
 
         try {
-            System.out.println(obtenerCabeceraDeMetodo(metodo));
             cabecera = obtenerCabeceraDeMetodoComoExpresionRegular(metodo);
-            System.out.println("cabecera " + cabecera);
+            System.out.println(cabecera);
             rutaClase = metodo.getClase().getRutaBase() + File.separator + metodo.getClase().getNombre() + Constantes.EXTENSION_JAVA;
             encontro = Boolean.FALSE;
             br = new BufferedReader(new InputStreamReader(new FileInputStream(rutaClase)));
@@ -106,22 +101,68 @@ public class ModeladoServicioImpl implements ModeladoServicio {
                 }
             }
             if (encontro) {
-                System.out.println(linea);
-                while ((linea = br.readLine()) != null) {
-                    System.out.println(linea);
+                //quitar comentarios
+                numeroLlaves = 0;
+                numerocomillas = 0;
+
+                cabMetodo = true;
+                obtenerLineaMetodo = obtenerLineaMetodo(linea, numeroLlaves, numerocomillas, cabMetodo);
+                codigo += (String) obtenerLineaMetodo[0];
+                numeroLlaves = (int) obtenerLineaMetodo[1];
+                numerocomillas = (int) obtenerLineaMetodo[2];
+                cabMetodo = (boolean) obtenerLineaMetodo[3];
+                while (numeroLlaves != 0 && (linea = br.readLine()) != null) {
+                    obtenerLineaMetodo = obtenerLineaMetodo(linea, numeroLlaves, numerocomillas, cabMetodo);
+                    codigo += (String) obtenerLineaMetodo[0];
+                    numeroLlaves = (int) obtenerLineaMetodo[1];
+                    numerocomillas = (int) obtenerLineaMetodo[2];
+                    cabMetodo = (boolean) obtenerLineaMetodo[3];
                 }
             }
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-        return "";
+        return codigo;
+    }
+
+    private Object[] obtenerLineaMetodo(String linea, int numeroLlaves, int numeroComillas, boolean cabMetodo) {
+        char llaveApertura = '{';
+        char llaveCierre = '}';
+        String codigoRestanteSinComentarios, codigo;
+        if (linea.contains("//")) {
+            codigoRestanteSinComentarios = linea.substring(0, linea.indexOf("//"));
+        } else {
+            codigoRestanteSinComentarios = linea;
+        }
+        codigo = "";
+        for (char c : codigoRestanteSinComentarios.toCharArray()) {
+            codigo = codigo + c;
+            if (c == '"') {
+                numeroComillas = (numeroComillas + 1) % 2;
+            }
+            if (numeroComillas != 1) {
+                //buscar que las llaves no esten en comillas
+                if (c == llaveApertura) {
+                    cabMetodo = false;
+                    numeroLlaves++;
+                } else if (c == llaveCierre) {
+                    cabMetodo = false;
+                    numeroLlaves--;
+                }
+
+                if (!cabMetodo && numeroLlaves == 0) {
+                    break;
+                }
+            }
+        }
+        return new Object[]{codigo + "\n", numeroLlaves, numeroComillas, cabMetodo};
     }
 
 //    private String obtenerCabeceraDeMetodo(Metodo metodo, Boolean enExpresionRegular) {
     private String obtenerCabeceraDeMetodoComoExpresionRegular(Metodo metodo) {
         Method method;
         String cabecera;
-        cabecera = "";
+        cabecera = Constantes.PATTERN_ESPACIO;
         method = metodo.getMetodoEjecutable();
         if (Modifier.isPublic(method.getModifiers())) {
             cabecera += "public";
@@ -146,11 +187,12 @@ public class ModeladoServicioImpl implements ModeladoServicio {
 //            System.out.println(parameterName);
 //        }
         for (Parameter parameter : method.getParameters()) {
-            cabecera += Constantes.PATTERN_ESPACIO + parameter.getType().getName() + Constantes.PATTERN_ESPACIO + parameter.getName() + Constantes.PATTERN_ESPACIO + "\\,";
+            cabecera += Constantes.PATTERN_ESPACIO + parameter.getType().getSimpleName() + Constantes.PATTERN_ESPACIO + parameter.getName() + Constantes.PATTERN_ESPACIO + "\\,";
         }
         if (method.getParameters().length > 0) {
-            cabecera = Constantes.PATTERN_ESPACIO + cabecera.substring(0, cabecera.length() - 2);
+            cabecera = cabecera.substring(0, cabecera.length() - 2);
         }
+        cabecera = cabecera + Constantes.PATTERN_ESPACIO;
         cabecera += "\\)" + Constantes.PATTERN_ESPACIO;
 
         if (method.getGenericExceptionTypes().length > 0) {
@@ -203,8 +245,53 @@ public class ModeladoServicioImpl implements ModeladoServicio {
         return cabecera;
     }
 
-    private int calcularComplejidadCiclomaticaLinea(String linea) {
-        return 0;
+    private boolean buscarPalabra(String palabra) {
+        List<String> palabrasReservadas;
+        palabrasReservadas = new ArrayList<String>() {
+            {
+                add("if");
+                add("for");
+                add("while");
+                add("case");
+                add("catch");
+                add("throw");
+                add("&&");
+                add("||");
+                add("?");
+            }
+        };
+        if (palabrasReservadas.contains(palabra)) {
+            return true;
+        }
+        return palabrasReservadas.stream().anyMatch((palabraReservada) -> (palabra.contains(palabraReservada)));
+    }
+
+    private int calcularComplejidadCiclomaticaLinea(String linea, boolean esUltimaLinea) {
+        int complejidad;
+        String palabras[];
+        complejidad = 0;
+
+        palabras = linea.trim().split(" ");
+        for (String palabra : palabras) {
+            palabra = palabra.trim();
+            if ((!esUltimaLinea && palabra.equals("return")) || (buscarPalabra(palabra))) {
+                complejidad++;
+            }
+        }
+        return complejidad;
+    }
+
+    private void obtenerComplejidadCiclomatica(Metodo metodo) {
+        String[] lineasMetodo;
+        int complejidad;
+
+        complejidad = 1;
+        lineasMetodo = metodo.getCodigoJava().split("\n");
+        for (int i = 0; i < lineasMetodo.length; i++) {
+            String linea = lineasMetodo[i];
+            complejidad += calcularComplejidadCiclomaticaLinea(linea, i == (lineasMetodo.length - 1));
+        }
+        System.out.println("Complejidad cliclomatica: " + complejidad);
     }
 
 }

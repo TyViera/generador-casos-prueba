@@ -10,6 +10,7 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import org.springframework.stereotype.Service;
 import pe.edu.unp.generadorpruebas.modelo.Clase;
 import pe.edu.unp.generadorpruebas.modelo.Metodo;
@@ -18,6 +19,8 @@ import pe.edu.unp.generadorpruebas.modelo.RecursoJava;
 import pe.edu.unp.generadorpruebas.servicio.ModeladoServicio;
 import pe.edu.unp.generadorpruebas.util.ClassPathHacker;
 import pe.edu.unp.generadorpruebas.exception.ModeladoException;
+import pe.edu.unp.generadorpruebas.modelo.CaminoEjecucion;
+import pe.edu.unp.generadorpruebas.modelo.CasoDePrueba;
 import pe.edu.unp.generadorpruebas.modelo.ParametroMetodo;
 import pe.edu.unp.generadorpruebas.util.Constantes;
 import pe.edu.unp.generadorpruebas.util.GeneradorUtil;
@@ -58,17 +61,23 @@ public class ModeladoServicioImpl implements ModeladoServicio {
             if (metodo == null) {
                 throw new ModeladoException("Método no encontrado.");
             }
+            //codigo fuente
             metodo.setCodigoJava(obtenerCodigoFuenteDeMetodo(metodo));
-            obtenerComplejidadCiclomatica(metodo);
+            //complejidad
+            metodo.setComplejidadCiclomatica(obtenerComplejidadCiclomatica(metodo));
 
+            //caminos de ejecucion
             Parameter[] parameters = metodo.getMetodoEjecutable().getParameters();
             for (Parameter parameter : parameters) {
                 ParametroMetodo parametroMetodo;
                 parametroMetodo = new ParametroMetodo(parameter);
                 metodo.agregarParametro(parametroMetodo);
             }
-
-            //codigo fuente
+            calcularCaminosEjecucion(metodo);
+            System.out.println("============================CASOS DE PRUEBA");
+            for (CasoDePrueba casoDePrueba : metodo.getCasosPrueba()) {
+                System.out.println(casoDePrueba);
+            }
             return metodo;
         } catch (IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
@@ -281,7 +290,7 @@ public class ModeladoServicioImpl implements ModeladoServicio {
         return complejidad;
     }
 
-    private void obtenerComplejidadCiclomatica(Metodo metodo) {
+    private Integer obtenerComplejidadCiclomatica(Metodo metodo) {
         String[] lineasMetodo;
         int complejidad;
 
@@ -292,6 +301,170 @@ public class ModeladoServicioImpl implements ModeladoServicio {
             complejidad += calcularComplejidadCiclomaticaLinea(linea, i == (lineasMetodo.length - 1));
         }
         System.out.println("Complejidad cliclomatica: " + complejidad);
+        return complejidad;
+    }
+
+    private void calcularCaminosEjecucion(Metodo metodo) {
+        List<CasoDePrueba> casosDePrueba, aux;
+        CasoDePrueba casoPruebaAux;
+        int identificador;
+
+        identificador = 0;
+        casosDePrueba = new ArrayList<>();
+        casoPruebaAux = new CasoDePrueba(identificador);
+        casoPruebaAux.setCaminoEjecucion(new CaminoEjecucion(metodo, new ArrayList<>()));
+        casosDePrueba.add(casoPruebaAux);
+
+        for (ParametroMetodo parametroMetodo : metodo.getListaParametros()) {
+            ParametroMetodo parMet;
+            List valoresCriticos = obtenerValoresCriticos(parametroMetodo);
+            if (valoresCriticos.size() == 1) {
+                for (CasoDePrueba casoDePrueba : casosDePrueba) {
+                    parMet = new ParametroMetodo(parametroMetodo.getParametroEjecutable());
+                    parMet.setValue(valoresCriticos.get(0));
+                    casoDePrueba.getCaminoEjecucion().getParametros().add(parMet);
+                }
+            } else {
+                aux = new ArrayList<>();
+                for (CasoDePrueba casoDePrueba : casosDePrueba) {
+                    for (Object valorCritico : valoresCriticos) {
+                        casoPruebaAux = new CasoDePrueba(casoDePrueba);
+                        casoPruebaAux.setId(identificador);
+                        parMet = new ParametroMetodo(parametroMetodo.getParametroEjecutable());
+                        parMet.setValue(valorCritico);
+                        casoPruebaAux.getCaminoEjecucion().getParametros().add(parMet);
+                        aux.add(casoPruebaAux);
+                        identificador++;
+                    }
+                }
+                casosDePrueba = aux;
+            }
+        }
+
+        //calcular diversidad de cada camino
+        for (CasoDePrueba casoDePrueba : casosDePrueba) {
+            calcularDiversidadCalidadPrueba(casoDePrueba);
+        }
+        metodo.setCasosPrueba(casosDePrueba);
+    }
+
+    private List obtenerValoresCriticos(ParametroMetodo parametroMetodo) {
+        Class clase;
+        List lista;
+        clase = parametroMetodo.getType();
+        if (clase.equals(String.class)) {
+            lista = new ArrayList() {
+                {
+                    add("");
+                    add(" ");
+                    add("             ");
+                    add("\t\t\t\t\n\r\fñ\b");
+                    add(Long.toHexString(Double.doubleToLongBits(Math.random())));
+                    add(UUID.randomUUID().toString());
+                }
+            };
+        } else if (clase.equals(Boolean.class) || clase.equals(boolean.class)) {
+            lista = new ArrayList() {
+                {
+                    add(Boolean.FALSE);
+                    add(Boolean.TRUE);
+                }
+            };
+        } else if (clase.equals(Byte.class) || clase.equals(byte.class)) {
+            lista = new ArrayList() {
+                {
+                    add(Byte.MIN_VALUE);
+                    add(Byte.MAX_VALUE);
+                    add(0);
+                }
+            };
+        } else if (clase.equals(Short.class) || clase.equals(short.class)) {
+            lista = new ArrayList() {
+                {
+                    add(Short.MIN_VALUE);
+                    add(Short.MAX_VALUE);
+                    add(0);
+                }
+            };
+        } else if (clase.equals(Integer.class) || clase.equals(int.class)) {
+            lista = new ArrayList() {
+                {
+                    add(Integer.MIN_VALUE);
+                    add(Integer.MAX_VALUE);
+                    add(0);
+                }
+            };
+        } else if (clase.equals(Long.class) || clase.equals(long.class)) {
+            lista = new ArrayList() {
+                {
+                    add(Long.MIN_VALUE);
+                    add(Long.MAX_VALUE);
+                    add(0);
+                }
+            };
+        } else if (clase.equals(Float.class) || clase.equals(float.class)) {
+            lista = new ArrayList() {
+                {
+                    add(Float.MIN_VALUE);
+                    add(Float.MAX_VALUE);
+                    add(0);
+                }
+            };
+        } else if (clase.equals(Double.class) || clase.equals(double.class)) {
+            lista = new ArrayList() {
+                {
+                    add(Double.MIN_VALUE);
+                    add(Double.MAX_VALUE);
+                    add(0);
+                }
+            };
+        } else {
+            lista = obtenerValoresCriticosObjeto(clase);
+        }
+        if (!clase.equals(boolean.class) && !clase.equals(byte.class) && !clase.equals(short.class) && !clase.equals(int.class)
+                && !clase.equals(long.class) && !clase.equals(float.class) && !clase.equals(double.class)) {
+            lista.add(null);
+        }
+        return lista;
+    }
+
+    private List obtenerValoresCriticosObjeto(Class clase) {
+        return null;
+    }
+
+    private void calcularDiversidadCalidadPrueba(CasoDePrueba casoDePrueba) {
+        List<ParametroMetodo> copia = new ArrayList<>(casoDePrueba.getCaminoEjecucion().getParametros());
+        List<Integer> listaEnteros = new ArrayList<>();
+        int k = 0;
+        for (int i = 0; i < copia.size(); i++) {
+            listaEnteros.add(1);
+            ParametroMetodo first = copia.remove(0);
+            for (int j = 0; j < copia.size(); j++) {
+                ParametroMetodo value = copia.get(j);
+                if (first.getType().equals(value.getType()) && first.getValue().equals(value.getValue())) {
+                    //si son iguales en tipo y valor
+                    //eliminar j
+                    copia.remove(j);
+                    //aumentar cuenta
+                    listaEnteros.set(k, listaEnteros.get(k) + 1);
+                    j--;
+                }
+            }
+            k++;
+        }
+        k = listaEnteros.size();
+        double resultado;
+        resultado = 0;
+        for (Integer entero : listaEnteros) {
+            if (entero > 1) {
+                resultado = resultado + (entero / k);
+            }
+        }
+        resultado = resultado / casoDePrueba.getCaminoEjecucion().getParametros().size();
+        casoDePrueba.setCalidad(resultado);
+//        for (ParametroMetodo parametro : casoDePrueba.getCaminoEjecucion().getParametros()) {
+//
+//        }
     }
 
 }

@@ -49,4 +49,9 @@ public class ParametroMetodo implements Serializable {
         return parametroEjecutable;
     }
 
+    @Override
+    public String toString() {
+        return "{" + type + " " + nombre + "=" + value + '}';
+    }
+
 }

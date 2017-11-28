@@ -11,7 +11,9 @@ public class Metodo implements Serializable {
     private String nombre;
     private String codigoJava;
     private final Method metodoEjecutable;
+    private Integer complejidadCiclomatica;
     private List<ParametroMetodo> listaParametros;
+    private List<CasoDePrueba> casosPrueba;
 
     public Metodo(Clase clase, String nombre, Method metodoEjecutable) {
         this.clase = clase;
@@ -65,6 +67,27 @@ public class Metodo implements Serializable {
 
     public Boolean agregarParametro(ParametroMetodo parametroMetodo) {
         return this.listaParametros.add(parametroMetodo);
+    }
+
+    public Integer getComplejidadCiclomatica() {
+        return complejidadCiclomatica;
+    }
+
+    public void setComplejidadCiclomatica(Integer complejidadCiclomatica) {
+        this.complejidadCiclomatica = complejidadCiclomatica;
+    }
+
+    public List<CasoDePrueba> getCasosPrueba() {
+        return casosPrueba;
+    }
+
+    public void setCasosPrueba(List<CasoDePrueba> casosPrueba) {
+        this.casosPrueba = casosPrueba;
+    }
+
+    @Override
+    public String toString() {
+        return "Metodo{" + nombre + " en " + clase + '}';
     }
 
 }

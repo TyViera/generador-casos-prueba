@@ -57,4 +57,9 @@ public class Clase extends RecursoJava implements Serializable {
         return true;
     }
 
+    @Override
+    public String toString() {
+        return "Clase{" + nombreCompleto + '}';
+    }
+
 }

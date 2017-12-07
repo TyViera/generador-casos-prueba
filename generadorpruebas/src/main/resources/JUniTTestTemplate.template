@@ -1,0 +1,43 @@
+package ${package_name};
+
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import static org.junit.Assert.*;
+${extra_imports}
+
+public class ${test_class_name} {
+    
+    public ${test_class_name}() {
+    }
+    
+    @BeforeClass
+    public static void setUpClass() {
+        ${set_up_class_code}
+    }
+    
+    @AfterClass
+    public static void tearDownClass() {
+        ${tear_down_class_code}
+    }
+    
+    @Before
+    public void setUp() {
+        ${set_up_code}
+    }
+    
+    @After
+    public void tearDown() {
+        ${tear_down_code}
+    }
+
+    #for ${test} in ${tests_code}
+        @Test
+        public void ${test}->nombre() {
+            ${test}->codigo
+        }
+    #endfor
+
+}

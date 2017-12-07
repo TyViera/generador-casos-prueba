@@ -5,13 +5,19 @@
  */
 package pe.edu.unp.generadorpruebas.vista;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import pe.edu.unp.generadorpruebas.modelo.CasoDePrueba;
 import pe.edu.unp.generadorpruebas.modelo.Clase;
 import pe.edu.unp.generadorpruebas.modelo.Metodo;
+import pe.edu.unp.generadorpruebas.modelo.Prueba;
 import pe.edu.unp.generadorpruebas.modelo.RecursoJava;
+import pe.edu.unp.generadorpruebas.servicio.BusquedaSolucionesServicio;
 import pe.edu.unp.generadorpruebas.servicio.CompilacionServicio;
 import pe.edu.unp.generadorpruebas.servicio.ModeladoServicio;
+import pe.edu.unp.generadorpruebas.servicio.PruebaServicio;
+import pe.edu.unp.generadorpruebas.util.ResultadoComando;
 
 @Component
 public class FormularioPrincipal extends javax.swing.JFrame {
@@ -90,10 +96,22 @@ public class FormularioPrincipal extends javax.swing.JFrame {
             compilacionServicio.validarProgramaSeleccionado(rutaArchivo);
             Boolean compilar = compilacionServicio.compilar(proyecto);
             System.out.println(compilar);
-            
+
             //2.- modelado
             Clase clase = (Clase) proyecto;
             Metodo metodo = modeladoServicio.obtenerMetodoEjecucion(clase, nombreMetodo);
+
+            //3.- busqueda de soluciones optimas
+            List<CasoDePrueba> solucionesOptimas;
+            solucionesOptimas = busquedaSolucionesServicio.buscarSolucionesOptimas(metodo);
+            //4.- Creacion de pruebas
+            Prueba prueba;
+            prueba = pruebaServicio.crearPruebas(metodo, solucionesOptimas);
+            //5.- Ejecucion de pruebas
+            ResultadoComando resultadoPruebas;
+            resultadoPruebas = pruebaServicio.ejecutarPrueba(proyecto, prueba);
+            //6.- Resultados
+            //resultadoPruebas....
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -104,6 +122,12 @@ public class FormularioPrincipal extends javax.swing.JFrame {
 
     @Autowired
     private ModeladoServicio modeladoServicio;
+
+    @Autowired
+    private PruebaServicio pruebaServicio;
+
+    @Autowired
+    private BusquedaSolucionesServicio busquedaSolucionesServicio;
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

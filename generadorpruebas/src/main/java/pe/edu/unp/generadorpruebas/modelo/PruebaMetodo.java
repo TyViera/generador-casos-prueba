@@ -31,4 +31,9 @@ public class PruebaMetodo implements Serializable {
         this.codigo = codigo;
     }
 
+    @Override
+    public String toString() {
+        return "Prueba: " + nombre + "\n" + codigo + '\n';
+    }
+
 }

@@ -1,9 +1,15 @@
 package pe.edu.unp.generadorpruebas.servicio.impl;
 
+import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import org.apache.log4j.Logger;
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.VelocityEngine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pe.edu.unp.generadorpruebas.exception.EjecucionPruebaException;
@@ -24,26 +30,66 @@ public class PruebaServicioImpl implements PruebaServicio {
 
     private final Logger logger = Logger.getLogger(getClass());
 
+    public static final String PLANTILLA_VELOCITY = "jUnitTestTemplate.vm";
+    
     @Autowired
     private EjecutorComandoMavenServicio ejecutorComandoMavenServicio;
 
+    @Autowired
+    private VelocityEngine velocityEngine;
+    
     @Override
     public ResultadoComando ejecutarPrueba(RecursoJava proyecto, Prueba prueba) throws EjecucionPruebaException {
-        ResultadoComando resultadoComando;
-        Proyecto proyectoMaven;
-        try {
-            //1,. ubicar ruta de creacion de archivo(s)
-            proyectoMaven = (Proyecto) proyecto;
-            //2.- para la prueba, crear el archivo java segun el modelo JUNITTestTemplate.template
-            //3.- agregar al classpath
-            //4.- ejecutar el comando de maven que ejecuta la prueba
-            resultadoComando = ejecutorComandoMavenServicio.test(proyectoMaven, prueba);
-            //5.- obtener y devolver resultados
-            return resultadoComando;
-        } catch (GeneradorException ex) {
-            logger.error(ex, ex);
-            throw new EjecucionPruebaException("Ocurrió un error al ejecutar la prueba");
-        }
+        //crear el archivo de la prueba
+        String codigo;
+        codigo = obtenerContenidoArchivo(prueba);
+        System.out.println(codigo);
+        return null;
+//        ResultadoComando resultadoComando;
+//        Proyecto proyectoMaven;
+//        try {
+//            //1,. ubicar ruta de creacion de archivo(s)
+//            proyectoMaven = (Proyecto) proyecto;
+//            //2.- para la prueba, crear el archivo java segun el modelo JUNITTestTemplate.template
+//            //3.- agregar al classpath
+//            //4.- ejecutar el comando de maven que ejecuta la prueba
+//            resultadoComando = ejecutorComandoMavenServicio.test(proyectoMaven, prueba);
+//            //5.- obtener y devolver resultados
+//            return resultadoComando;
+//        } catch (GeneradorException ex) {
+//            logger.error(ex, ex);
+//            throw new EjecucionPruebaException("Ocurrió un error al ejecutar la prueba");
+//        }
+    }
+
+    private String obtenerContenidoArchivo(Prueba prueba) {
+        Template template;
+        VelocityContext velocityContext;
+        Iterator it;
+        StringWriter stringWriter;
+
+        velocityContext = new VelocityContext();
+        stringWriter = new StringWriter();
+        template = velocityEngine.getTemplate(PLANTILLA_VELOCITY);
+
+        velocityContext.put("packageName", prueba.getPackageName());
+        velocityContext.put("extraImports", prueba.getExtraImports());
+        velocityContext.put("testClassName", prueba.getTestClassName());
+        velocityContext.put("setUpClassCode", prueba.getSetUpClassCode());
+        velocityContext.put("tearDownClassCode", prueba.getTearDownClassCode());
+        velocityContext.put("setUpCode", prueba.getSetUpCode());
+        velocityContext.put("tearDownCode", prueba.getTearDownCode());
+        velocityContext.put("testsCode", prueba.getTestsCode());
+        
+//        while (it.hasNext()) {
+//            Map.Entry e = (Map.Entry) it.next();
+//            velocityContext.put(e.getKey().toString(), e.getValue());
+//        }
+
+        velocityEngine.init();
+
+        template.merge(velocityContext, stringWriter);
+        return stringWriter.toString();
     }
 
     @Override

@@ -36,4 +36,6 @@ public abstract class RecursoJava {
         this.nombre = nombre;
     }
 
+    public abstract String getRutaFisica();
+    
 }

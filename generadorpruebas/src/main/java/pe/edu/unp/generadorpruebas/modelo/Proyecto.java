@@ -10,4 +10,9 @@ public class Proyecto extends RecursoJava {
         super(ruta, nombre);
     }
 
+    @Override
+    public String getRutaFisica() {
+        return this.getRutaBase();
+    }
+
 }

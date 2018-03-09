@@ -11,4 +11,14 @@ public class GeneradorUtil {
         }
     }
 
+    public static boolean sistemaOperativoEsLinux() {
+        String soName = System.getProperty("os.name");
+        return soName.equalsIgnoreCase("linux");
+    }
+
+    public static boolean sistemaOperativoEsWindows() {
+        String soName = System.getProperty("os.name");
+        return soName.equalsIgnoreCase("windows");
+    }
+
 }

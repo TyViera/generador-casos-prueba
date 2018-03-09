@@ -82,6 +82,7 @@ public class FormularioPrincipal extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 //        String rutaArchivo = "/home/nazaret/generador_pruebas/Programa.java";
+//        String rutaArchivo = "/home/nazaret/generador_pruebas/";
         String rutaArchivo = "/home/nazaret/generador_pruebas/SegundaPrueba.java";
 //        String rutaArchivo = "/home/nazaret/pruebas_generador/nomiproject";//<-exit value = 1
 //        String rutaArchivo = "/home/nazaret/pruebas_generador/miproject";//<-exit value = 0

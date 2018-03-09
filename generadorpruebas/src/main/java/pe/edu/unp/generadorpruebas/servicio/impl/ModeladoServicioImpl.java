@@ -36,7 +36,7 @@ public class ModeladoServicioImpl implements ModeladoServicio {
             String carpeta = archivo.getParent();
             return new Clase(carpeta, GeneradorUtil.quitarExtension(nombreArchivo), nombreArchivo);
         } else {
-            return new Proyecto(ruta, nombreArchivo);
+            return new Proyecto(archivo.getAbsolutePath(), nombreArchivo);
         }
     }
 
@@ -100,7 +100,8 @@ public class ModeladoServicioImpl implements ModeladoServicio {
         try {
             cabecera = obtenerCabeceraDeMetodoComoExpresionRegular(metodo);
             System.out.println(cabecera);
-            rutaClase = metodo.getClase().getRutaBase() + File.separator + metodo.getClase().getNombre() + Constantes.EXTENSION_JAVA;
+//            rutaClase = metodo.getClase().getRutaBase() + File.separator + metodo.getClase().getNombre() + Constantes.EXTENSION_JAVA;
+            rutaClase = metodo.getClase().getRutaFisica();
             encontro = Boolean.FALSE;
             br = new BufferedReader(new InputStreamReader(new FileInputStream(rutaClase)));
             linea = null;

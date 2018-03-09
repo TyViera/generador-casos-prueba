@@ -1,7 +1,9 @@
 package pe.edu.unp.generadorpruebas.modelo;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.Objects;
+import pe.edu.unp.generadorpruebas.util.Constantes;
 
 public class Clase extends RecursoJava implements Serializable {
 
@@ -60,6 +62,11 @@ public class Clase extends RecursoJava implements Serializable {
     @Override
     public String toString() {
         return "Clase{" + nombreCompleto + '}';
+    }
+
+    @Override
+    public String getRutaFisica() {
+        return this.getRutaBase() + File.separator + this.getNombre() + Constantes.EXTENSION_JAVA;
     }
 
 }

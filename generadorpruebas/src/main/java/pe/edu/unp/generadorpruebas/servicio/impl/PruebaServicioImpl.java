@@ -42,7 +42,8 @@ public class PruebaServicioImpl implements PruebaServicio {
 
     private final Logger logger = Logger.getLogger(getClass());
 
-    public static final String PLANTILLA_VELOCITY = "jUnitTestTemplate.vm";
+    public static final String PLANTILLA_VELOCITY_TEST = "jUnitTestTemplate.vm";
+    public static final String PLANTILLA_VELOCITY_RUNNER = "junitRunnerTemplate.vm";
 
     @Autowired
     private EjecutorComandoMavenServicio ejecutorComandoMavenServicio;
@@ -56,11 +57,13 @@ public class PruebaServicioImpl implements PruebaServicio {
     @Override
     public ResultadoComando ejecutarPrueba(RecursoJava proyecto, Prueba prueba) throws EjecucionPruebaException {
         //crear el archivo de la prueba
-        String codigo, rutaSalida;
+        String codigo, codigoRunner, rutaSalida;
         try {
             //1.- para la prueba, crear el archivo java segun el modelo JUNITTestTemplate
             codigo = obtenerContenidoArchivo(prueba);
+            codigoRunner = obtenerContenidoArchivoRunner(prueba);
             System.out.println(codigo);
+            System.out.println(codigoRunner);
             //2,. ubicar ruta de creacion de archivo(s)
 
             //3.- Si es clase -> agregar al classpath
@@ -72,11 +75,10 @@ public class PruebaServicioImpl implements PruebaServicio {
                 //es solo una clase, hay que copiarla en la ruta indicada
                 agregarDependenciasJUnitJars(Constantes.BASE_PATH_OUTPUT_TEST);
                 //agregar la clase creada
-                escribirPruebaCreada(prueba, codigo);
-                System.out.println(prueba.getTestClassName());
-                ejecutarComandoCompilacion(proyecto.getNombre());
-                ejecutarComandoCompilacion(prueba.getTestClassName());
-//                System.out.println(ejecutarComandoEjecucion(proyecto).getGobbler().getResultadoComando());
+                escribirPruebaCreada(prueba.getTestClassName(), codigo);
+                escribirPruebaCreada(Constantes.NOMBRE_CLASE_RUNNER, codigoRunner);
+                ejecutarComandoCompilacion(Constantes.NOMBRE_CLASE_RUNNER);
+                ejecutarComandoEjecucion(Constantes.NOMBRE_CLASE_RUNNER);
             } else {
                 rutaSalida = copiarRecursosDeProyecto(proyecto, Constantes.BASE_PATH_OUTPUT_TEST);
                 agregarDependenciasJUnitPomXml(rutaSalida);
@@ -115,7 +117,7 @@ public class PruebaServicioImpl implements PruebaServicio {
 
         velocityContext = new VelocityContext();
         stringWriter = new StringWriter();
-        template = velocityEngine.getTemplate(PLANTILLA_VELOCITY);
+        template = velocityEngine.getTemplate(PLANTILLA_VELOCITY_TEST);
 
         velocityContext.put("packageName", prueba.getPackageName());
         velocityContext.put("extraImports", prueba.getExtraImports());
@@ -130,6 +132,23 @@ public class PruebaServicioImpl implements PruebaServicio {
 //            Map.Entry e = (Map.Entry) it.next();
 //            velocityContext.put(e.getKey().toString(), e.getValue());
 //        }
+        velocityEngine.init();
+
+        template.merge(velocityContext, stringWriter);
+        return stringWriter.toString();
+    }
+    
+    private String obtenerContenidoArchivoRunner(Prueba prueba) {
+        Template template;
+        VelocityContext velocityContext;
+        StringWriter stringWriter;
+
+        velocityContext = new VelocityContext();
+        stringWriter = new StringWriter();
+        template = velocityEngine.getTemplate(PLANTILLA_VELOCITY_RUNNER);
+
+        velocityContext.put("testClassName", prueba.getTestClassName());
+
         velocityEngine.init();
 
         template.merge(velocityContext, stringWriter);
@@ -258,18 +277,20 @@ public class PruebaServicioImpl implements PruebaServicio {
     }
 
     private ResultadoComando ejecutarComandoCompilacion(String className) throws IOException, InterruptedException {
-        return ejecutorComandoServicio.ejecutarComando("javac -cp *.jar " + className + Constantes.EXTENSION_JAVA, Constantes.BASE_PATH_OUTPUT_TEST + File.separator, System.out);
+        return ejecutorComandoServicio.ejecutarComando("javac -cp .:junit-4.10.jar " + className + Constantes.EXTENSION_JAVA, Constantes.BASE_PATH_OUTPUT_TEST + File.separator, System.out);
     }
 
-    private ResultadoComando ejecutarComandoEjecucion(RecursoJava proyecto) throws IOException, InterruptedException, EjecucionPruebaException {
+    private ResultadoComando ejecutarComandoEjecucion(String className) throws IOException, InterruptedException, EjecucionPruebaException {
         String comando;
+        comando = "java -cp junit-4.10.jar";
         if (GeneradorUtil.sistemaOperativoEsLinux()) {
-            comando = "java -cp *.jar:. " + proyecto.getNombre();
+            comando = comando + ":. ";
         } else if (GeneradorUtil.sistemaOperativoEsWindows()) {
-            comando = "java -cp *.jar;. " + proyecto.getNombre();
+            comando = comando + ";. ";
         } else {
             throw new EjecucionPruebaException("SO no soportado");
         }
+        comando = comando + className;
         System.out.println(comando);
         System.out.println(Constantes.BASE_PATH_OUTPUT_TEST);
         return ejecutorComandoServicio.ejecutarComando(comando, Constantes.BASE_PATH_OUTPUT_TEST + File.separator, System.out);
@@ -278,7 +299,7 @@ public class PruebaServicioImpl implements PruebaServicio {
 
     public static void main(String[] args) {
         try {
-            Process exec = Runtime.getRuntime().exec("javac -cp junit-4.10.jar  GeneradorTestSegundaPrueba.java", null, new File(Constantes.BASE_PATH_OUTPUT_TEST));
+            Process exec = Runtime.getRuntime().exec("javac -cp .:junit-4.10.jar  GeneradorTestSegundaPrueba.java", null, new File(Constantes.BASE_PATH_OUTPUT_TEST));
             Integer exitValue = exec.waitFor();
 
             InputStreamReader isr = new InputStreamReader(exec.getErrorStream());
@@ -298,8 +319,8 @@ public class PruebaServicioImpl implements PruebaServicio {
         }
     }
 
-    private void escribirPruebaCreada(Prueba prueba, String codigo) throws FileNotFoundException, IOException {
-        File file = new File(Constantes.BASE_PATH_OUTPUT_TEST + File.separator + prueba.getTestClassName() + Constantes.EXTENSION_JAVA);
+    private void escribirPruebaCreada(String className, String codigo) throws FileNotFoundException, IOException {
+        File file = new File(Constantes.BASE_PATH_OUTPUT_TEST + File.separator + className + Constantes.EXTENSION_JAVA);
         try (FileOutputStream fos = new FileOutputStream(file); PrintStream ps = new PrintStream(fos)) {
             ps.println(codigo);
         }

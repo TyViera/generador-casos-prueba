@@ -26,7 +26,8 @@ public class Prueba implements Serializable {
 
     public Prueba(String testClassName) {
         this.testClassName = Constantes.BASE_JUNITTEST_CLASS_NAME + testClassName;
-        this.packageName = Constantes.BASE_JUNITTEST_PACKAGE_NAME;
+//        this.packageName = Constantes.BASE_JUNITTEST_PACKAGE_NAME;
+        this.packageName = "";
         this.extraImports = "";
         this.setUpClassCode = "";
         this.tearDownClassCode = "";

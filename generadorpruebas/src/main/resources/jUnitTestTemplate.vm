@@ -1,4 +1,6 @@
+#if ($packageName && !$packageName.isEmpty())
 package $packageName;
+#end
 
 import org.junit.After;
 import org.junit.AfterClass;

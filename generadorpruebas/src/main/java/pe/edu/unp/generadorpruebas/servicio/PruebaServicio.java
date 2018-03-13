@@ -1,6 +1,9 @@
 package pe.edu.unp.generadorpruebas.servicio;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
+import org.junit.runner.Result;
 import pe.edu.unp.generadorpruebas.modelo.CasoDePrueba;
 import pe.edu.unp.generadorpruebas.modelo.Prueba;
 import pe.edu.unp.generadorpruebas.exception.EjecucionPruebaException;
@@ -19,5 +22,7 @@ public interface PruebaServicio {
     public Prueba crearPruebas(Metodo metodo, List<CasoDePrueba> solucionesOptimas);
 
     public List<Prueba> crearPruebas(List<CasoDePrueba> solucionesOptimas);
+
+    public Result leerResultadosPruebas() throws ClassNotFoundException, FileNotFoundException, IOException;
 
 }

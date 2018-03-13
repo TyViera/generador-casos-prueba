@@ -6,6 +6,7 @@
 package pe.edu.unp.generadorpruebas.vista;
 
 import java.util.List;
+import org.junit.runner.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pe.edu.unp.generadorpruebas.modelo.CasoDePrueba;
@@ -111,7 +112,15 @@ public class FormularioPrincipal extends javax.swing.JFrame {
             //5.- Ejecucion de pruebas
             ResultadoComando resultadoPruebas;
             resultadoPruebas = pruebaServicio.ejecutarPrueba(proyecto, prueba);
+            Result result = pruebaServicio.leerResultadosPruebas();
+            System.out.println("==============================================");
+            System.out.println("Result: " + result.wasSuccessful());
+            System.out.println("Run Count: " + result.getRunCount());
+            System.out.println("Failure Count: " + result.getFailureCount());
+            System.out.println("Run Time: " + result.getRunTime() + " miliseconds");
             //6.- Resultados
+            System.out.println(resultadoPruebas.getExitValue());
+            System.out.println(resultadoPruebas.getGobbler().getResultadoComando());
             //resultadoPruebas....
         } catch (Exception ex) {
             ex.printStackTrace();

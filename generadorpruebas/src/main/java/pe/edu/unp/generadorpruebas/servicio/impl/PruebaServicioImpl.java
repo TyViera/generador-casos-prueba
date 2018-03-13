@@ -1,11 +1,15 @@
 package pe.edu.unp.generadorpruebas.servicio.impl;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.StringWriter;
 import java.nio.file.Files;
@@ -16,10 +20,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
+import org.junit.runner.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pe.edu.unp.generadorpruebas.exception.EjecucionPruebaException;
@@ -78,7 +84,7 @@ public class PruebaServicioImpl implements PruebaServicio {
                 escribirPruebaCreada(prueba.getTestClassName(), codigo);
                 escribirPruebaCreada(Constantes.NOMBRE_CLASE_RUNNER, codigoRunner);
                 ejecutarComandoCompilacion(Constantes.NOMBRE_CLASE_RUNNER);
-                ejecutarComandoEjecucion(Constantes.NOMBRE_CLASE_RUNNER);
+                return ejecutarComandoEjecucion(Constantes.NOMBRE_CLASE_RUNNER);
             } else {
                 rutaSalida = copiarRecursosDeProyecto(proyecto, Constantes.BASE_PATH_OUTPUT_TEST);
                 agregarDependenciasJUnitPomXml(rutaSalida);
@@ -137,7 +143,7 @@ public class PruebaServicioImpl implements PruebaServicio {
         template.merge(velocityContext, stringWriter);
         return stringWriter.toString();
     }
-    
+
     private String obtenerContenidoArchivoRunner(Prueba prueba) {
         Template template;
         VelocityContext velocityContext;
@@ -160,6 +166,7 @@ public class PruebaServicioImpl implements PruebaServicio {
         fileOrigen = new File(proyecto.getRutaFisica());
         fileDestino = new File(rutaDestino);
 
+//        Files.deleteIfExists(Paths.get(Constantes.BASE_PATH_OUTPUT_TEST));
         Files.deleteIfExists(fileDestino.toPath());
 
         if (fileOrigen.exists()) {
@@ -269,11 +276,12 @@ public class PruebaServicioImpl implements PruebaServicio {
 
     }
 
-    private void comprobarExistenciaCarpetaSalida() {
+    private void comprobarExistenciaCarpetaSalida() throws IOException {
         File file = new File(Constantes.BASE_PATH_OUTPUT_TEST);
-        if (!file.exists()) {
-            file.mkdirs();
+        if (file.exists()) {
+            FileUtils.deleteDirectory(file);
         }
+        file.mkdirs();
     }
 
     private ResultadoComando ejecutarComandoCompilacion(String className) throws IOException, InterruptedException {
@@ -282,6 +290,9 @@ public class PruebaServicioImpl implements PruebaServicio {
 
     private ResultadoComando ejecutarComandoEjecucion(String className) throws IOException, InterruptedException, EjecucionPruebaException {
         String comando;
+        OutputStream out;
+
+        out = new ByteArrayOutputStream();//PipedOutputStream();
         comando = "java -cp junit-4.10.jar";
         if (GeneradorUtil.sistemaOperativoEsLinux()) {
             comando = comando + ":. ";
@@ -293,7 +304,7 @@ public class PruebaServicioImpl implements PruebaServicio {
         comando = comando + className;
         System.out.println(comando);
         System.out.println(Constantes.BASE_PATH_OUTPUT_TEST);
-        return ejecutorComandoServicio.ejecutarComando(comando, Constantes.BASE_PATH_OUTPUT_TEST + File.separator, System.out);
+        return ejecutorComandoServicio.ejecutarComando(comando, Constantes.BASE_PATH_OUTPUT_TEST + File.separator, out);
 
     }
 
@@ -325,4 +336,12 @@ public class PruebaServicioImpl implements PruebaServicio {
             ps.println(codigo);
         }
     }
+
+    @Override
+    public Result leerResultadosPruebas() throws ClassNotFoundException, FileNotFoundException, IOException {
+        try (FileInputStream fis = new FileInputStream(Constantes.BASE_PATH_OUTPUT_TEST + File.separator + "data.dat"); ObjectInputStream ois = new ObjectInputStream(fis)) {
+            return (Result) ois.readUnshared();
+        }
+    }
+
 }

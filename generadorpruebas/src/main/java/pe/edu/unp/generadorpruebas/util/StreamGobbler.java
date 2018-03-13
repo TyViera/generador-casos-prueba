@@ -55,7 +55,7 @@ public class StreamGobbler extends Thread {
                 if (out != null) {
                     out.println(line);
                 }
-                resultadoComando.append(line);
+                resultadoComando.append(line).append("\n");
             }
         } catch (IOException ex) {
             logger.log(Level.SEVERE, null, ex);

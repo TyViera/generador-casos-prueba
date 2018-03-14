@@ -356,12 +356,12 @@ public class ModeladoServicioImpl implements ModeladoServicio {
         if (clase.equals(String.class)) {
             lista = new ArrayList() {
                 {
-                    add("");
-                    add(" ");
-                    add("             ");
-                    add("\t\t\t\t\n\r\fñ\b");
-                    add(Long.toHexString(Double.doubleToLongBits(Math.random())));
-                    add(UUID.randomUUID().toString());
+                    add("\"\"");
+                    add("\" \"");
+                    add("\"             \"");
+                    add("\"\\t\\t\\t\\t\\n\\r\\fñ\\b\"");
+                    add("\"" + Long.toHexString(Double.doubleToLongBits(Math.random())) + "\"");
+                    add("\"" + UUID.randomUUID().toString() + "\"");
                 }
             };
         } else if (clase.equals(Boolean.class) || clase.equals(boolean.class)) {

@@ -22,7 +22,6 @@ public class EjecutorComandoServicioImpl implements EjecutorComandoServicio {
         StreamGobbler outputGobbler = new StreamGobbler(flujoSalida, exec.getInputStream(), comando);
         outputGobbler.start();
         Integer exitValue = exec.waitFor();
-        System.out.println(exitValue);
         return new ResultadoComando(outputGobbler, exitValue);
     }
 

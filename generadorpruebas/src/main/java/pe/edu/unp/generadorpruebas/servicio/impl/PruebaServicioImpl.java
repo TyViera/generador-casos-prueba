@@ -181,27 +181,31 @@ public class PruebaServicioImpl implements PruebaServicio {
     public Prueba crearPrueba(CasoDePrueba casoDePrueba) {
         Prueba prueba;
         prueba = new Prueba(casoDePrueba.getId());
-        prueba.addTestCode(crearPruebaMetodo(casoDePrueba));
+        prueba.addTestCode(crearPruebaMetodo(casoDePrueba, 0));
         return prueba;
     }
 
     @Override
     public Prueba crearPruebas(Metodo metodo) {
         Prueba prueba;
+        Integer index = 0;
         prueba = new Prueba(metodo.getClase().getNombre());
-        metodo.getCasosPrueba().forEach((casoDePrueba) -> {
-            prueba.addTestCode(crearPruebaMetodo(casoDePrueba));
-        });
+        for (CasoDePrueba casoDePrueba : metodo.getCasosPrueba()) {
+            prueba.addTestCode(crearPruebaMetodo(casoDePrueba, index));
+            index++;
+        }
         return prueba;
     }
 
     @Override
     public Prueba crearPruebas(Metodo metodo, List<CasoDePrueba> solucionesOptimas) {
         Prueba prueba;
+        Integer index = 0;
         prueba = new Prueba(metodo.getClase().getNombre());
-        solucionesOptimas.forEach((casoDePrueba) -> {
-            prueba.addTestCode(crearPruebaMetodo(casoDePrueba));
-        });
+        for (CasoDePrueba casoDePrueba : solucionesOptimas) {
+            prueba.addTestCode(crearPruebaMetodo(casoDePrueba, index));
+            index++;
+        }
         return prueba;
     }
 
@@ -215,11 +219,12 @@ public class PruebaServicioImpl implements PruebaServicio {
         return listaPruebas;
     }
 
-    private PruebaMetodo crearPruebaMetodo(CasoDePrueba casoDePrueba) {
+    private PruebaMetodo crearPruebaMetodo(CasoDePrueba casoDePrueba, Integer index) {
         PruebaMetodo pruebaMetodo;
         StringBuffer buffer;
         String nombreClase, variablePrincipal, codigoMetodo, nombreMetodo;
         List<String> parametrosEntradaMetodo;
+        Integer indexVar = 0;
 
         nombreMetodo = casoDePrueba.getCaminoEjecucion().getMetodo().getNombre();
         nombreClase = casoDePrueba.getCaminoEjecucion().getMetodo().getClase().getNombre();
@@ -229,14 +234,16 @@ public class PruebaServicioImpl implements PruebaServicio {
         codigoMetodo = "";
         for (ParametroMetodo parametro : casoDePrueba.getCaminoEjecucion().getParametros()) {
             String var, clasePar;
-            clasePar = parametro.getType().getName();
-            var = "_" + clasePar.toLowerCase() + "Value" + (new Random()).nextInt(Integer.MAX_VALUE / 2);
-            if (esDatoPrimitivo(clasePar)) {
+            clasePar = parametro.getType().getSimpleName();
+//            var = "_" + clasePar.toLowerCase() + "Value" + (new Random()).nextInt(Integer.MAX_VALUE / 2);
+            var = "_" + clasePar.toLowerCase() + "Value" + indexVar;
+            if (esDatoPrimitivo(clasePar) || esDatoString(clasePar)) {
                 codigoMetodo += clasePar + " " + var + " = " + parametro.getValue() + ";\n";
             } else {
                 codigoMetodo += clasePar + " " + var + " = new " + clasePar + "(" + parametro.getValue() + ");\n";
             }
             parametrosEntradaMetodo.add(var);
+            indexVar++;
         }
         //declarar variables que serviran de parametros
 
@@ -250,7 +257,7 @@ public class PruebaServicioImpl implements PruebaServicio {
         codigoMetodo += ");\n";
 
         pruebaMetodo = new PruebaMetodo();
-        pruebaMetodo.setNombre("test_" + System.currentTimeMillis());
+        pruebaMetodo.setNombre("test_" + index);
         pruebaMetodo.setCodigo(codigoMetodo);
         System.out.println(pruebaMetodo);
         return pruebaMetodo;
@@ -264,6 +271,10 @@ public class PruebaServicioImpl implements PruebaServicio {
                 || clasePar.equals(long.class.getName())
                 || clasePar.equals(float.class.getName())
                 || clasePar.equals(double.class.getName()));
+    }
+
+    private boolean esDatoString(String clasePar) {
+        return (clasePar.equals(String.class.getSimpleName()));
     }
 
     private void agregarDependenciasJUnitJars(String rutaSalida) throws IOException {
@@ -303,14 +314,27 @@ public class PruebaServicioImpl implements PruebaServicio {
         }
         comando = comando + className;
         System.out.println(comando);
-        System.out.println(Constantes.BASE_PATH_OUTPUT_TEST);
         return ejecutorComandoServicio.ejecutarComando(comando, Constantes.BASE_PATH_OUTPUT_TEST + File.separator, out);
 
     }
 
+    private void escribirPruebaCreada(String className, String codigo) throws FileNotFoundException, IOException {
+        File file = new File(Constantes.BASE_PATH_OUTPUT_TEST + File.separator + className + Constantes.EXTENSION_JAVA);
+        try (FileOutputStream fos = new FileOutputStream(file); PrintStream ps = new PrintStream(fos)) {
+            ps.println(codigo);
+        }
+    }
+
+    @Override
+    public Result leerResultadosPruebas() throws ClassNotFoundException, FileNotFoundException, IOException {
+        try (FileInputStream fis = new FileInputStream(Constantes.BASE_PATH_OUTPUT_TEST + File.separator + "data.dat"); ObjectInputStream ois = new ObjectInputStream(fis)) {
+            return (Result) ois.readUnshared();
+        }
+    }
+
     public static void main(String[] args) {
         try {
-            Process exec = Runtime.getRuntime().exec("javac -cp .:junit-4.10.jar  GeneradorTestSegundaPrueba.java", null, new File(Constantes.BASE_PATH_OUTPUT_TEST));
+            Process exec = Runtime.getRuntime().exec("javac -cp .:junit-4.10.jar  TestRunner.java", null, new File(Constantes.BASE_PATH_OUTPUT_TEST));
             Integer exitValue = exec.waitFor();
 
             InputStreamReader isr = new InputStreamReader(exec.getErrorStream());
@@ -327,20 +351,6 @@ public class PruebaServicioImpl implements PruebaServicio {
             System.out.println(exitValue);
         } catch (InterruptedException | IOException ex) {
             java.util.logging.Logger.getLogger(PruebaServicioImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    private void escribirPruebaCreada(String className, String codigo) throws FileNotFoundException, IOException {
-        File file = new File(Constantes.BASE_PATH_OUTPUT_TEST + File.separator + className + Constantes.EXTENSION_JAVA);
-        try (FileOutputStream fos = new FileOutputStream(file); PrintStream ps = new PrintStream(fos)) {
-            ps.println(codigo);
-        }
-    }
-
-    @Override
-    public Result leerResultadosPruebas() throws ClassNotFoundException, FileNotFoundException, IOException {
-        try (FileInputStream fis = new FileInputStream(Constantes.BASE_PATH_OUTPUT_TEST + File.separator + "data.dat"); ObjectInputStream ois = new ObjectInputStream(fis)) {
-            return (Result) ois.readUnshared();
         }
     }
 

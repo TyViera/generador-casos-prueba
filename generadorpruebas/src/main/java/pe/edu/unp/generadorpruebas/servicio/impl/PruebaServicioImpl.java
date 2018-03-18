@@ -64,12 +64,14 @@ public class PruebaServicioImpl implements PruebaServicio {
     public ResultadoComando ejecutarPrueba(RecursoJava proyecto, Prueba prueba) throws EjecucionPruebaException {
         //crear el archivo de la prueba
         String codigo, codigoRunner, rutaSalida;
+        ResultadoComando resultadoComando;
+        resultadoComando = null;
         try {
             //1.- para la prueba, crear el archivo java segun el modelo JUNITTestTemplate
             codigo = obtenerContenidoArchivo(prueba);
             codigoRunner = obtenerContenidoArchivoRunner(prueba);
-            System.out.println(codigo);
-            System.out.println(codigoRunner);
+//            System.out.println(codigo);
+//            System.out.println(codigoRunner);
             //2,. ubicar ruta de creacion de archivo(s)
 
             //3.- Si es clase -> agregar al classpath
@@ -83,8 +85,11 @@ public class PruebaServicioImpl implements PruebaServicio {
                 //agregar la clase creada
                 escribirPruebaCreada(prueba.getTestClassName(), codigo);
                 escribirPruebaCreada(Constantes.NOMBRE_CLASE_RUNNER, codigoRunner);
-                ejecutarComandoCompilacion(Constantes.NOMBRE_CLASE_RUNNER);
-                return ejecutarComandoEjecucion(Constantes.NOMBRE_CLASE_RUNNER);
+                resultadoComando = ejecutarComandoCompilacion(Constantes.NOMBRE_CLASE_RUNNER);
+                if (!resultadoComando.esResultadoExito()) {
+                    return resultadoComando;
+                }
+                resultadoComando = ejecutarComandoEjecucion(Constantes.NOMBRE_CLASE_RUNNER);
             } else {
                 rutaSalida = copiarRecursosDeProyecto(proyecto, Constantes.BASE_PATH_OUTPUT_TEST);
                 agregarDependenciasJUnitPomXml(rutaSalida);
@@ -97,7 +102,7 @@ public class PruebaServicioImpl implements PruebaServicio {
             ex.printStackTrace();
             throw new EjecucionPruebaException(ex);
         }
-        return null;
+        return resultadoComando;
 //        ResultadoComando resultadoComando;
 //        Proyecto proyectoMaven;
 //        try {
@@ -259,7 +264,7 @@ public class PruebaServicioImpl implements PruebaServicio {
         pruebaMetodo = new PruebaMetodo();
         pruebaMetodo.setNombre("test_" + index);
         pruebaMetodo.setCodigo(codigoMetodo);
-        System.out.println(pruebaMetodo);
+//        System.out.println(pruebaMetodo);
         return pruebaMetodo;
     }
 
@@ -313,7 +318,7 @@ public class PruebaServicioImpl implements PruebaServicio {
             throw new EjecucionPruebaException("SO no soportado");
         }
         comando = comando + className;
-        System.out.println(comando);
+//        System.out.println(comando);
         return ejecutorComandoServicio.ejecutarComando(comando, Constantes.BASE_PATH_OUTPUT_TEST + File.separator, out);
 
     }
@@ -329,28 +334,6 @@ public class PruebaServicioImpl implements PruebaServicio {
     public Result leerResultadosPruebas() throws ClassNotFoundException, FileNotFoundException, IOException {
         try (FileInputStream fis = new FileInputStream(Constantes.BASE_PATH_OUTPUT_TEST + File.separator + "data.dat"); ObjectInputStream ois = new ObjectInputStream(fis)) {
             return (Result) ois.readUnshared();
-        }
-    }
-
-    public static void main(String[] args) {
-        try {
-            Process exec = Runtime.getRuntime().exec("javac -cp .:junit-4.10.jar  TestRunner.java", null, new File(Constantes.BASE_PATH_OUTPUT_TEST));
-            Integer exitValue = exec.waitFor();
-
-            InputStreamReader isr = new InputStreamReader(exec.getErrorStream());
-            BufferedReader br = new BufferedReader(isr);
-            String line;
-            while ((line = br.readLine()) != null) {
-                System.out.println(line);
-            }
-            isr = new InputStreamReader(exec.getInputStream());
-            br = new BufferedReader(isr);
-            while ((line = br.readLine()) != null) {
-                System.out.println(line);
-            }
-            System.out.println(exitValue);
-        } catch (InterruptedException | IOException ex) {
-            java.util.logging.Logger.getLogger(PruebaServicioImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

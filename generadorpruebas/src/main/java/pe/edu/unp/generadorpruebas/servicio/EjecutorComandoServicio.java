@@ -10,4 +10,6 @@ public interface EjecutorComandoServicio {
 
     public ResultadoComando ejecutarComando(String comando, String rutaBase, OutputStream flujoSalida) throws IOException, InterruptedException;
 
+    public ResultadoComando ejecutarComando(String comando, String rutaBase, OutputStream flujoSalida, OutputStream flujoSalidaError) throws IOException, InterruptedException;
+    
 }

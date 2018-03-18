@@ -11,6 +11,10 @@ public class GeneradorUtil {
         }
     }
 
+    public static boolean esCadenaValida(String cadena) {
+        return cadena != null && !cadena.isEmpty();
+    }
+
     public static boolean sistemaOperativoEsLinux() {
         String soName = System.getProperty("os.name");
         return soName.equalsIgnoreCase("linux");

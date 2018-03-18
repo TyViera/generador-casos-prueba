@@ -18,8 +18,13 @@ public class EjecutorComandoServicioImpl implements EjecutorComandoServicio {
 
     @Override
     public ResultadoComando ejecutarComando(String comando, String rutaBase, OutputStream flujoSalida) throws IOException, InterruptedException {
+        return this.ejecutarComando(comando, rutaBase, flujoSalida, flujoSalida);
+    }
+    
+    @Override
+    public ResultadoComando ejecutarComando(String comando, String rutaBase, OutputStream flujoSalida, OutputStream flujoSalidaError) throws IOException, InterruptedException {
         Process exec = Runtime.getRuntime().exec(comando, null, new File(rutaBase));
-        StreamGobbler outputGobbler = new StreamGobbler(flujoSalida, exec.getInputStream(), comando);
+        StreamGobbler outputGobbler = new StreamGobbler(flujoSalida, flujoSalidaError, exec, comando);
         outputGobbler.start();
         Integer exitValue = exec.waitFor();
         return new ResultadoComando(outputGobbler, exitValue);

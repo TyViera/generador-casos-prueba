@@ -9,8 +9,10 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import pe.edu.unp.generadorpruebas.modelo.Clase;
 import pe.edu.unp.generadorpruebas.modelo.Metodo;
@@ -28,6 +30,8 @@ import pe.edu.unp.generadorpruebas.util.GeneradorUtil;
 @Service
 public class ModeladoServicioImpl implements ModeladoServicio {
 
+    private Logger logger = Logger.getLogger(getClass());
+    
     @Override
     public RecursoJava obtenerProyecto(String ruta) {
         File archivo = new File(ruta);
@@ -74,13 +78,29 @@ public class ModeladoServicioImpl implements ModeladoServicio {
                 metodo.agregarParametro(parametroMetodo);
             }
             calcularCaminosEjecucion(metodo);
-            System.out.println("============================CASOS DE PRUEBA");
-            for (CasoDePrueba casoDePrueba : metodo.getCasosPrueba()) {
-                System.out.println(casoDePrueba);
-            }
+//            System.out.println("============================CASOS DE PRUEBA");
+//            for (CasoDePrueba casoDePrueba : metodo.getCasosPrueba()) {
+//                System.out.println(casoDePrueba);
+//            }
             return metodo;
         } catch (IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
+            throw new ModeladoException("Ocurrió un error al agregar la clase especificada al classpath.");
+
+        }
+    }
+
+    @Override
+    public List<Method> obtenerMetodosDeClase(String rutaClase, String nombreClase) throws ModeladoException {
+        try {
+            Method[] metodos;
+            Class miClase;
+            ClassPathHacker.addFile(rutaClase);
+            miClase = Class.forName(nombreClase);
+            metodos = miClase.getMethods();
+            return Arrays.asList(metodos);
+        } catch (IOException | ClassNotFoundException ex) {
+            logger.error(ex, ex);
             throw new ModeladoException("Ocurrió un error al agregar la clase especificada al classpath.");
 
         }
@@ -99,7 +119,7 @@ public class ModeladoServicioImpl implements ModeladoServicio {
 
         try {
             cabecera = obtenerCabeceraDeMetodoComoExpresionRegular(metodo);
-            System.out.println(cabecera);
+//            System.out.println(cabecera);
 //            rutaClase = metodo.getClase().getRutaBase() + File.separator + metodo.getClase().getNombre() + Constantes.EXTENSION_JAVA;
             rutaClase = metodo.getClase().getRutaFisica();
             encontro = Boolean.FALSE;
@@ -301,7 +321,7 @@ public class ModeladoServicioImpl implements ModeladoServicio {
             String linea = lineasMetodo[i];
             complejidad += calcularComplejidadCiclomaticaLinea(linea, i == (lineasMetodo.length - 1));
         }
-        System.out.println("Complejidad cliclomatica: " + complejidad);
+//        System.out.println("Complejidad cliclomatica: " + complejidad);
         return complejidad;
     }
 

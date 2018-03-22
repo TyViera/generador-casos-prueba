@@ -483,9 +483,7 @@ public class ModeladoServicioImpl implements ModeladoServicio {
         }
         resultado = resultado / casoDePrueba.getCaminoEjecucion().getParametros().size();
         casoDePrueba.setCalidad(resultado);
-//        for (ParametroMetodo parametro : casoDePrueba.getCaminoEjecucion().getParametros()) {
-//
-//        }
+
     }
 
 }

@@ -1,13 +1,11 @@
 package pe.edu.unp.generadorpruebas.servicio.impl;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -18,8 +16,6 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
-import java.util.logging.Level;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.Template;
@@ -39,6 +35,7 @@ import pe.edu.unp.generadorpruebas.modelo.RecursoJava;
 import pe.edu.unp.generadorpruebas.servicio.EjecutorComandoMavenServicio;
 import pe.edu.unp.generadorpruebas.servicio.EjecutorComandoServicio;
 import pe.edu.unp.generadorpruebas.servicio.PruebaServicio;
+import pe.edu.unp.generadorpruebas.util.ConfiguracionProperties;
 import pe.edu.unp.generadorpruebas.util.Constantes;
 import pe.edu.unp.generadorpruebas.util.GeneradorUtil;
 import pe.edu.unp.generadorpruebas.util.ResultadoComando;
@@ -59,6 +56,8 @@ public class PruebaServicioImpl implements PruebaServicio {
 
     @Autowired
     private VelocityEngine velocityEngine;
+    
+    private final ConfiguracionProperties properties = ConfiguracionProperties.getInstance();
 
     @Override
     public ResultadoComando ejecutarPrueba(RecursoJava proyecto, Prueba prueba) throws EjecucionPruebaException {
@@ -79,9 +78,9 @@ public class PruebaServicioImpl implements PruebaServicio {
             //4.- ejecutar el comando de maven que ejecuta la prueba
             if (proyecto instanceof Clase) {
                 comprobarExistenciaCarpetaSalida();
-                copiarRecursosDeProyecto(proyecto, Constantes.BASE_PATH_OUTPUT_TEST + File.separator + proyecto.getNombre() + Constantes.EXTENSION_JAVA);
+                copiarRecursosDeProyecto(proyecto, properties.getRutaSalida() + File.separator + proyecto.getNombre() + Constantes.EXTENSION_JAVA);
                 //es solo una clase, hay que copiarla en la ruta indicada
-                agregarDependenciasJUnitJars(Constantes.BASE_PATH_OUTPUT_TEST);
+                agregarDependenciasJUnitJars(properties.getRutaSalida());
                 //agregar la clase creada
                 escribirPruebaCreada(prueba.getTestClassName(), codigo);
                 escribirPruebaCreada(Constantes.NOMBRE_CLASE_RUNNER, codigoRunner);
@@ -91,7 +90,7 @@ public class PruebaServicioImpl implements PruebaServicio {
                 }
                 resultadoComando = ejecutarComandoEjecucion(Constantes.NOMBRE_CLASE_RUNNER);
             } else {
-                rutaSalida = copiarRecursosDeProyecto(proyecto, Constantes.BASE_PATH_OUTPUT_TEST);
+                rutaSalida = copiarRecursosDeProyecto(proyecto, properties.getRutaSalida());
                 agregarDependenciasJUnitPomXml(rutaSalida);
 //nazaret@ty-ubuntu-PC:~/cd$ javac -cp *.jar *.java
 //nazaret@ty-ubuntu-PC:~/cd$ java -cp junit-4.10.jar:. TestEmployeeRunner->linux
@@ -284,7 +283,7 @@ public class PruebaServicioImpl implements PruebaServicio {
 
     private void agregarDependenciasJUnitJars(String rutaSalida) throws IOException {
         String pathSalida = rutaSalida + File.separator + "junit-4.10.jar";
-        String pathEntrada = Constantes.BASE_PATH_INPUT_TEST + File.separator + "junit-4.10.jar";
+        String pathEntrada = properties.getRutaEntrada() + File.separator + "junit-4.10.jar";
         Files.copy(Paths.get(pathEntrada), Paths.get(pathSalida), StandardCopyOption.REPLACE_EXISTING);
     }
 
@@ -293,7 +292,7 @@ public class PruebaServicioImpl implements PruebaServicio {
     }
 
     private void comprobarExistenciaCarpetaSalida() throws IOException {
-        File file = new File(Constantes.BASE_PATH_OUTPUT_TEST);
+        File file = new File(properties.getRutaSalida());
         if (file.exists()) {
             FileUtils.deleteDirectory(file);
         }
@@ -301,7 +300,7 @@ public class PruebaServicioImpl implements PruebaServicio {
     }
 
     private ResultadoComando ejecutarComandoCompilacion(String className) throws IOException, InterruptedException {
-        return ejecutorComandoServicio.ejecutarComando("javac -cp .:junit-4.10.jar " + className + Constantes.EXTENSION_JAVA, Constantes.BASE_PATH_OUTPUT_TEST + File.separator, System.out);
+        return ejecutorComandoServicio.ejecutarComando("javac -cp .:junit-4.10.jar " + className + Constantes.EXTENSION_JAVA, properties.getRutaSalida() + File.separator, System.out);
     }
 
     private ResultadoComando ejecutarComandoEjecucion(String className) throws IOException, InterruptedException, EjecucionPruebaException {
@@ -319,12 +318,12 @@ public class PruebaServicioImpl implements PruebaServicio {
         }
         comando = comando + className;
 //        System.out.println(comando);
-        return ejecutorComandoServicio.ejecutarComando(comando, Constantes.BASE_PATH_OUTPUT_TEST + File.separator, out);
+        return ejecutorComandoServicio.ejecutarComando(comando, properties.getRutaSalida() + File.separator, out);
 
     }
 
     private void escribirPruebaCreada(String className, String codigo) throws FileNotFoundException, IOException {
-        File file = new File(Constantes.BASE_PATH_OUTPUT_TEST + File.separator + className + Constantes.EXTENSION_JAVA);
+        File file = new File(properties.getRutaSalida() + File.separator + className + Constantes.EXTENSION_JAVA);
         try (FileOutputStream fos = new FileOutputStream(file); PrintStream ps = new PrintStream(fos)) {
             ps.println(codigo);
         }
@@ -332,7 +331,7 @@ public class PruebaServicioImpl implements PruebaServicio {
 
     @Override
     public Result leerResultadosPruebas() throws ClassNotFoundException, FileNotFoundException, IOException {
-        try (FileInputStream fis = new FileInputStream(Constantes.BASE_PATH_OUTPUT_TEST + File.separator + "data.dat"); ObjectInputStream ois = new ObjectInputStream(fis)) {
+        try (FileInputStream fis = new FileInputStream(properties.getRutaSalida() + File.separator + "data.dat"); ObjectInputStream ois = new ObjectInputStream(fis)) {
             return (Result) ois.readUnshared();
         }
     }

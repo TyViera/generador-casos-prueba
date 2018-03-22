@@ -11,8 +11,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
-import java.util.logging.Level;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import org.apache.log4j.Logger;
@@ -252,11 +250,11 @@ public class FormularioPrincipal extends javax.swing.JFrame {
 
         rutaArchivo = txtNombreClase.getText();
         nombreMetodo = txtNombreMetodo.getText();
-        
+
         if (!validarNombreMetodo(nombreMetodo)) {
             return;
         }
-        
+
         proyecto = modeladoServicio.obtenerProyecto(rutaArchivo);
         //1.- compilacion
         if (!compilar(proyecto)) {
@@ -307,7 +305,8 @@ public class FormularioPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jmiGuardarActionPerformed
 
     private void jmiConfigurarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiConfigurarActionPerformed
-        // TODO add your handling code here:
+        ConfigurarDialog dialog = new ConfigurarDialog(this, Boolean.TRUE);
+        dialog.setVisible(true);
     }//GEN-LAST:event_jmiConfigurarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed

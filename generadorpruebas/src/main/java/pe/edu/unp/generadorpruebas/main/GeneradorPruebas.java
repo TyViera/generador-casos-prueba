@@ -15,6 +15,7 @@ public class GeneradorPruebas {
 
         try {
             SpringRunner.iniciarSpring();
+            SpringRunner.iniciarArchivoProperties();
             java.awt.EventQueue.invokeLater(() -> {
                 SpringRunner.obtenerFormularioPrincipal().setVisible(true);
             });

@@ -12,7 +12,7 @@ public class JavaFileFilter extends FileFilter {
 
     @Override
     public String getDescription() {
-        return "Java source code file";
+        return "Archivo codigo fuente de Java";
     }
 
 }

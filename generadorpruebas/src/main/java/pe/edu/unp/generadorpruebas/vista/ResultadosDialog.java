@@ -14,10 +14,17 @@ import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.data.general.PieDataset;
+import org.jfree.ui.RefineryUtilities;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 import pe.edu.unp.generadorpruebas.exception.EjecucionPruebaException;
@@ -39,6 +46,7 @@ public class ResultadosDialog extends javax.swing.JDialog {
     public ResultadosDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        RefineryUtilities.centerFrameOnScreen(this);
     }
 
     public void showDialog(Result result, Prueba prueba) throws EjecucionPruebaException {
@@ -71,6 +79,8 @@ public class ResultadosDialog extends javax.swing.JDialog {
         tbDetallePruebas = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Resultados de las pruebas");
+        setMinimumSize(new java.awt.Dimension(980, 464));
 
         jLabel1.setFont(new java.awt.Font("Ubuntu", 1, 24)); // NOI18N
         jLabel1.setText("Resultados de las pruebas");
@@ -83,22 +93,14 @@ public class ResultadosDialog extends javax.swing.JDialog {
 
         jLabel4.setText("Tiempo de ejecucion");
 
+        txtResultadoGeneral.setEditable(false);
         txtResultadoGeneral.setText("EXITO/FRACASO");
 
+        txtNumeroPruebas.setEditable(false);
         txtNumeroPruebas.setText("N PRUEBAS");
 
+        txtTiempoEjecucion.setEditable(false);
         txtTiempoEjecucion.setText("X MILISEGUNDOS");
-
-        javax.swing.GroupLayout jpPanelGraficoLayout = new javax.swing.GroupLayout(jpPanelGrafico);
-        jpPanelGrafico.setLayout(jpPanelGraficoLayout);
-        jpPanelGraficoLayout.setHorizontalGroup(
-            jpPanelGraficoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        jpPanelGraficoLayout.setVerticalGroup(
-            jpPanelGraficoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 180, Short.MAX_VALUE)
-        );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -107,18 +109,17 @@ public class ResultadosDialog extends javax.swing.JDialog {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jpPanelGrafico, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
                             .addComponent(jLabel4)
                             .addComponent(jLabel2))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtNumeroPruebas)
-                            .addComponent(txtTiempoEjecucion, javax.swing.GroupLayout.DEFAULT_SIZE, 543, Short.MAX_VALUE)
-                            .addComponent(txtResultadoGeneral))))
-                .addContainerGap())
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(txtNumeroPruebas, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtResultadoGeneral, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtTiempoEjecucion)))
+                    .addComponent(jpPanelGrafico, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 526, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -135,8 +136,8 @@ public class ResultadosDialog extends javax.swing.JDialog {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtTiempoEjecucion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
-                .addGap(18, 18, 18)
-                .addComponent(jpPanelGrafico, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jpPanelGrafico, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -173,14 +174,14 @@ public class ResultadosDialog extends javax.swing.JDialog {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 214, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -189,14 +190,13 @@ public class ResultadosDialog extends javax.swing.JDialog {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 248, Short.MAX_VALUE)
-                        .addComponent(jLabel1)
-                        .addGap(0, 248, Short.MAX_VALUE))
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -204,10 +204,10 @@ public class ResultadosDialog extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
-                .addGap(18, 18, 18)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -234,14 +234,42 @@ public class ResultadosDialog extends javax.swing.JDialog {
             throw new EjecucionPruebaException("El resultado no puede ser un valor nulo.");
         }
         txtNumeroPruebas.setText(String.valueOf(result.getRunCount()));
-        txtResultadoGeneral.setText(result.wasSuccessful() ? "Exiti" : "Fracaso");
+        txtResultadoGeneral.setText(result.wasSuccessful() ? "Exito" : "Fracaso");
         txtTiempoEjecucion.setText(result.getRunTime() + " milisegundos");
         dibujarDiagrama();
         llenarTabla();
     }
 
     private void dibujarDiagrama() {
+        JPanel panel = createDemoPanel();
+        jpPanelGrafico.add(panel);
+    }
 
+    private PieDataset createDataset() {
+        DefaultPieDataset dataset = new DefaultPieDataset();
+        int failCount = result.getFailureCount();
+        int totalCount = result.getRunCount();
+        double errorP = failCount * 1.0 / totalCount * 1.0;
+
+        dataset.setValue("Exito", (1 - errorP));
+        dataset.setValue("Fracaso", errorP);
+        return dataset;
+    }
+
+    private JFreeChart createChart(PieDataset dataset) {
+        JFreeChart chart = ChartFactory.createPieChart(
+                "Resultado de pruebas", // chart title 
+                dataset, // data    
+                true, // include legend   
+                true,
+                false);
+//        ((PiePlot) chart.getPlot()).setLabelGenerator(null);
+        return chart;
+    }
+
+    public JPanel createDemoPanel() {
+        JFreeChart chart = createChart(createDataset());
+        return new ChartPanel(chart);
     }
 
     private void llenarTabla() {
@@ -250,7 +278,12 @@ public class ResultadosDialog extends javax.swing.JDialog {
         model.setRowCount(0);
         prueba.getTestsCode().stream().map((pruebaMetodo) -> {
             lista.add((ActionListener) (ActionEvent e) -> {
-                JOptionPane.showMessageDialog(ResultadosDialog.this, pruebaMetodo.getCodigo());
+                String codigo;
+                codigo = "@Test\n";
+                codigo += "public void " + pruebaMetodo.getNombre() + "() {\n";
+                codigo += pruebaMetodo.getCodigo();
+                codigo += "\n}";
+                JOptionPane.showMessageDialog(ResultadosDialog.this, codigo);
             });
             return pruebaMetodo;
         }).forEachOrdered((pruebaMetodo) -> {

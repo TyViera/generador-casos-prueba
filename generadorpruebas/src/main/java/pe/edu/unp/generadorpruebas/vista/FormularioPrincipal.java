@@ -14,6 +14,7 @@ import java.util.List;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import org.apache.log4j.Logger;
+import org.jfree.ui.RefineryUtilities;
 import org.junit.runner.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -36,18 +37,18 @@ import pe.edu.unp.generadorpruebas.util.ResultadoComando;
 
 @Component
 public class FormularioPrincipal extends javax.swing.JFrame {
-    
+
     private Logger logger = Logger.getLogger(getClass());
-    
+
     @Autowired
     private CompilacionServicio compilacionServicio;
-    
+
     @Autowired
     private ModeladoServicio modeladoServicio;
-    
+
     @Autowired
     private PruebaServicio pruebaServicio;
-    
+
     @Autowired
     private BusquedaSolucionesServicio busquedaSolucionesServicio;
 
@@ -68,6 +69,7 @@ public class FormularioPrincipal extends javax.swing.JFrame {
         }
         initComponents();
         limpiarFormulario();
+        RefineryUtilities.centerFrameOnScreen(this);
     }
 
     /**
@@ -98,6 +100,8 @@ public class FormularioPrincipal extends javax.swing.JFrame {
         jmiAcercaDe = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Generador de casos de pruebas");
+        setMinimumSize(new java.awt.Dimension(795, 510));
 
         btnEjecutar.setText("Ejecutar");
         btnEjecutar.addActionListener(new java.awt.event.ActionListener() {
@@ -130,7 +134,7 @@ public class FormularioPrincipal extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 507, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 735, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2)
@@ -153,7 +157,7 @@ public class FormularioPrincipal extends javax.swing.JFrame {
                     .addComponent(jLabel2)
                     .addComponent(txtNombreMetodo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 317, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -247,14 +251,14 @@ public class FormularioPrincipal extends javax.swing.JFrame {
         Result result;
         Metodo metodo;
         Prueba prueba;
-        
+
         rutaArchivo = txtNombreClase.getText();
         nombreMetodo = txtNombreMetodo.getText();
-        
+
         if (!validarNombreMetodo(nombreMetodo)) {
             return;
         }
-        
+
         proyecto = modeladoServicio.obtenerProyecto(rutaArchivo);
         //1.- compilacion
         if (!compilar(proyecto)) {
@@ -297,7 +301,7 @@ public class FormularioPrincipal extends javax.swing.JFrame {
         System.out.println("Run Count: " + result.getRunCount());
         System.out.println("Failure Count: " + result.getFailureCount());
         System.out.println("Run Time: " + result.getRunTime() + " miliseconds");
-        
+
         System.out.println(resultadoPruebas.getExitValue());
         System.out.println(resultadoPruebas.getGobbler().getResultadoComando());
 
@@ -334,11 +338,11 @@ public class FormularioPrincipal extends javax.swing.JFrame {
             procesarArchivoSeleccionado(chooser.getSelectedFile());
         }
     }//GEN-LAST:event_jmiSeleccionarActionPerformed
-    
+
     private void procesarArchivoSeleccionado(File selectedFile) {
         try {
             compilacionServicio.validarProgramaSeleccionado(selectedFile.getAbsolutePath());
-            
+
             txtNombreClase.setText(selectedFile.getAbsolutePath());
             cargarCodigoArchivoSeleccionado(selectedFile.getAbsolutePath());
             activarComponentes(true);
@@ -347,7 +351,7 @@ public class FormularioPrincipal extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, ex.getMessage());
         }
     }
-    
+
     private void cargarCodigoArchivoSeleccionado(String absolutePath) {
         try {
             try (FileReader fr = new FileReader(absolutePath)) {
@@ -363,20 +367,20 @@ public class FormularioPrincipal extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, ex.getMessage());
         }
     }
-    
+
     private void limpiarFormulario() {
         txtCodigo.setText("");
         txtNombreClase.setText("");
         txtNombreMetodo.setText("");
         activarComponentes(false);
     }
-    
+
     private void activarComponentes(boolean valor) {
         btnCancelar.setEnabled(true);
         btnEjecutar.setEnabled(valor);
         txtNombreMetodo.setEditable(valor);
     }
-    
+
     private Result obtenerResultadoDePruebasDeArchivo() throws HeadlessException {
         Result result;
         try {
@@ -388,7 +392,7 @@ public class FormularioPrincipal extends javax.swing.JFrame {
         }
         return result;
     }
-    
+
     private ResultadoComando resultadoPruebas(RecursoJava proyecto, Prueba prueba) {
         ResultadoComando resultadoPruebas;
         try {
@@ -400,7 +404,7 @@ public class FormularioPrincipal extends javax.swing.JFrame {
         }
         return resultadoPruebas;
     }
-    
+
     private Metodo validacionMetodo(RecursoJava proyecto, String nombreMetodo) throws HeadlessException {
         Metodo metodo;
         Clase clase;
@@ -414,7 +418,7 @@ public class FormularioPrincipal extends javax.swing.JFrame {
         }
         return metodo;
     }
-    
+
     private boolean validarNombreMetodo(String nombreMetodo) throws HeadlessException {
         if (!GeneradorUtil.esCadenaValida(nombreMetodo)) {
             JOptionPane.showMessageDialog(this, "Debe ingresar un nombre de metodo");
@@ -426,7 +430,7 @@ public class FormularioPrincipal extends javax.swing.JFrame {
         }
         return true;
     }
-    
+
     private Boolean compilar(RecursoJava proyecto) {
         Boolean compilar;
         try {
@@ -442,7 +446,7 @@ public class FormularioPrincipal extends javax.swing.JFrame {
         }
         return compilar;
     }
-    
+
     private boolean metodoEsMetodoDefault(String nombreMetodo) {
         return nombreMetodo.equalsIgnoreCase("equals")
                 || nombreMetodo.equalsIgnoreCase("tostring")
@@ -452,7 +456,7 @@ public class FormularioPrincipal extends javax.swing.JFrame {
                 || nombreMetodo.equalsIgnoreCase("wait")
                 || nombreMetodo.equalsIgnoreCase("hashcode");
     }
-    
+
     private void antiguoEjecutar() {
         //        String rutaArchivo = "/home/nazaret/generador_pruebas/Programa.java";
 //        String rutaArchivo = "/home/nazaret/generador_pruebas/";
@@ -464,7 +468,7 @@ public class FormularioPrincipal extends javax.swing.JFrame {
 //        String nombreMetodo = "sumar2";
         String nombreMetodo = "metodo1";
         RecursoJava proyecto = modeladoServicio.obtenerProyecto(rutaArchivo);
-        
+
         try {
             //1.- compilacion
             compilacionServicio.validarProgramaSeleccionado(rutaArchivo);

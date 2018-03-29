@@ -56,7 +56,7 @@ public class PruebaServicioImpl implements PruebaServicio {
 
     @Autowired
     private VelocityEngine velocityEngine;
-    
+
     private final ConfiguracionProperties properties = ConfiguracionProperties.getInstance();
 
     @Override
@@ -300,7 +300,21 @@ public class PruebaServicioImpl implements PruebaServicio {
     }
 
     private ResultadoComando ejecutarComandoCompilacion(String className) throws IOException, InterruptedException {
-        return ejecutorComandoServicio.ejecutarComando("javac -cp .:junit-4.10.jar " + className + Constantes.EXTENSION_JAVA, properties.getRutaSalida() + File.separator, System.out);
+        String comando;
+        OutputStream out;
+
+        out = new ByteArrayOutputStream();//PipedOutputStream();
+        comando = "javac -cp ";
+        if (GeneradorUtil.sistemaOperativoEsLinux()) {
+            comando = comando + ".:";
+        } else if (GeneradorUtil.sistemaOperativoEsWindows()) {
+            comando = comando + ".;";
+        } else {
+            throw new IOException("SO no soportado");
+        }
+        comando = comando + "junit-4.10.jar " + className + Constantes.EXTENSION_JAVA;
+        return ejecutorComandoServicio.ejecutarComando(comando, properties.getRutaSalida() + File.separator, out);
+        //"javac -cp .:junit-4.10.jar " + className + Constantes.EXTENSION_JAVA, properties.getRutaSalida() + File.separator, System.out);
     }
 
     private ResultadoComando ejecutarComandoEjecucion(String className) throws IOException, InterruptedException, EjecucionPruebaException {

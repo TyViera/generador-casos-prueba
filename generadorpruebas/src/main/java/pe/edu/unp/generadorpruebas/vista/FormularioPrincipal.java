@@ -89,6 +89,8 @@ public class FormularioPrincipal extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         txtCodigo = new javax.swing.JTextArea();
         txtNombreMetodo = new javax.swing.JTextField();
+        jpbBarraProgreso = new javax.swing.JProgressBar();
+        jLabel3 = new javax.swing.JLabel();
         btnCancelar = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jmArchivo = new javax.swing.JMenu();
@@ -127,6 +129,10 @@ public class FormularioPrincipal extends javax.swing.JFrame {
         txtNombreMetodo.setEditable(false);
         txtNombreMetodo.setText("jTextField2");
 
+        jpbBarraProgreso.setMaximum(6);
+
+        jLabel3.setText("Progreso:");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -142,13 +148,21 @@ public class FormularioPrincipal extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtNombreClase)
-                            .addComponent(txtNombreMetodo))))
+                            .addComponent(txtNombreMetodo)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel3)
+                        .addGap(18, 18, 18)
+                        .addComponent(jpbBarraProgreso, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jpbBarraProgreso, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(txtNombreClase, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -156,8 +170,8 @@ public class FormularioPrincipal extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(txtNombreMetodo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 317, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 354, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -244,6 +258,12 @@ public class FormularioPrincipal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnEjecutarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEjecutarActionPerformed
+        (new Thread(() -> {
+            ejecutarPruebas();
+        })).start();
+    }//GEN-LAST:event_btnEjecutarActionPerformed
+
+    private boolean ejecutarPruebas() throws HeadlessException {
         List<CasoDePrueba> solucionesOptimas;
         ResultadoComando resultadoPruebas;
         String rutaArchivo, nombreMetodo;
@@ -251,43 +271,49 @@ public class FormularioPrincipal extends javax.swing.JFrame {
         Result result;
         Metodo metodo;
         Prueba prueba;
-
         rutaArchivo = txtNombreClase.getText();
         nombreMetodo = txtNombreMetodo.getText();
-
         if (!validarNombreMetodo(nombreMetodo)) {
-            return;
+            return true;
         }
-
         proyecto = modeladoServicio.obtenerProyecto(rutaArchivo);
+        jpbBarraProgreso.setValue(1);
         //1.- compilacion
         if (!compilar(proyecto)) {
-            return;
+            jpbBarraProgreso.setValue(0);
+            return true;
         }
         //2.- modelado
         metodo = validacionMetodo(proyecto, nombreMetodo);
+        jpbBarraProgreso.setValue(2);
         if (metodo == null) {
-            return;
+            jpbBarraProgreso.setValue(0);
+            return true;
         }
         //3.- busqueda de soluciones optimas
         solucionesOptimas = busquedaSolucionesServicio.buscarSolucionesOptimas(metodo);
-
+        jpbBarraProgreso.setValue(3);
         //4.- Creacion de pruebas
         prueba = pruebaServicio.crearPruebas(metodo, solucionesOptimas);
-
+        jpbBarraProgreso.setValue(4);
         //5.- Ejecucion de pruebas
         resultadoPruebas = resultadoPruebas(proyecto, prueba);
+        jpbBarraProgreso.setValue(5);
         if (resultadoPruebas == null) {
-            return;
+            jpbBarraProgreso.setValue(0);
+            return true;
         }
         if (!resultadoPruebas.esResultadoExito()) {
             JOptionPane.showMessageDialog(this, "Ha fallado la ejecución de las pruebas.\n" + resultadoPruebas.getGobbler().getResultadoErrorComando());
-            return;
+            jpbBarraProgreso.setValue(0);
+            return true;
         }
         //6.- Resultados
         result = obtenerResultadoDePruebasDeArchivo();
+        jpbBarraProgreso.setValue(6);
         if (result == null) {
-            return;
+            jpbBarraProgreso.setValue(0);
+            return true;
         }
         ResultadosDialog dialog = new ResultadosDialog(this, Boolean.TRUE);
         try {
@@ -296,16 +322,8 @@ public class FormularioPrincipal extends javax.swing.JFrame {
             logger.error(ex, ex);
             JOptionPane.showMessageDialog(this, ex.getMessage());
         }
-        System.out.println("==============================================");
-        System.out.println("Result: " + result.wasSuccessful());
-        System.out.println("Run Count: " + result.getRunCount());
-        System.out.println("Failure Count: " + result.getFailureCount());
-        System.out.println("Run Time: " + result.getRunTime() + " miliseconds");
-
-        System.out.println(resultadoPruebas.getExitValue());
-        System.out.println(resultadoPruebas.getGobbler().getResultadoComando());
-
-    }//GEN-LAST:event_btnEjecutarActionPerformed
+        return false;
+    }
 
     private void jmiCargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiCargarActionPerformed
         // TODO add your handling code here:
@@ -372,6 +390,7 @@ public class FormularioPrincipal extends javax.swing.JFrame {
         txtCodigo.setText("");
         txtNombreClase.setText("");
         txtNombreMetodo.setText("");
+        jpbBarraProgreso.setValue(0);
         activarComponentes(false);
     }
 
@@ -457,57 +476,12 @@ public class FormularioPrincipal extends javax.swing.JFrame {
                 || nombreMetodo.equalsIgnoreCase("hashcode");
     }
 
-    private void antiguoEjecutar() {
-        //        String rutaArchivo = "/home/nazaret/generador_pruebas/Programa.java";
-//        String rutaArchivo = "/home/nazaret/generador_pruebas/";
-        String rutaArchivo = "/home/nazaret/generador_pruebas/SegundaPrueba.java";
-//        String rutaArchivo = "/home/nazaret/pruebas_generador/nomiproject";//<-exit value = 1
-//        String rutaArchivo = "/home/nazaret/pruebas_generador/miproject";//<-exit value = 0
-
-//        String nombreMetodo = "wait";
-//        String nombreMetodo = "sumar2";
-        String nombreMetodo = "metodo1";
-        RecursoJava proyecto = modeladoServicio.obtenerProyecto(rutaArchivo);
-
-        try {
-            //1.- compilacion
-            compilacionServicio.validarProgramaSeleccionado(rutaArchivo);
-            Boolean compilar = compilacionServicio.compilar(proyecto);
-            System.out.println(compilar);
-
-            //2.- modelado
-            Clase clase = (Clase) proyecto;
-            Metodo metodo = modeladoServicio.obtenerMetodoEjecucion(clase, nombreMetodo);
-
-            //3.- busqueda de soluciones optimas
-            List<CasoDePrueba> solucionesOptimas;
-            solucionesOptimas = busquedaSolucionesServicio.buscarSolucionesOptimas(metodo);
-            //4.- Creacion de pruebas
-            Prueba prueba;
-            prueba = pruebaServicio.crearPruebas(metodo, solucionesOptimas);
-            //5.- Ejecucion de pruebas
-            ResultadoComando resultadoPruebas;
-            resultadoPruebas = pruebaServicio.ejecutarPrueba(proyecto, prueba);
-            Result result = pruebaServicio.leerResultadosPruebas();
-            System.out.println("==============================================");
-            System.out.println("Result: " + result.wasSuccessful());
-            System.out.println("Run Count: " + result.getRunCount());
-            System.out.println("Failure Count: " + result.getFailureCount());
-            System.out.println("Run Time: " + result.getRunTime() + " miliseconds");
-            //6.- Resultados
-            System.out.println(resultadoPruebas.getExitValue());
-            System.out.println(resultadoPruebas.getGobbler().getResultadoComando());
-            //resultadoPruebas....
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnEjecutar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
@@ -518,6 +492,7 @@ public class FormularioPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenuItem jmiConfigurar;
     private javax.swing.JMenuItem jmiGuardar;
     private javax.swing.JMenuItem jmiSeleccionar;
+    private javax.swing.JProgressBar jpbBarraProgreso;
     private javax.swing.JTextArea txtCodigo;
     private javax.swing.JTextField txtNombreClase;
     private javax.swing.JTextField txtNombreMetodo;

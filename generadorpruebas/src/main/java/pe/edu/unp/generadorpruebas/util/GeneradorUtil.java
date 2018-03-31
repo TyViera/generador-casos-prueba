@@ -22,7 +22,7 @@ public class GeneradorUtil {
 
     public static boolean sistemaOperativoEsWindows() {
         String soName = System.getProperty("os.name");
-        return soName.equalsIgnoreCase("windows");
+        return soName.toLowerCase().startsWith("windows");
     }
 
 }

@@ -78,10 +78,6 @@ public class ModeladoServicioImpl implements ModeladoServicio {
                 metodo.agregarParametro(parametroMetodo);
             }
             calcularCaminosEjecucion(metodo);
-//            System.out.println("============================CASOS DE PRUEBA");
-//            for (CasoDePrueba casoDePrueba : metodo.getCasosPrueba()) {
-//                System.out.println(casoDePrueba);
-//            }
             return metodo;
         } catch (IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
@@ -119,7 +115,6 @@ public class ModeladoServicioImpl implements ModeladoServicio {
 
         try {
             cabecera = obtenerCabeceraDeMetodoComoExpresionRegular(metodo);
-//            System.out.println(cabecera);
 //            rutaClase = metodo.getClase().getRutaBase() + File.separator + metodo.getClase().getNombre() + Constantes.EXTENSION_JAVA;
             rutaClase = metodo.getClase().getRutaFisica();
             encontro = Boolean.FALSE;
@@ -213,9 +208,6 @@ public class ModeladoServicioImpl implements ModeladoServicio {
 //        Paranamer info = new CachingParanamer(new AnnotationParanamer(new BytecodeReadingParanamer()));
 
 //        String[] parameterNames = info.lookupParameterNames(method);
-//        for (String parameterName : parameterNames) {
-//            System.out.println(parameterName);
-//        }
         for (Parameter parameter : method.getParameters()) {
             cabecera += Constantes.PATTERN_ESPACIO + parameter.getType().getSimpleName() + Constantes.PATTERN_ESPACIO + parameter.getName() + Constantes.PATTERN_ESPACIO + "\\,";
         }
@@ -321,7 +313,6 @@ public class ModeladoServicioImpl implements ModeladoServicio {
             String linea = lineasMetodo[i];
             complejidad += calcularComplejidadCiclomaticaLinea(linea, i == (lineasMetodo.length - 1));
         }
-//        System.out.println("Complejidad cliclomatica: " + complejidad);
         return complejidad;
     }
 

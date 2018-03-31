@@ -69,8 +69,6 @@ public class PruebaServicioImpl implements PruebaServicio {
             //1.- para la prueba, crear el archivo java segun el modelo JUNITTestTemplate
             codigo = obtenerContenidoArchivo(prueba);
             codigoRunner = obtenerContenidoArchivoRunner(prueba);
-//            System.out.println(codigo);
-//            System.out.println(codigoRunner);
             //2,. ubicar ruta de creacion de archivo(s)
 
             //3.- Si es clase -> agregar al classpath
@@ -263,7 +261,6 @@ public class PruebaServicioImpl implements PruebaServicio {
         pruebaMetodo = new PruebaMetodo();
         pruebaMetodo.setNombre("test_" + index);
         pruebaMetodo.setCodigo(codigoMetodo);
-//        System.out.println(pruebaMetodo);
         return pruebaMetodo;
     }
 
@@ -331,7 +328,6 @@ public class PruebaServicioImpl implements PruebaServicio {
             throw new EjecucionPruebaException("SO no soportado");
         }
         comando = comando + className;
-//        System.out.println(comando);
         return ejecutorComandoServicio.ejecutarComando(comando, properties.getRutaSalida() + File.separator, out);
 
     }

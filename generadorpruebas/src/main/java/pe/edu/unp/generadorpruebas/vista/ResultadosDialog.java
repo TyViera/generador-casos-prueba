@@ -6,6 +6,8 @@
 package pe.edu.unp.generadorpruebas.vista;
 
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -46,13 +48,13 @@ public class ResultadosDialog extends javax.swing.JDialog {
     public ResultadosDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        RefineryUtilities.centerFrameOnScreen(this);
     }
 
     public void showDialog(Result result, Prueba prueba) throws EjecucionPruebaException {
         this.result = result;
         this.prueba = prueba;
         inicializeData();
+        maximizar();
         this.setVisible(true);
     }
 
@@ -325,6 +327,15 @@ public class ResultadosDialog extends javax.swing.JDialog {
         return null;
     }
 
+    private void maximizar() {
+        Toolkit kit = Toolkit.getDefaultToolkit();
+        Dimension screenSize = kit.getScreenSize();
+        int screenHeight = screenSize.height - 100;
+        int screenWidth = screenSize.width - 100;
+
+        this.setSize(screenWidth, screenHeight);
+    }
+
     private class JTableButtonRenderer extends JButton implements TableCellRenderer {
 
         public JTableButtonRenderer() {
@@ -407,5 +418,13 @@ public class ResultadosDialog extends javax.swing.JDialog {
             isPushed = false;
             return super.stopCellEditing();
         }
+    }
+
+    public static void main(String[] args) {
+        ResultadosDialog d = new ResultadosDialog(null, false);
+//        d.setSize(500, 500);
+        d.maximizar();
+        d.setVisible(true);
+
     }
 }

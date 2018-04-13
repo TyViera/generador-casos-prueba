@@ -14,5 +14,7 @@ public interface ModeladoServicio {
     public Metodo obtenerMetodoEjecucion(Clase clase, String nombreMetodo) throws ModeladoException;
     
     public List<Method> obtenerMetodosDeClase(String rutaClase, String nombreClase) throws ModeladoException;
+    
+    public List<Method> obtenerMetodosDeClaseEjecucion(String rutaClase, String nombreClase) throws ModeladoException;
 
 }

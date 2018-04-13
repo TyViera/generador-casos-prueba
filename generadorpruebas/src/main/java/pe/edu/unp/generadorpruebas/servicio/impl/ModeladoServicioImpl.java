@@ -31,7 +31,7 @@ import pe.edu.unp.generadorpruebas.util.GeneradorUtil;
 public class ModeladoServicioImpl implements ModeladoServicio {
 
     private Logger logger = Logger.getLogger(getClass());
-    
+
     @Override
     public RecursoJava obtenerProyecto(String ruta) {
         File archivo = new File(ruta);
@@ -95,6 +95,30 @@ public class ModeladoServicioImpl implements ModeladoServicio {
             miClase = Class.forName(nombreClase);
             metodos = miClase.getMethods();
             return Arrays.asList(metodos);
+        } catch (IOException | ClassNotFoundException ex) {
+            logger.error(ex, ex);
+            throw new ModeladoException("Ocurrió un error al agregar la clase especificada al classpath.");
+
+        }
+    }
+
+    @Override
+    public List<Method> obtenerMetodosDeClaseEjecucion(String rutaClase, String nombreClase) throws ModeladoException {
+        try {
+            List<Method> lista;
+            Method[] metodos;
+            Class miClase;
+            lista = new ArrayList<>();
+            ClassPathHacker.addFile(rutaClase);
+            miClase = Class.forName(nombreClase);
+            metodos = miClase.getDeclaredMethods();
+
+            Arrays.asList(metodos).stream()
+                    .filter((metodo) -> (Modifier.isPublic(metodo.getModifiers()) && !Modifier.isStatic(metodo.getModifiers())))
+                    .forEachOrdered((metodo) -> {
+                        lista.add(metodo);
+                    });
+            return lista;
         } catch (IOException | ClassNotFoundException ex) {
             logger.error(ex, ex);
             throw new ModeladoException("Ocurrió un error al agregar la clase especificada al classpath.");

@@ -13,6 +13,7 @@ import pe.edu.unp.generadorpruebas.servicio.EjecutorComandoServicio;
 import pe.edu.unp.generadorpruebas.exception.CompilacionException;
 import pe.edu.unp.generadorpruebas.exception.GeneradorException;
 import pe.edu.unp.generadorpruebas.util.Constantes;
+import pe.edu.unp.generadorpruebas.util.GeneradorUtil;
 import pe.edu.unp.generadorpruebas.util.ResultadoComando;
 
 @Service
@@ -56,16 +57,26 @@ public class CompilacionServicioImpl implements CompilacionServicio {
     }
 
     @Override
-    public Boolean compilar(RecursoJava proyecto) throws CompilacionException {
+    public ResultadoComando compilar(RecursoJava proyecto) throws CompilacionException {
         try {
             ResultadoComando resultado;
             if (proyecto instanceof Clase) {
                 Clase clase = (Clase) proyecto;
-                resultado = ejecutorComandoServicio.ejecutarComando("javac -g -parameters " + clase.getNombre() + Constantes.EXTENSION_JAVA, clase.getRutaBase());
+                String comando;
+                comando = "javac -g -parameters -cp ";
+                if (GeneradorUtil.sistemaOperativoEsLinux()) {
+                    comando = comando + ".:. ";
+                } else if (GeneradorUtil.sistemaOperativoEsWindows()) {
+                    comando = comando + ".;. ";
+                } else {
+                    throw new IOException("SO no soportado");
+                }
+                comando = comando + clase.getNombre() + Constantes.EXTENSION_JAVA;
+                resultado = ejecutorComandoServicio.ejecutarComando(comando, clase.getRutaBase());
             } else {
                 resultado = ejecutorComandoMavenServicio.compile((Proyecto) proyecto);
             }
-            return resultado.esResultadoExito();
+            return resultado;
         } catch (GeneradorException | IOException | InterruptedException ex) {
             throw new CompilacionException(ex);
         }

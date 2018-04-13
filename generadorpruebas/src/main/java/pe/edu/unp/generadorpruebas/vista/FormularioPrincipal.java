@@ -10,12 +10,16 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.List;
+import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.jfree.ui.RefineryUtilities;
 import org.junit.runner.Result;
+import org.junit.runner.notification.Failure;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pe.edu.unp.generadorpruebas.exception.CompilacionException;
@@ -31,6 +35,8 @@ import pe.edu.unp.generadorpruebas.servicio.BusquedaSolucionesServicio;
 import pe.edu.unp.generadorpruebas.servicio.CompilacionServicio;
 import pe.edu.unp.generadorpruebas.servicio.ModeladoServicio;
 import pe.edu.unp.generadorpruebas.servicio.PruebaServicio;
+import pe.edu.unp.generadorpruebas.util.Constantes;
+import pe.edu.unp.generadorpruebas.util.FolderFileFilter;
 import pe.edu.unp.generadorpruebas.util.GeneradorUtil;
 import pe.edu.unp.generadorpruebas.util.JavaFileFilter;
 import pe.edu.unp.generadorpruebas.util.ResultadoComando;
@@ -82,6 +88,8 @@ public class FormularioPrincipal extends javax.swing.JFrame {
     private void initComponents() {
 
         btnEjecutar = new javax.swing.JButton();
+        btnCancelar = new javax.swing.JButton();
+        jtbPanelTabs = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -89,9 +97,16 @@ public class FormularioPrincipal extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         txtCodigo = new javax.swing.JTextArea();
         txtNombreMetodo = new javax.swing.JTextField();
+        btnSeleccionarClase = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        txtCarpetaArchivos = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jlListaArchivos = new javax.swing.JList<>();
+        btnSeleccionarCarpetaArchivos = new javax.swing.JButton();
+        jPanel3 = new javax.swing.JPanel();
         jpbBarraProgreso = new javax.swing.JProgressBar();
         jLabel3 = new javax.swing.JLabel();
-        btnCancelar = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jmArchivo = new javax.swing.JMenu();
         jmiConfigurar = new javax.swing.JMenuItem();
@@ -112,7 +127,12 @@ public class FormularioPrincipal extends javax.swing.JFrame {
             }
         });
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Codigo de prueba"));
+        btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Clase:");
 
@@ -129,9 +149,12 @@ public class FormularioPrincipal extends javax.swing.JFrame {
         txtNombreMetodo.setEditable(false);
         txtNombreMetodo.setText("jTextField2");
 
-        jpbBarraProgreso.setMaximum(6);
-
-        jLabel3.setText("Progreso:");
+        btnSeleccionarClase.setText("...");
+        btnSeleccionarClase.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSeleccionarClaseActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -140,47 +163,106 @@ public class FormularioPrincipal extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 735, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 750, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2)
                             .addComponent(jLabel1))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtNombreClase)
-                            .addComponent(txtNombreMetodo)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jLabel3)
-                        .addGap(18, 18, 18)
-                        .addComponent(jpbBarraProgreso, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(txtNombreMetodo)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(txtNombreClase)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnSeleccionarClase, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jpbBarraProgreso, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(txtNombreClase, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtNombreClase, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSeleccionarClase))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(txtNombreMetodo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 354, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
-        btnCancelar.setText("Cancelar");
-        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+        jtbPanelTabs.addTab("Prueba individual", jPanel1);
+
+        txtCarpetaArchivos.setEditable(false);
+        txtCarpetaArchivos.setText("jTextField1");
+
+        jLabel4.setText("Carpeta");
+
+        jlListaArchivos.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane1.setViewportView(jlListaArchivos);
+
+        btnSeleccionarCarpetaArchivos.setText("...");
+        btnSeleccionarCarpetaArchivos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCancelarActionPerformed(evt);
+                btnSeleccionarCarpetaArchivosActionPerformed(evt);
             }
         });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addGap(18, 18, 18)
+                        .addComponent(txtCarpetaArchivos, javax.swing.GroupLayout.DEFAULT_SIZE, 660, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnSeleccionarCarpetaArchivos, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(2, 2, 2)))
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(txtCarpetaArchivos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSeleccionarCarpetaArchivos))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 355, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        jtbPanelTabs.addTab("Carpeta archivos", jPanel2);
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 770, Short.MAX_VALUE)
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 411, Short.MAX_VALUE)
+        );
+
+        jtbPanelTabs.addTab("Proyecto maven", jPanel3);
+
+        jpbBarraProgreso.setMaximum(6);
+
+        jLabel3.setText("Progreso:");
 
         jmArchivo.setText("Archivo");
 
@@ -193,6 +275,7 @@ public class FormularioPrincipal extends javax.swing.JFrame {
         jmArchivo.add(jmiConfigurar);
 
         jmiSeleccionar.setText("Seleccionar archivo...");
+        jmiSeleccionar.setEnabled(false);
         jmiSeleccionar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jmiSeleccionarActionPerformed(evt);
@@ -239,14 +322,24 @@ public class FormularioPrincipal extends javax.swing.JFrame {
                 .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jtbPanelTabs)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jpbBarraProgreso, javax.swing.GroupLayout.PREFERRED_SIZE, 297, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jpbBarraProgreso, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jtbPanelTabs)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCancelar)
@@ -259,71 +352,16 @@ public class FormularioPrincipal extends javax.swing.JFrame {
 
     private void btnEjecutarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEjecutarActionPerformed
         (new Thread(() -> {
-            ejecutarPruebas();
+            switch (jtbPanelTabs.getSelectedIndex()) {
+                case 0:
+                    ejecutarPruebasDeArchivoUnico();
+                    break;
+                case 1:
+                    ejecutarPruebasDeCarpetaArchivos();
+                    break;
+            }
         })).start();
     }//GEN-LAST:event_btnEjecutarActionPerformed
-
-    private boolean ejecutarPruebas() throws HeadlessException {
-        List<CasoDePrueba> solucionesOptimas;
-        ResultadoComando resultadoPruebas;
-        String rutaArchivo, nombreMetodo;
-        RecursoJava proyecto;
-        Result result;
-        Metodo metodo;
-        Prueba prueba;
-        rutaArchivo = txtNombreClase.getText();
-        nombreMetodo = txtNombreMetodo.getText();
-        if (!validarNombreMetodo(nombreMetodo)) {
-            return true;
-        }
-        proyecto = modeladoServicio.obtenerProyecto(rutaArchivo);
-        jpbBarraProgreso.setValue(1);
-        //1.- compilacion
-        if (!compilar(proyecto)) {
-            jpbBarraProgreso.setValue(0);
-            return true;
-        }
-        //2.- modelado
-        metodo = validacionMetodo(proyecto, nombreMetodo);
-        jpbBarraProgreso.setValue(2);
-        if (metodo == null) {
-            jpbBarraProgreso.setValue(0);
-            return true;
-        }
-        //3.- busqueda de soluciones optimas
-        solucionesOptimas = busquedaSolucionesServicio.buscarSolucionesOptimas(metodo);
-        jpbBarraProgreso.setValue(3);
-        //4.- Creacion de pruebas
-        prueba = pruebaServicio.crearPruebas(metodo, solucionesOptimas);
-        jpbBarraProgreso.setValue(4);
-        //5.- Ejecucion de pruebas
-        resultadoPruebas = resultadoPruebas(proyecto, prueba);
-        jpbBarraProgreso.setValue(5);
-        if (resultadoPruebas == null) {
-            jpbBarraProgreso.setValue(0);
-            return true;
-        }
-        if (!resultadoPruebas.esResultadoExito()) {
-            JOptionPane.showMessageDialog(this, "Ha fallado la ejecución de las pruebas.\n" + resultadoPruebas.getGobbler().getResultadoErrorComando());
-            jpbBarraProgreso.setValue(0);
-            return true;
-        }
-        //6.- Resultados
-        result = obtenerResultadoDePruebasDeArchivo();
-        jpbBarraProgreso.setValue(6);
-        if (result == null) {
-            jpbBarraProgreso.setValue(0);
-            return true;
-        }
-        ResultadosDialog dialog = new ResultadosDialog(this, Boolean.TRUE);
-        try {
-            dialog.showDialog(result, prueba);
-        } catch (EjecucionPruebaException ex) {
-            logger.error(ex, ex);
-            JOptionPane.showMessageDialog(this, ex.getMessage());
-        }
-        return false;
-    }
 
     private void jmiCargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiCargarActionPerformed
         // TODO add your handling code here:
@@ -347,6 +385,10 @@ public class FormularioPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void jmiSeleccionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiSeleccionarActionPerformed
+
+    }//GEN-LAST:event_jmiSeleccionarActionPerformed
+
+    private void btnSeleccionarClaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSeleccionarClaseActionPerformed
         JFileChooser chooser;
         int eleccion;
         chooser = new JFileChooser();
@@ -355,7 +397,194 @@ public class FormularioPrincipal extends javax.swing.JFrame {
         if (eleccion == JFileChooser.APPROVE_OPTION) {
             procesarArchivoSeleccionado(chooser.getSelectedFile());
         }
-    }//GEN-LAST:event_jmiSeleccionarActionPerformed
+    }//GEN-LAST:event_btnSeleccionarClaseActionPerformed
+
+    private void btnSeleccionarCarpetaArchivosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSeleccionarCarpetaArchivosActionPerformed
+        JFileChooser chooser;
+        int eleccion;
+        chooser = new JFileChooser();
+        chooser.setFileFilter(new FolderFileFilter());
+        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        eleccion = chooser.showOpenDialog(this);
+        if (eleccion == JFileChooser.APPROVE_OPTION) {
+            procesarCarpetaArchivosSeleccionada(chooser.getSelectedFile());
+        }
+    }//GEN-LAST:event_btnSeleccionarCarpetaArchivosActionPerformed
+
+    private boolean ejecutarPruebasDeCarpetaArchivos() {
+        List<CasoDePrueba> solucionesOptimas;
+        ResultadoComando resultadoPruebas;
+        String rutaCarpeta, rutaArchivo2, nombreClase, nombreMetodo;
+        RecursoJava proyecto;
+        Result result;
+        Metodo metodo;
+        Prueba prueba;
+        File carpeta, listaArchivos[];
+        List<Method> metodosClase;
+
+        rutaCarpeta = txtCarpetaArchivos.getText();
+        carpeta = new File(rutaCarpeta);
+        listaArchivos = carpeta.listFiles((File pathname) -> {
+            return pathname.getName().endsWith(Constantes.EXTENSION_JAVA);
+        });
+
+        jpbBarraProgreso.setValue(0);
+        jpbBarraProgreso.setMaximum(obtenerMaximo(listaArchivos, rutaCarpeta));
+        System.out.println("maximun " + jpbBarraProgreso.getMaximum());
+        for (File javaFile : listaArchivos) {
+            rutaArchivo2 = javaFile.getAbsolutePath();
+            nombreClase = FilenameUtils.removeExtension(javaFile.getName());
+            proyecto = modeladoServicio.obtenerProyecto(rutaArchivo2);
+            jpbBarraProgreso.setValue(jpbBarraProgreso.getValue() + 1);
+            //1.- compilacion
+            if (!compilar(proyecto)) {
+                jpbBarraProgreso.setValue(0);
+                return false;
+            }
+
+            //OBTENER LOS METODOS
+            try {
+                metodosClase = modeladoServicio.obtenerMetodosDeClaseEjecucion(rutaCarpeta, nombreClase);
+            } catch (ModeladoException ex) {
+                logger.error(ex, ex);
+                JOptionPane.showMessageDialog(this, ex.getMessage());
+                jpbBarraProgreso.setValue(0);
+                return false;
+            }
+            for (Method method : metodosClase) {
+                nombreMetodo = method.getName();
+                //2.- modelado
+                metodo = validacionMetodo(proyecto, nombreMetodo);
+                jpbBarraProgreso.setValue(jpbBarraProgreso.getValue() + 1);
+                if (metodo == null) {
+                    jpbBarraProgreso.setValue(0);
+                    return false;
+                }
+                //3.- busqueda de soluciones optimas
+                solucionesOptimas = busquedaSolucionesServicio.buscarSolucionesOptimas(metodo);
+                jpbBarraProgreso.setValue(jpbBarraProgreso.getValue() + 1);
+                //4.- Creacion de pruebas
+                prueba = pruebaServicio.crearPruebas(metodo, solucionesOptimas);
+                jpbBarraProgreso.setValue(jpbBarraProgreso.getValue() + 1);
+                //5.- Ejecucion de pruebas
+                resultadoPruebas = resultadoPruebas(proyecto, prueba);
+                jpbBarraProgreso.setValue(jpbBarraProgreso.getValue() + 1);
+                if (resultadoPruebas == null) {
+                    jpbBarraProgreso.setValue(0);
+                    return false;
+                }
+                if (!resultadoPruebas.esResultadoExito()) {
+                    JOptionPane.showMessageDialog(this, "Ha fallado la ejecución de las pruebas.\n" + resultadoPruebas.getGobbler().getResultadoErrorComando());
+                    jpbBarraProgreso.setValue(0);
+                    return false;
+                }
+                //6.- Resultados
+                result = obtenerResultadoDePruebasDeArchivo();
+                jpbBarraProgreso.setValue(jpbBarraProgreso.getValue() + 1);
+                if (result == null) {
+                    jpbBarraProgreso.setValue(0);
+                    return false;
+                }
+                System.out.println("=============================");
+                System.out.println(jpbBarraProgreso.getValue());
+                System.out.println("FC: " + result.getFailureCount());
+                System.out.println("IC: " + result.getIgnoreCount());
+                System.out.println("RC: " + result.getRunCount());
+                System.out.println("RT: " + result.getRunTime());
+                System.out.println("WS: " + result.wasSuccessful());
+                for (Failure failure : result.getFailures()) {
+                    System.out.println("MSS: " + failure.getMessage());
+                    System.out.println("FTH: " + failure.getTestHeader());
+                    System.out.println("FDC: " + failure.getDescription());
+                }
+            }
+        }
+        System.out.println(jpbBarraProgreso.getValue());
+        return true;
+    }
+
+    private boolean ejecutarPruebasDeArchivoUnico() throws HeadlessException {
+        List<CasoDePrueba> solucionesOptimas;
+        ResultadoComando resultadoPruebas;
+        String rutaArchivo, nombreMetodo;
+        RecursoJava proyecto;
+        Result result;
+        Metodo metodo;
+        Prueba prueba;
+
+        jpbBarraProgreso.setValue(0);
+        jpbBarraProgreso.setMaximum(6);
+
+        rutaArchivo = txtNombreClase.getText();
+        nombreMetodo = txtNombreMetodo.getText();
+        if (!validarNombreMetodo(nombreMetodo)) {
+            return false;
+        }
+        proyecto = modeladoServicio.obtenerProyecto(rutaArchivo);
+        jpbBarraProgreso.setValue(jpbBarraProgreso.getValue() + 1);
+        //1.- compilacion
+        if (!compilar(proyecto)) {
+            jpbBarraProgreso.setValue(0);
+            return false;
+        }
+        //2.- modelado
+        metodo = validacionMetodo(proyecto, nombreMetodo);
+        jpbBarraProgreso.setValue(jpbBarraProgreso.getValue() + 1);
+        if (metodo == null) {
+            jpbBarraProgreso.setValue(0);
+            return false;
+        }
+        //3.- busqueda de soluciones optimas
+        solucionesOptimas = busquedaSolucionesServicio.buscarSolucionesOptimas(metodo);
+        jpbBarraProgreso.setValue(jpbBarraProgreso.getValue() + 1);
+        //4.- Creacion de pruebas
+        prueba = pruebaServicio.crearPruebas(metodo, solucionesOptimas);
+        jpbBarraProgreso.setValue(jpbBarraProgreso.getValue() + 1);
+        //5.- Ejecucion de pruebas
+        resultadoPruebas = resultadoPruebas(proyecto, prueba);
+        jpbBarraProgreso.setValue(jpbBarraProgreso.getValue() + 1);
+        if (resultadoPruebas == null) {
+            jpbBarraProgreso.setValue(0);
+            return false;
+        }
+        if (!resultadoPruebas.esResultadoExito()) {
+            JOptionPane.showMessageDialog(this, "Ha fallado la ejecución de las pruebas.\n" + resultadoPruebas.getGobbler().getResultadoErrorComando());
+            jpbBarraProgreso.setValue(0);
+            return false;
+        }
+        //6.- Resultados
+        result = obtenerResultadoDePruebasDeArchivo();
+        jpbBarraProgreso.setValue(jpbBarraProgreso.getValue() + 1);
+        if (result == null) {
+            jpbBarraProgreso.setValue(0);
+            return false;
+        }
+        ResultadosDialog dialog = new ResultadosDialog(this, Boolean.TRUE);
+        try {
+            dialog.showDialog(result, prueba);
+        } catch (EjecucionPruebaException ex) {
+            logger.error(ex, ex);
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+        }
+        return true;
+    }
+
+    private void procesarCarpetaArchivosSeleccionada(File selectedFile) {
+        txtCarpetaArchivos.setText(selectedFile.getAbsolutePath());
+        cargarListaArchivosCarpetaSeleccionada(selectedFile);
+        activarComponentes(true);
+    }
+
+    private void cargarListaArchivosCarpetaSeleccionada(File carpeta) {
+        DefaultListModel<String> model;
+        model = new DefaultListModel();
+        for (File javaFile : carpeta.listFiles((File pathname) -> {
+            return pathname.getName().endsWith(Constantes.EXTENSION_JAVA);
+        })) {
+            model.addElement(javaFile.getName());
+        }
+        jlListaArchivos.setModel(model);
+    }
 
     private void procesarArchivoSeleccionado(File selectedFile) {
         try {
@@ -391,6 +620,10 @@ public class FormularioPrincipal extends javax.swing.JFrame {
         txtNombreClase.setText("");
         txtNombreMetodo.setText("");
         jpbBarraProgreso.setValue(0);
+
+        jlListaArchivos.setModel(new DefaultListModel());
+        txtCarpetaArchivos.setText("");
+
         activarComponentes(false);
     }
 
@@ -451,12 +684,19 @@ public class FormularioPrincipal extends javax.swing.JFrame {
     }
 
     private Boolean compilar(RecursoJava proyecto) {
+        ResultadoComando resultado;
         Boolean compilar;
+        String msg;
         try {
             //1.- compilacion
-            compilar = compilacionServicio.compilar(proyecto);
+            resultado = compilacionServicio.compilar(proyecto);
+            compilar = resultado.esResultadoExito();
             if (!compilar) {
-                JOptionPane.showMessageDialog(this, "No se ha podido compilar la clase correctamente, pro favor intentelo de nuevo.");
+                msg = resultado.getGobbler().getResultadoComando().toString();
+                if (!GeneradorUtil.esCadenaValida(msg)) {
+                    msg = resultado.getGobbler().getResultadoErrorComando().toString();
+                }
+                JOptionPane.showMessageDialog(this, "No se ha podido compilar la clase \"" + proyecto.getNombre() + "\" correctamente.\nError: \n " + msg);
             }
         } catch (CompilacionException ex) {
             compilar = Boolean.FALSE;
@@ -479,13 +719,20 @@ public class FormularioPrincipal extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnEjecutar;
+    private javax.swing.JButton btnSeleccionarCarpetaArchivos;
+    private javax.swing.JButton btnSeleccionarClase;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JList<String> jlListaArchivos;
     private javax.swing.JMenu jmArchivo;
     private javax.swing.JMenuItem jmiAcercaDe;
     private javax.swing.JMenuItem jmiCargar;
@@ -493,9 +740,30 @@ public class FormularioPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenuItem jmiGuardar;
     private javax.swing.JMenuItem jmiSeleccionar;
     private javax.swing.JProgressBar jpbBarraProgreso;
+    private javax.swing.JTabbedPane jtbPanelTabs;
+    private javax.swing.JTextField txtCarpetaArchivos;
     private javax.swing.JTextArea txtCodigo;
     private javax.swing.JTextField txtNombreClase;
     private javax.swing.JTextField txtNombreMetodo;
     // End of variables declaration//GEN-END:variables
+
+    private int obtenerMaximo(File[] listaArchivos, String rutaCarpeta) {
+        String nombreClase;
+        int i = 0;
+
+        for (File javaFile : listaArchivos) {
+            nombreClase = FilenameUtils.removeExtension(javaFile.getName());
+            i++;
+            //OBTENER LOS METODOS
+            try {
+                List<Method> lista = modeladoServicio.obtenerMetodosDeClaseEjecucion(rutaCarpeta, nombreClase);
+                i = i + (lista.size() * 5);
+            } catch (ModeladoException ex) {
+                logger.error(ex, ex);
+                JOptionPane.showMessageDialog(this, ex.getMessage());
+            }
+        }
+        return i;
+    }
 
 }

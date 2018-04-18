@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
@@ -19,7 +20,6 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.jfree.ui.RefineryUtilities;
 import org.junit.runner.Result;
-import org.junit.runner.notification.Failure;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pe.edu.unp.generadorpruebas.exception.CompilacionException;
@@ -39,6 +39,7 @@ import pe.edu.unp.generadorpruebas.util.Constantes;
 import pe.edu.unp.generadorpruebas.util.FolderFileFilter;
 import pe.edu.unp.generadorpruebas.util.GeneradorUtil;
 import pe.edu.unp.generadorpruebas.util.JavaFileFilter;
+import pe.edu.unp.generadorpruebas.util.PruebaView;
 import pe.edu.unp.generadorpruebas.util.ResultadoComando;
 
 @Component
@@ -421,16 +422,19 @@ public class FormularioPrincipal extends javax.swing.JFrame {
         Prueba prueba;
         File carpeta, listaArchivos[];
         List<Method> metodosClase;
+        List<PruebaView> listaResultados;
+        Long inicio, fin;
 
+        inicio = System.currentTimeMillis();
         rutaCarpeta = txtCarpetaArchivos.getText();
         carpeta = new File(rutaCarpeta);
         listaArchivos = carpeta.listFiles((File pathname) -> {
             return pathname.getName().endsWith(Constantes.EXTENSION_JAVA);
         });
+        listaResultados = new ArrayList<>();
 
         jpbBarraProgreso.setValue(0);
         jpbBarraProgreso.setMaximum(obtenerMaximo(listaArchivos, rutaCarpeta));
-        System.out.println("maximun " + jpbBarraProgreso.getMaximum());
         for (File javaFile : listaArchivos) {
             rutaArchivo2 = javaFile.getAbsolutePath();
             nombreClase = FilenameUtils.removeExtension(javaFile.getName());
@@ -485,21 +489,17 @@ public class FormularioPrincipal extends javax.swing.JFrame {
                     jpbBarraProgreso.setValue(0);
                     return false;
                 }
-                System.out.println("=============================");
-                System.out.println(jpbBarraProgreso.getValue());
-                System.out.println("FC: " + result.getFailureCount());
-                System.out.println("IC: " + result.getIgnoreCount());
-                System.out.println("RC: " + result.getRunCount());
-                System.out.println("RT: " + result.getRunTime());
-                System.out.println("WS: " + result.wasSuccessful());
-                for (Failure failure : result.getFailures()) {
-                    System.out.println("MSS: " + failure.getMessage());
-                    System.out.println("FTH: " + failure.getTestHeader());
-                    System.out.println("FDC: " + failure.getDescription());
-                }
+                listaResultados.add(new PruebaView(nombreClase, nombreMetodo, result, prueba));
             }
         }
-        System.out.println(jpbBarraProgreso.getValue());
+        fin = System.currentTimeMillis();
+        ResultadosCarpetaJDialog dialog = new ResultadosCarpetaJDialog(this, Boolean.TRUE);
+        try {
+            dialog.showDialog(listaResultados, (fin - inicio));
+        } catch (EjecucionPruebaException ex) {
+            logger.error(ex, ex);
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+        }
         return true;
     }
 

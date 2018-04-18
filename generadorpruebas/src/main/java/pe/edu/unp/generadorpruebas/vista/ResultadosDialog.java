@@ -5,33 +5,31 @@
  */
 package pe.edu.unp.generadorpruebas.vista;
 
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.DefaultCellEditor;
-import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTable;
-import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
+import org.jfree.chart.plot.PiePlot;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.general.PieDataset;
-import org.jfree.ui.RefineryUtilities;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 import pe.edu.unp.generadorpruebas.exception.EjecucionPruebaException;
 import pe.edu.unp.generadorpruebas.modelo.Prueba;
 import pe.edu.unp.generadorpruebas.modelo.PruebaMetodo;
+import pe.edu.unp.generadorpruebas.util.ButtonEditor;
+import pe.edu.unp.generadorpruebas.util.GeneradorUtil;
+import pe.edu.unp.generadorpruebas.util.JTableButtonRenderer;
 
 /**
  *
@@ -75,14 +73,14 @@ public class ResultadosDialog extends javax.swing.JDialog {
         txtResultadoGeneral = new javax.swing.JTextField();
         txtNumeroPruebas = new javax.swing.JTextField();
         txtTiempoEjecucion = new javax.swing.JTextField();
-        jpPanelGrafico = new javax.swing.JPanel();
+        jsPanelGrafico = new javax.swing.JScrollPane();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbDetallePruebas = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Resultados de las pruebas");
-        setMinimumSize(new java.awt.Dimension(980, 464));
+        setMinimumSize(new java.awt.Dimension(980, 700));
 
         jLabel1.setFont(new java.awt.Font("Ubuntu", 1, 24)); // NOI18N
         jLabel1.setText("Resultados de las pruebas");
@@ -111,6 +109,7 @@ public class ResultadosDialog extends javax.swing.JDialog {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jsPanelGrafico)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
@@ -119,9 +118,9 @@ public class ResultadosDialog extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(txtNumeroPruebas, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtResultadoGeneral, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtTiempoEjecucion)))
-                    .addComponent(jpPanelGrafico, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 526, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(txtTiempoEjecucion, javax.swing.GroupLayout.DEFAULT_SIZE, 367, Short.MAX_VALUE)
+                            .addComponent(txtResultadoGeneral))))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -139,7 +138,7 @@ public class ResultadosDialog extends javax.swing.JDialog {
                     .addComponent(txtTiempoEjecucion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jpPanelGrafico, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
+                .addComponent(jsPanelGrafico)
                 .addContainerGap())
         );
 
@@ -183,7 +182,7 @@ public class ResultadosDialog extends javax.swing.JDialog {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 519, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -224,7 +223,7 @@ public class ResultadosDialog extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JPanel jpPanelGrafico;
+    private javax.swing.JScrollPane jsPanelGrafico;
     private javax.swing.JTable tbDetallePruebas;
     private javax.swing.JTextField txtNumeroPruebas;
     private javax.swing.JTextField txtResultadoGeneral;
@@ -244,7 +243,7 @@ public class ResultadosDialog extends javax.swing.JDialog {
 
     private void dibujarDiagrama() {
         JPanel panel = createDemoPanel();
-        jpPanelGrafico.add(panel);
+        jsPanelGrafico.setViewportView(panel);
     }
 
     private PieDataset createDataset() {
@@ -265,13 +264,16 @@ public class ResultadosDialog extends javax.swing.JDialog {
                 true, // include legend   
                 true,
                 false);
-//        ((PiePlot) chart.getPlot()).setLabelGenerator(null);
+        ((PiePlot) chart.getPlot()).setLabelGenerator(new StandardPieSectionLabelGenerator("{0} = {2}"));
         return chart;
     }
 
     public JPanel createDemoPanel() {
         JFreeChart chart = createChart(createDataset());
-        return new ChartPanel(chart);
+        ChartPanel localChartPanel = new ChartPanel(chart);
+        localChartPanel.setMouseWheelEnabled(true);
+        return localChartPanel;
+//        return new ChartPanel(chart);
     }
 
     private void llenarTabla() {
@@ -289,142 +291,19 @@ public class ResultadosDialog extends javax.swing.JDialog {
             });
             return pruebaMetodo;
         }).forEachOrdered((pruebaMetodo) -> {
-            model.addRow(new Object[]{pruebaMetodo.getNombre(), obtenerEstadoPrueba(pruebaMetodo), obtenerMensajesPrueba(pruebaMetodo), "Ver codigo"});
+            model.addRow(new Object[]{pruebaMetodo.getNombre(), GeneradorUtil.obtenerEstadoPrueba(pruebaMetodo.getNombre(), result, prueba), GeneradorUtil.obtenerMensajesPrueba(pruebaMetodo.getNombre(), result, prueba), "Ver codigo"});
         });
         tbDetallePruebas.getColumn("Codigo").setCellRenderer(new JTableButtonRenderer());
-        tbDetallePruebas.getColumn("Codigo").setCellEditor(new ButtonEditor(new JCheckBox(), lista));
-    }
-
-    private String obtenerEstadoPrueba(PruebaMetodo pruebaMetodo) {
-        if (result.getFailureCount() <= 0) {
-            return "Exito";
-        }
-        Failure failure = obtenerFailure(pruebaMetodo);
-        if (failure != null) {
-            return "Error";
-        }
-        return "Exito";
-    }
-
-    private String obtenerMensajesPrueba(PruebaMetodo pruebaMetodo) {
-        if (result.getFailureCount() <= 0) {
-            return "";
-        }
-        Failure failure = obtenerFailure(pruebaMetodo);
-        if (failure != null) {
-            return failure.getMessage();
-        }
-        return "";
-    }
-
-    private Failure obtenerFailure(PruebaMetodo pruebaMetodo) {
-        for (Failure failure : result.getFailures()) {//test_6(GeneradorTestSegundaPrueba)
-            String cabecera = pruebaMetodo.getNombre() + "(" + prueba.getTestClassName() + ")";
-            if (failure.getTestHeader().equals(cabecera)) {
-                return failure;
-            }
-        }
-        return null;
+        tbDetallePruebas.getColumn("Codigo").setCellEditor(new ButtonEditor(new JCheckBox(), lista, tbDetallePruebas.getColumnCount() - 1));
     }
 
     private void maximizar() {
         Toolkit kit = Toolkit.getDefaultToolkit();
         Dimension screenSize = kit.getScreenSize();
-        int screenHeight = screenSize.height - 100;
-        int screenWidth = screenSize.width - 100;
+        int screenHeight = screenSize.height - 50;
+        int screenWidth = screenSize.width - 50;
 
         this.setSize(screenWidth, screenHeight);
     }
 
-    private class JTableButtonRenderer extends JButton implements TableCellRenderer {
-
-        public JTableButtonRenderer() {
-            setOpaque(true);
-        }
-
-        @Override
-        public Component getTableCellRendererComponent(JTable table, Object value,
-                boolean isSelected, boolean hasFocus, int row, int column) {
-            if (isSelected) {
-                setForeground(table.getSelectionForeground());
-                setBackground(table.getSelectionBackground());
-            } else {
-                setForeground(table.getForeground());
-                setBackground(UIManager.getColor("Button.background"));
-            }
-            setText(value == null ? "" : value.toString());
-            return this;
-        }
-    }
-
-    private class ButtonEditor extends DefaultCellEditor {
-
-        protected JButton button;
-        private String label;
-        private boolean isPushed;
-        private int lastRow;
-        private List<ActionListener> lista;
-
-        public ButtonEditor(JCheckBox checkBox, List<ActionListener> lista) {
-            super(checkBox);
-            this.lista = lista;
-            button = new JButton();
-            button.setOpaque(true);
-            button.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    fireEditingStopped();
-                }
-            });
-        }
-
-        @Override
-        public Component getTableCellEditorComponent(JTable table, Object value,
-                boolean isSelected, int row, int column) {
-            if (isSelected) {
-                button.setForeground(table.getSelectionForeground());
-                button.setBackground(table.getSelectionBackground());
-            } else {
-                button.setForeground(table.getForeground());
-                button.setBackground(table.getBackground());
-            }
-            lastRow = -1;
-            if (column == 3) {
-                lastRow = row;
-            }
-            label = (value == null) ? "" : value.toString();
-            button.setText(label);
-            isPushed = true;
-            return button;
-        }
-
-        @Override
-        public Object getCellEditorValue() {
-            if (isPushed) {
-//                JOptionPane.showMessageDialog(button, label + ": Ouch!");
-                if (lastRow >= 0) {
-                    ActionListener listener = lista.get(lastRow);
-                    if (listener != null) {
-                        listener.actionPerformed(null);
-                    }
-                }
-            }
-            isPushed = false;
-            return label;
-        }
-
-        @Override
-        public boolean stopCellEditing() {
-            isPushed = false;
-            return super.stopCellEditing();
-        }
-    }
-
-    public static void main(String[] args) {
-        ResultadosDialog d = new ResultadosDialog(null, false);
-//        d.setSize(500, 500);
-        d.maximizar();
-        d.setVisible(true);
-
-    }
 }

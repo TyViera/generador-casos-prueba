@@ -8,7 +8,6 @@ package pe.edu.unp.generadorpruebas.context;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import org.apache.log4j.Logger;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;

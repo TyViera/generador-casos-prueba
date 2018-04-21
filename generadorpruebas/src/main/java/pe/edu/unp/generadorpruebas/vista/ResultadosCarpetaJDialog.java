@@ -390,7 +390,7 @@ public class ResultadosCarpetaJDialog extends javax.swing.JDialog {
 
         @Override
         public String generateLabel(CategoryDataset paramCategoryDataset, int paramInt1, int paramInt2) {
-            return paramCategoryDataset.getRowKey(paramInt1).toString() + "(" + paramInt2 + ")";
+            return paramCategoryDataset.getRowKey(paramInt1).toString() + "(" + paramCategoryDataset.getValue(paramInt1, paramInt2) + ")";
         }
     }
 

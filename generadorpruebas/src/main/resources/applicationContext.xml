@@ -8,7 +8,6 @@
         <property name="arguments">
             <list>
                 <value>classpath:log4j.properties</value>
-                <value>180000</value>
             </list>
         </property>
     </bean>

@@ -2,68 +2,34 @@ package modelo;
 
 import java.math.BigDecimal;
 import java.util.List;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SelectBeforeUpdate;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.grupocaritafeliz.sistemaclinico.util.AuditoriaBean;
+import util.AuditoriaBean;
 
-@Entity
-@Table(name = "tarifaparticular")
-@DynamicUpdate(value = true)
-@DynamicInsert(value = true)
-@SelectBeforeUpdate
 public class TarifaParticular extends AuditoriaBean {
 
     private static final long serialVersionUID = 1L;
 
-    @Column(name = "nombre")
     private String nombre;
 
-    @Column(name = "ctacontable")
     private String cuentaContable;
 
-    @Column(name = "precio", precision = 10, scale = 2)
     private BigDecimal precio;
 
-    @Column(name = "precioemergencia", precision = 10, scale = 2)
     private BigDecimal precioEmergencia;
 
-    @Column(name = "modificable")
     private Boolean modificable;
 
-    @Column(name = "facturacarita")
     private Boolean facturaCarita;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idservicio")
     private Servicio servicio;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idserviciocontable")
     private ServicioContable servicioContable;
 
-    @JsonIgnoreProperties("examenParticular")
-    @OneToMany(mappedBy = "examenParticular", fetch = FetchType.LAZY)
     private List<InforMedicoExamen> inforMedicoExamenes;
 
-    @JsonIgnoreProperties("tarifaParticular")
-    @OneToMany(mappedBy = "tarifaParticular", fetch = FetchType.LAZY)
     private List<TipoTarjetaDescuentoServicio> descuentos;
 
-    @JsonIgnoreProperties("examenParticular")
-    @OneToMany(mappedBy = "examenParticular", fetch = FetchType.LAZY)
     private List<DocumExamenesDet> documExamenesDets;
 
-    @Transient
     private BigDecimal descuento;
 
     public String getNombre() {

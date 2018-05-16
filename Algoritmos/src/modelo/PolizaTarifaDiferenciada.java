@@ -5,60 +5,35 @@
  */
 package com.grupocaritafeliz.sistemaclinico.entidad;
 
-import com.grupocaritafeliz.sistemaclinico.util.AuditoriaBean;
 import java.math.BigDecimal;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SelectBeforeUpdate;
+import modelo.Poliza;
+import modelo.Tarifario;
+import util.AuditoriaBean;
 
-@Entity
-@Table(name = "polizatarifadiferenciada")
-@DynamicUpdate(value = true)
-@DynamicInsert(value = true)
-@SelectBeforeUpdate
 public class PolizaTarifaDiferenciada extends AuditoriaBean {
 
     private static final long serialVersionUID = 1L;
 
-    @Column(name = "monto1", nullable = false, precision = 9, scale = 2)
     private BigDecimal monto1;
 
-    @Column(name = "cantidad1", nullable = false, precision = 9, scale = 2)
     private BigDecimal cantidad1;
 
-    @Column(name = "tipo1")
     private String tipo1;
 
-    @Column(name = "monto2", nullable = false, precision = 9, scale = 2)
     private BigDecimal monto2;
 
-    @Column(name = "cantidad2", nullable = false, precision = 9, scale = 2)
     private BigDecimal cantidad2;
 
-    @Column(name = "tipo2")
     private String tipo2;
 
-    @Column(name = "monto3", nullable = false, precision = 9, scale = 2)
     private BigDecimal monto3;
 
-    @Column(name = "cantidad3", nullable = false, precision = 9, scale = 2)
     private BigDecimal cantidad3;
 
-    @Column(name = "tipo3")
     private String tipo3;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idpoliza", nullable = false)
     private Poliza poliza;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idsegus", nullable = false)
     private Tarifario tarifario;
 
     public PolizaTarifaDiferenciada() {

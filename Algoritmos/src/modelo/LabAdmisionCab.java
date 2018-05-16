@@ -1,60 +1,27 @@
 package modelo;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SelectBeforeUpdate;
-import com.grupocaritafeliz.sistemaclinico.util.AuditoriaBean;
 import java.sql.Timestamp;
 import java.util.List;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import util.AuditoriaBean;
 
-/**
- * The persistent class for the laboratorio database table.
- *
- */
-@Entity
-@Table(name = "labadmisioncab")
-@DynamicUpdate(value = true)
-@DynamicInsert(value = true)
-@SelectBeforeUpdate
 public class LabAdmisionCab extends AuditoriaBean {
 
     private static final long serialVersionUID = 1L;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idamisionmedico")
     private AdmisionMedico admisionMedico;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idpersona")
     private Persona persona;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idmedico")
     private Medico medico;
 
-    @Column(name = "observacion")
     private String observacion;
 
-    @Column(name = "pacinterno")
     private Boolean pacInterno;
 
-    @Column(name = "fechaadmision")
     private Timestamp fechaAdmision;
 
-    @JsonIgnoreProperties("labAdmisionCab")
-    @OneToMany(mappedBy = "labAdmisionCab")
     private List<LabResultadoCab> labResultadosCab;
 
-    @JsonIgnoreProperties("labAdmisionCab")
-    @OneToMany(mappedBy = "labAdmisionCab")
     private List<LabAdmisionDet> labAdmisionesDet;
 
     public LabAdmisionCab() {

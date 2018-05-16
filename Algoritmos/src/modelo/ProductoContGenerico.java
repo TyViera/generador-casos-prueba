@@ -1,56 +1,32 @@
 package modelo;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import util.AuditoriaBean;
 
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SelectBeforeUpdate;
-
-import com.grupocaritafeliz.sistemaclinico.util.AuditoriaBean;
-
-
-/**
- * The persistent class for the productocontgenerico database table.
- * 
- */
-@Entity
-@Table(name = "productocontgenerico")
-@DynamicUpdate(value = true)
-@DynamicInsert(value = true)
-@SelectBeforeUpdate
 public class ProductoContGenerico extends AuditoriaBean {
-	
-	private static final long serialVersionUID = 1L;
 
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="idgenerico")
-	private Generico generico;
+    private static final long serialVersionUID = 1L;
 
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="idproducto")
-	private Producto producto;
+    private Generico generico;
 
-	public ProductoContGenerico() {
-	}
+    private Producto producto;
 
-	public Generico getGenerico() {
-		return this.generico;
-	}
+    public ProductoContGenerico() {
+    }
 
-	public void setGenerico(Generico generico) {
-		this.generico = generico;
-	}
+    public Generico getGenerico() {
+        return this.generico;
+    }
 
-	public Producto getProducto() {
-		return this.producto;
-	}
+    public void setGenerico(Generico generico) {
+        this.generico = generico;
+    }
 
-	public void setProducto(Producto producto) {
-		this.producto = producto;
-	}
+    public Producto getProducto() {
+        return this.producto;
+    }
+
+    public void setProducto(Producto producto) {
+        this.producto = producto;
+    }
 
 }

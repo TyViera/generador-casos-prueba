@@ -1,52 +1,26 @@
 package modelo;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import javax.persistence.*;
-
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SelectBeforeUpdate;
-
-import com.grupocaritafeliz.sistemaclinico.util.AuditoriaBean;
-
 import java.util.List;
+import util.AuditoriaBean;
 
-/**
- * The persistent class for the operacion database table.
- *
- */
-@Entity
-@Table(name = "operacion")
-@DynamicUpdate(value = true)
-@DynamicInsert(value = true)
-@SelectBeforeUpdate
 public class Operacion extends AuditoriaBean {
 
     private static final long serialVersionUID = 1L;
 
-    @Column(name = "abreviatura")
     private String abreviatura;
 
-    @Column(name = "inventario")
     private Boolean inventario;
 
-    @Column(name = "nombre")
     private String nombre;
 
-    @Column(name = "regcompra")
     private String regCompra;
 
-    @Column(name = "regventa")
     private String regVenta;
 
-    @Column(name = "tipo")
     private String tipo;
-    
-    @Column(name = "tipotransaccion")
+
     private String tipoTransaccion;
 
-    @JsonIgnoreProperties("documentoCabecera")
-    @OneToMany(mappedBy = "documentoCabecera", fetch = FetchType.LAZY)
     private List<DocumProductoDet> documentosProductoDet;
 
     public Operacion() {

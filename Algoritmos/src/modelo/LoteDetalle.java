@@ -1,70 +1,34 @@
 package modelo;
 
-
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import util.AuditoriaBean;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SelectBeforeUpdate;
-
-import com.grupocaritafeliz.sistemaclinico.util.AuditoriaBean;
-
-@Entity
-@Table(name = "lotedet")
-@DynamicUpdate(value = true)
-@DynamicInsert(value = true)
-@SelectBeforeUpdate
-public class LoteDetalle  extends AuditoriaBean
-{
+public class LoteDetalle extends AuditoriaBean {
 
     private static final long serialVersionUID = 1L;
 
-    @Column(name = "fechaadm")
     private Timestamp fechaAdm;
 
-    @Column(name = "bruto", precision = 9, scale = 2)
     private BigDecimal bruto;
 
-    @Column(name = "descuento", precision = 9, scale = 2)
     private BigDecimal descuento;
 
-    @Column(name = "coaseguro", precision = 9, scale = 2)
     private BigDecimal coaseguro;
 
-    @Column(name = "deducible", precision = 9, scale = 2)
     private BigDecimal deducible;
 
-    @Column(name = "neto", precision = 9, scale = 2)
     private BigDecimal neto;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idlotecab")
     private LoteCabecera loteCabecera;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idadmision")
     private Admision admision;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idpaciente")
     private Persona persona;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idtitular")
     private Persona titular;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idaseguradora")
     private Aseguradora aseguradora;
-
 
     public Timestamp getFechaAdm() {
         return fechaAdm;

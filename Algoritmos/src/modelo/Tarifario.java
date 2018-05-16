@@ -2,74 +2,36 @@ package modelo;
 
 import java.math.BigDecimal;
 import java.util.List;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SelectBeforeUpdate;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.grupocaritafeliz.sistemaclinico.util.AuditoriaBean;
+import util.AuditoriaBean;
 
-/**
- * The persistent class for the tarifario database table.
- *
- */
-@Entity
-@Table(name = "tarifario")
-@DynamicUpdate(value = true)
-@DynamicInsert(value = true)
-@SelectBeforeUpdate
 public class Tarifario extends AuditoriaBean {
 
     private static final long serialVersionUID = 1L;
 
-    @Column(name = "codigo", nullable = false)
     private String codigo;
 
-    @Column(name = "nombre")
     private String nombre;
 
-    @Column(name = "tipo")
     private Character tipo;
 
-    @Column(name = "puntos", precision = 9, scale = 2)
     private BigDecimal puntos;
 
-    @Column(name = "modificable")
     private Boolean modificable;
 
-    @Column(name = "aplicalaparoscopia")
     private Boolean aplicaLaparoscopia;
 
-    @Column(name = "puntajeminimo")
     private BigDecimal puntajeMinimo;
 
-    @Column(name = "aplicapuntajeminimo")
     private Boolean aplicaPuntajeMinimo;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idcobertura")
     private Cobertura cobertura;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idservicio")
     private Servicio servicio;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idserviciocontable")
     private ServicioContable servicioContable;
 
-    @JsonIgnoreProperties("examenSeguro")
-    @OneToMany(mappedBy = "examenSeguro", fetch = FetchType.LAZY)
     private List<InforMedicoExamen> inforMedicoExamenes;
 
-    @JsonIgnoreProperties("examenSeguro")
-    @OneToMany(mappedBy = "examenSeguro", fetch = FetchType.LAZY)
     private List<DocumExamenesDet> documExamenesDets;
 
     public Tarifario() {

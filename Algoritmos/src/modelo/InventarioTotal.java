@@ -1,62 +1,33 @@
 package modelo;
 
-import com.grupocaritafeliz.sistemaclinico.util.AuditoriaBean;
 import java.math.BigDecimal;
 import java.util.Date;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SelectBeforeUpdate;
+import util.AuditoriaBean;
 
-@Entity
-@Table(name = "inventariototal")
-@DynamicUpdate(value = true)
-@DynamicInsert(value = true)
-@SelectBeforeUpdate
 public class InventarioTotal extends AuditoriaBean {
 
     private static final long serialVersionUID = 1L;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idproducto")
     private Producto producto;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idalmacen")
     private Almacen almacen;
 
-    @Column(name = "mes")
     private Integer mes;
 
-    @Column(name = "anio")
     private Integer anio;
 
-    @Column(name = "feccompra")
-    @Temporal(javax.persistence.TemporalType.DATE)
     private Date fechaCompra;
 
-    @Column(name = "costopromedio", precision = 9, scale = 2)
     private BigDecimal costoPromedio;
 
-    @Column(name = "stockinicial", precision = 9, scale = 2)
     private BigDecimal stockInicial;
 
-    @Column(name = "entrada", precision = 9, scale = 2)
     private BigDecimal entrada;
 
-    @Column(name = "salida", precision = 9, scale = 2)
     private BigDecimal salida;
 
-    @Column(name = "preciokairos", precision = 9, scale = 2)
     private BigDecimal precioKairos;
 
-    @Column(name = "precioventa", precision = 9, scale = 2)
     private BigDecimal precioVenta;
 
     public InventarioTotal() {

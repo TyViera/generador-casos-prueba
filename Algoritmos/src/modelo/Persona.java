@@ -1,105 +1,50 @@
 package modelo;
 
 import java.util.List;
+import util.AuditoriaBean;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SelectBeforeUpdate;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.grupocaritafeliz.sistemaclinico.util.AuditoriaBean;
-import com.grupocaritafeliz.sistemaclinico.util.Detalle;
-
-/**
- * The persistent class for the persona database table.
- *
- */
-@Entity
-@Table(name = "persona")
-@DynamicUpdate(value = true)
-@DynamicInsert(value = true)
-@SelectBeforeUpdate
 public class Persona extends AuditoriaBean {
 
     private static final long serialVersionUID = 1L;
 
-    @Column(name = "nombre", nullable = false)
     private String nombre;
 
-    @Column(name = "apepat", nullable = false)
     private String apePat;
 
-    @Column(name = "apemat")
     private String apeMat;
 
-    @Column(name = "nombrecompleto", nullable = false)
     private String nombreCompleto;
 
-    @Column(name = "direccion")
     private String direccion;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idtipodocumento")
     private TipoDocumento tipoDocumento;
 
-    @Column(name = "numdocumento")
     private String numDocumento;
 
-    @Column(name = "ruc")
     private String ruc;
 
-    @Column(name = "tipopersona")
     private String tipoPersona;
 
-    @Column(name = "celular")
     private String celular;
 
-    @Column(name = "telefono")
     private String telefono;
 
-    @Column(name = "otroscelulares")
     private String otrosCelulares;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idubigeo")
     private Ubigeo ubigeo;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idpais")
     private Pais pais;
 
-    @Detalle
-    @JsonIgnoreProperties("persona")
-    @OneToMany(mappedBy = "persona", fetch = FetchType.LAZY)
     private List<PolizaPaciente> polizaPacientes;
 
-    @Detalle
-    @JsonIgnoreProperties("persona")
-    @OneToMany(mappedBy = "persona", fetch = FetchType.LAZY)
     private List<Paciente> pacientes;
 
-    @JsonIgnoreProperties("persona")
-    @OneToMany(mappedBy = "persona", fetch = FetchType.LAZY)
     private List<Cita> citas;
 
-    @JsonIgnoreProperties("persona")
-    @OneToMany(mappedBy = "persona", fetch = FetchType.LAZY)
     private List<TarifaSocial> tarifaSocials;
 
-    @JsonIgnoreProperties("persona")
-    @OneToMany(mappedBy = "persona", fetch = FetchType.LAZY)
     private List<PreFacturaAseguradora> preFacturasAseguradora;
 
-    @JsonIgnoreProperties("persona")
-    @OneToMany(mappedBy = "persona", fetch = FetchType.LAZY)
     private List<HistoriaClinica> historiasClinica;
 
     public String getNombre() {

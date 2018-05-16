@@ -1,78 +1,42 @@
 package modelo;
 
 import java.math.BigDecimal;
+import util.AuditoriaBean;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SelectBeforeUpdate;
-
-import com.grupocaritafeliz.sistemaclinico.util.AuditoriaBean;
-
-@Entity
-@Table(name = "documexamenesdet")
-@DynamicUpdate(value = true)
-@DynamicInsert(value = true)
-@SelectBeforeUpdate
 public class DocumExamenesDet extends AuditoriaBean {
 
     private static final long serialVersionUID = 1L;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "iddocumentocab")
     private DocumentoCabecera documentoCabecera;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idsegus")
     private Tarifario examenSeguro;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idtarifaparticular")
     private TarifaParticular examenParticular;
 
-    @Column(name = "valortotal", precision = 9, scale = 2)
     private BigDecimal valorTotal;
 
-    @Column(name = "valodscto", precision = 9, scale = 2)
     private BigDecimal valorDescuento;
 
-    @Column(name = "valorigv", precision = 9, scale = 2)
     private BigDecimal valorIGV;
 
-    @Column(name = "valorventa", precision = 9, scale = 2)
     private BigDecimal valorVenta;
 
-    @Column(name = "preciounitario", precision = 9, scale = 2)
     private BigDecimal precioUnitario;
 
-    @Column(name = "valortotalop", precision = 9, scale = 2)
     private BigDecimal valorTotalOperacion;
 
-    @Column(name = "valodsctoop", precision = 9, scale = 2)
     private BigDecimal valorDescuentoOperacion;
 
-    @Column(name = "valorigvop", precision = 9, scale = 2)
     private BigDecimal valorIGVOperacion;
 
-    @Column(name = "valorventaop", precision = 9, scale = 2)
     private BigDecimal valorVentaOperacion;
 
-    @Column(name = "preciounitarioop", precision = 9, scale = 2)
     private BigDecimal precioUnitarioOperacion;
 
-    @Column(name = "cantidad", precision = 9, scale = 2)
     private BigDecimal cantidad;
 
-    @Column(name = "piezastratadas")
     private Integer piezasTratadas;
 
-    @Column(name = "afacturar")
     private Boolean aFacturar;
 
     public DocumExamenesDet() {

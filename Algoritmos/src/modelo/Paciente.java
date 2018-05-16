@@ -1,66 +1,28 @@
 package modelo;
 
 import java.util.Date;
+import util.AuditoriaBean;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SelectBeforeUpdate;
-
-import com.grupocaritafeliz.sistemaclinico.util.AuditoriaBean;
-import com.grupocaritafeliz.sistemaclinico.util.Detalle;
-
-@Entity
-@Table(name = "paciente")
-@DynamicUpdate(value = true)
-@DynamicInsert(value = true)
-@SelectBeforeUpdate
 public class Paciente extends AuditoriaBean {
 
     private static final long serialVersionUID = 1L;
 
-    @Detalle
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idpersona")
     private Persona persona;
 
-    @Column(name = "email")
     private String email;
 
-    @Temporal(TemporalType.DATE)
-    @Column(name = "fecnac")
     private Date fecNac;
 
-    @Column(name = "sexo")
     private Character sexo;
 
-    @Column(name = "tipoSangre")
     private String tipoSangre;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idarchivo")
     private Archivo foto;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idparentesco", nullable = false)
     private Parentesco parentesco;
-    
-    @Detalle
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idpadre")
+
     private Persona padre;
-    
-    @Detalle
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idmadre")
+
     private Persona madre;
 
     public Paciente() {
@@ -122,20 +84,20 @@ public class Paciente extends AuditoriaBean {
         this.foto = foto;
     }
 
-	public Persona getPadre() {
-		return padre;
-	}
+    public Persona getPadre() {
+        return padre;
+    }
 
-	public void setPadre(Persona padre) {
-		this.padre = padre;
-	}
+    public void setPadre(Persona padre) {
+        this.padre = padre;
+    }
 
-	public Persona getMadre() {
-		return madre;
-	}
+    public Persona getMadre() {
+        return madre;
+    }
 
-	public void setMadre(Persona madre) {
-		this.madre = madre;
-	}
- 
+    public void setMadre(Persona madre) {
+        this.madre = madre;
+    }
+
 }

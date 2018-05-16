@@ -1,58 +1,31 @@
 package modelo;
 
-import com.grupocaritafeliz.sistemaclinico.util.AuditoriaBean;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SelectBeforeUpdate;
+import util.AuditoriaBean;
 
-@Entity
-@Table(name = "informedicotratamientopiezadental")
-@DynamicUpdate(value = true)
-@DynamicInsert(value = true)
-@SelectBeforeUpdate
 public class InformedicoTratamientoPiezaDental extends AuditoriaBean {
 
     private static final long serialVersionUID = 1L;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idinformedico", nullable = false)
     private InforMedico informedico;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idpieza", nullable = false)
     private PiezaDental piezaDental;
 
-    @Column(name = "mesial", nullable = false)
     private Boolean mesial;
 
-    @Column(name = "lingual", nullable = false)
     private Boolean lingual;
 
-    @Column(name = "distal", nullable = false)
     private Boolean distal;
 
-    @Column(name = "vestibular", nullable = false)
     private Boolean vestibular;
 
-    @Column(name = "oclusal", nullable = false)
     private Boolean oclusal;
 
-    @Column(name = "todapieza", nullable = false)
     private Boolean todaPieza;
 
-    @Column(name = "palantina", nullable = false)
     private Boolean palantina;
 
-    @Column(name = "cervical", nullable = false)
     private Boolean cervical;
 
-    @Column(name = "incisal", nullable = false)
     private Boolean incisal;
 
     public InformedicoTratamientoPiezaDental() {

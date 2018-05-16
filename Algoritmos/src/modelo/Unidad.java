@@ -1,93 +1,67 @@
 package modelo;
 
 import java.util.List;
+import util.AuditoriaBean;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SelectBeforeUpdate;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.grupocaritafeliz.sistemaclinico.util.AuditoriaBean;
-
-
-/**
- * The persistent class for the unidad database table.
- * 
- */
-@Entity
-@Table(name = "unidad")
-@DynamicUpdate(value = true)
-@DynamicInsert(value = true)
-@SelectBeforeUpdate
 public class Unidad extends AuditoriaBean {
-	
-	private static final long serialVersionUID = 1L;
 
-	@Column(name="abreviatura")
-	private String abreviatura;
+    private static final long serialVersionUID = 1L;
 
-	@Column(name="codsunat")
-	private String codSunat;
+    private String abreviatura;
 
-	@Column(name="nombre",nullable=false)
-	private String nombre;
+    private String codSunat;
 
-	@JsonIgnoreProperties("unidad")
-	@OneToMany(mappedBy="unidad")
-	private List<Producto> productos;
+    private String nombre;
 
-	public Unidad() {
-	}
+    private List<Producto> productos;
 
-	public String getAbreviatura() {
-		return this.abreviatura;
-	}
+    public Unidad() {
+    }
 
-	public void setAbreviatura(String abreviatura) {
-		this.abreviatura = abreviatura;
-	}
+    public String getAbreviatura() {
+        return this.abreviatura;
+    }
 
-	public String getCodSunat() {
-		return this.codSunat;
-	}
+    public void setAbreviatura(String abreviatura) {
+        this.abreviatura = abreviatura;
+    }
 
-	public void setCodSunat(String codSunat) {
-		this.codSunat = codSunat;
-	}
+    public String getCodSunat() {
+        return this.codSunat;
+    }
 
-	public String getNombre() {
-		return this.nombre;
-	}
+    public void setCodSunat(String codSunat) {
+        this.codSunat = codSunat;
+    }
 
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
-	
-	public List<Producto> getProductos() {
-		return this.productos;
-	}
+    public String getNombre() {
+        return this.nombre;
+    }
 
-	public void setProductos(List<Producto> productos) {
-		this.productos = productos;
-	}
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
 
-	public Producto addProducto(Producto producto) {
-		getProductos().add(producto);
-		producto.setUnidad(this);
+    public List<Producto> getProductos() {
+        return this.productos;
+    }
 
-		return producto;
-	}
+    public void setProductos(List<Producto> productos) {
+        this.productos = productos;
+    }
 
-	public Producto removeProducto(Producto producto) {
-		getProductos().remove(producto);
-		producto.setUnidad(null);
+    public Producto addProducto(Producto producto) {
+        getProductos().add(producto);
+        producto.setUnidad(this);
 
-		return producto;
-	}
-	
+        return producto;
+    }
+
+    public Producto removeProducto(Producto producto) {
+        getProductos().remove(producto);
+        producto.setUnidad(null);
+
+        return producto;
+    }
+
 }

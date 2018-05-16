@@ -1,145 +1,111 @@
 package modelo;
 
 import java.util.List;
+import util.AuditoriaBean;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SelectBeforeUpdate;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.grupocaritafeliz.sistemaclinico.util.AuditoriaBean;
-
-
-/**
- * The persistent class for the parrafoinforme database table.
- * 
- */
-@Entity
-@Table(name = "parrafoinforme")
-@DynamicUpdate(value = true)
-@DynamicInsert(value = true)
-@SelectBeforeUpdate
 public class ParrafoInforme extends AuditoriaBean {
-	
-	private static final long serialVersionUID = 1L;
 
-	@Column(name="descripcion",nullable=false)
-	private String descripcion;
+    private static final long serialVersionUID = 1L;
 
-	@Column(name="orden")
-	private Integer orden;
+    private String descripcion;
 
-	@Column(name="tipo")
-	private String tipo;
-	
-	@Column(name="multilinea", nullable = false)
-	private Boolean multilinea;
+    private Integer orden;
 
-	@JsonIgnoreProperties("parrafoInforme")
-	@OneToMany(mappedBy="parrafoInforme",fetch=FetchType.LAZY)
-	private List<InforMedicoDetalle> inforMedicoDetalles;
-	
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="idtituloinforme", nullable=false)
-	private TituloInforme tituloInforme;
+    private String tipo;
 
-	@JsonIgnoreProperties("parrafoInforme")
-	@OneToMany(mappedBy="parrafoInforme",fetch=FetchType.LAZY)
-	private List<PlantillaParrafoInforme> plantillaParrafoInformes;
+    private Boolean multilinea;
 
-	public ParrafoInforme() {
-	}
+    private List<InforMedicoDetalle> inforMedicoDetalles;
 
-	public String getDescripcion() {
-		return this.descripcion;
-	}
+    private TituloInforme tituloInforme;
 
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
-	}
+    private List<PlantillaParrafoInforme> plantillaParrafoInformes;
 
-	public Integer getOrden() {
-		return this.orden;
-	}
+    public ParrafoInforme() {
+    }
 
-	public void setOrden(Integer orden) {
-		this.orden = orden;
-	}
+    public String getDescripcion() {
+        return this.descripcion;
+    }
 
-	public String getTipo() {
-		return this.tipo;
-	}
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
 
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
-	}
+    public Integer getOrden() {
+        return this.orden;
+    }
 
-	public List<InforMedicoDetalle> getInforMedicoDetalles() {
-		return this.inforMedicoDetalles;
-	}
+    public void setOrden(Integer orden) {
+        this.orden = orden;
+    }
 
-	public void setInforMedicoDetalles(List<InforMedicoDetalle> inforMedicoDetalles) {
-		this.inforMedicoDetalles = inforMedicoDetalles;
-	}
+    public String getTipo() {
+        return this.tipo;
+    }
 
-	public InforMedicoDetalle addInforMedicoDetalle(InforMedicoDetalle inforMedicoDetalle) {
-		getInforMedicoDetalles().add(inforMedicoDetalle);
-		inforMedicoDetalle.setParrafoInforme(this);
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
 
-		return inforMedicoDetalle;
-	}
+    public List<InforMedicoDetalle> getInforMedicoDetalles() {
+        return this.inforMedicoDetalles;
+    }
 
-	public InforMedicoDetalle removeInforMedicoDetalle(InforMedicoDetalle inforMedicoDetalle) {
-		getInforMedicoDetalles().remove(inforMedicoDetalle);
-		inforMedicoDetalle.setParrafoInforme(null);
+    public void setInforMedicoDetalles(List<InforMedicoDetalle> inforMedicoDetalles) {
+        this.inforMedicoDetalles = inforMedicoDetalles;
+    }
 
-		return inforMedicoDetalle;
-	}
+    public InforMedicoDetalle addInforMedicoDetalle(InforMedicoDetalle inforMedicoDetalle) {
+        getInforMedicoDetalles().add(inforMedicoDetalle);
+        inforMedicoDetalle.setParrafoInforme(this);
 
-	public TituloInforme getTituloInforme() {
-		return this.tituloInforme;
-	}
+        return inforMedicoDetalle;
+    }
 
-	public void setTituloInforme(TituloInforme tituloInforme) {
-		this.tituloInforme = tituloInforme;
-	}
+    public InforMedicoDetalle removeInforMedicoDetalle(InforMedicoDetalle inforMedicoDetalle) {
+        getInforMedicoDetalles().remove(inforMedicoDetalle);
+        inforMedicoDetalle.setParrafoInforme(null);
 
-	public List<PlantillaParrafoInforme> getPlantillaParrafoInformes() {
-		return this.plantillaParrafoInformes;
-	}
+        return inforMedicoDetalle;
+    }
 
-	public void setPlantillaParrafoInformes(List<PlantillaParrafoInforme> plantillaParrafoInformes) {
-		this.plantillaParrafoInformes = plantillaParrafoInformes;
-	}
+    public TituloInforme getTituloInforme() {
+        return this.tituloInforme;
+    }
 
-	public PlantillaParrafoInforme addPlantillaParrafoInforme(PlantillaParrafoInforme plantillaParrafoInforme) {
-		getPlantillaParrafoInformes().add(plantillaParrafoInforme);
-		plantillaParrafoInforme.setParrafoInforme(this);
+    public void setTituloInforme(TituloInforme tituloInforme) {
+        this.tituloInforme = tituloInforme;
+    }
 
-		return plantillaParrafoInforme;
-	}
+    public List<PlantillaParrafoInforme> getPlantillaParrafoInformes() {
+        return this.plantillaParrafoInformes;
+    }
 
-	public PlantillaParrafoInforme removePlantillaParrafoInforme(PlantillaParrafoInforme plantillaParrafoInforme) {
-		getPlantillaParrafoInformes().remove(plantillaParrafoInforme);
-		plantillaParrafoInforme.setParrafoInforme(null);
+    public void setPlantillaParrafoInformes(List<PlantillaParrafoInforme> plantillaParrafoInformes) {
+        this.plantillaParrafoInformes = plantillaParrafoInformes;
+    }
 
-		return plantillaParrafoInforme;
-	}
+    public PlantillaParrafoInforme addPlantillaParrafoInforme(PlantillaParrafoInforme plantillaParrafoInforme) {
+        getPlantillaParrafoInformes().add(plantillaParrafoInforme);
+        plantillaParrafoInforme.setParrafoInforme(this);
 
-	public Boolean getMultilinea() {
-		return multilinea;
-	}
+        return plantillaParrafoInforme;
+    }
 
-	public void setMultilinea(Boolean multilinea) {
-		this.multilinea = multilinea;
-	}
+    public PlantillaParrafoInforme removePlantillaParrafoInforme(PlantillaParrafoInforme plantillaParrafoInforme) {
+        getPlantillaParrafoInformes().remove(plantillaParrafoInforme);
+        plantillaParrafoInforme.setParrafoInforme(null);
+
+        return plantillaParrafoInforme;
+    }
+
+    public Boolean getMultilinea() {
+        return multilinea;
+    }
+
+    public void setMultilinea(Boolean multilinea) {
+        this.multilinea = multilinea;
+    }
 
 }

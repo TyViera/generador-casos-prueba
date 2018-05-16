@@ -1,44 +1,18 @@
 package modelo;
 
 import java.util.List;
+import util.AuditoriaBean;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SelectBeforeUpdate;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.grupocaritafeliz.sistemaclinico.util.AuditoriaBean;
-
-/**
- * The persistent class for the tipodocumento database table.
- *
- */
-@Entity
-@Table(name = "tipodocumento")
-@DynamicUpdate(value = true)
-@DynamicInsert(value = true)
-@SelectBeforeUpdate
 public class TipoDocumento extends AuditoriaBean {
 
     private static final long serialVersionUID = 1L;
 
-    @Column(name = "abreviatura")
     private String abreviatura;
 
-    @Column(name = "nombre", nullable = false)
     private String nombre;
 
-    @Column(name = "codsunat")
     private String codigoSunat;
 
-    @JsonIgnoreProperties("archivo")
-    @OneToMany(mappedBy = "tipoDocumento", fetch = FetchType.LAZY)
     private List<Persona> personas;
 
     public List<LibroReclamacion> getLibroReclamaciones() {
@@ -57,13 +31,8 @@ public class TipoDocumento extends AuditoriaBean {
         this.libroReclamacionesPres = libroReclamacionesPres;
     }
 
-    @JsonIgnoreProperties("tipoDocumento")
-    @OneToMany(mappedBy = "tipoDocumento", fetch = FetchType.LAZY)
-
     private List<LibroReclamacion> libroReclamaciones;
 
-    @JsonIgnoreProperties("tipoDocumentoPres")
-    @OneToMany(mappedBy = "tipoDocumentoPres", fetch = FetchType.LAZY)
     private List<LibroReclamacion> libroReclamacionesPres;
 
     public TipoDocumento() {

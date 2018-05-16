@@ -2,102 +2,54 @@ package modelo;
 
 import java.math.BigDecimal;
 import java.util.List;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SelectBeforeUpdate;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.grupocaritafeliz.sistemaclinico.util.AuditoriaBean;
+import util.AuditoriaBean;
 
-/**
- * The persistent class for the medico database table.
- *
- */
-@Entity
-@Table(name = "medico")
-@DynamicUpdate(value = true)
-@DynamicInsert(value = true)
-@SelectBeforeUpdate
 public class Medico extends AuditoriaBean {
 
     private static final long serialVersionUID = 1L;
 
-    @Column(name = "apemat", nullable = false)
     private String apeMat;
 
-    @Column(name = "apepat", nullable = false)
     private String apePat;
 
-    @Column(name = "celular")
     private String celular;
 
-    @Column(name = "colegiatura", nullable = false)
     private String colegiatura;
 
-    @Column(name = "ctacontable")
     private String ctaContable;
 
-    @Column(name = "direccion")
     private String direccion;
 
-    @Column(name = "dni", nullable = false)
     private String dni;
 
-    @Column(name = "essocio")
     private Boolean esSocio;
 
-    @Column(name = "honorariomax", precision = 7, scale = 2)
     private BigDecimal honorarioMax;
 
-    @Column(name = "honorariomin", precision = 7, scale = 2)
     private BigDecimal honorarioMin;
 
-    @Column(name = "nombre", nullable = false)
     private String nombre;
 
-    @Column(name = "nombrecompleto", nullable = false)
     private String nombreCompleto;
 
-    @Column(name = "rne")
     private String rne;
 
-    @Column(name = "ruc")
     private String ruc;
 
-    @Column(name = "tiempoatencion")
     private Integer tiempoAtencion;
 
-    @Column(name = "numeroconsultorio")
     private String numeroConsultorio;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idarchivo")
     private Archivo foto;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idarchivofirma")
     private Archivo firma;
 
-    @JsonIgnoreProperties("medico")
-    @OneToMany(mappedBy = "medico", fetch = FetchType.LAZY)
     private List<Cita> citas;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idtipoprofesional")
     private TipoProfesional tipoProfesional;
 
-    @JsonIgnoreProperties("medico")
-    @OneToMany(mappedBy = "medico", fetch = FetchType.LAZY)
     private List<MedicoEspecialidad> medicoEspecialidades;
 
-    @JsonIgnoreProperties("medico")
-    @OneToMany(mappedBy = "medico", fetch = FetchType.LAZY)
     private List<DescuentoMedico> descuentosMedicos;
 
     public Medico() {

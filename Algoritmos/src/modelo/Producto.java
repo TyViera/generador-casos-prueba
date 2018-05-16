@@ -1,139 +1,74 @@
 package modelo;
 
 import java.math.BigDecimal;
-import java.util.List;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SelectBeforeUpdate;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.grupocaritafeliz.sistemaclinico.util.AuditoriaBean;
-import com.grupocaritafeliz.sistemaclinico.util.Detalle;
 import java.util.Date;
-import javax.persistence.Temporal;
+import java.util.List;
+import util.AuditoriaBean;
 
-/**
- * The persistent class for the producto database table.
- *
- */
-@Entity
-@Table(name = "producto")
-@DynamicUpdate(value = true)
-@DynamicInsert(value = true)
-@SelectBeforeUpdate
 public class Producto extends AuditoriaBean {
 
     private static final long serialVersionUID = 1L;
 
-    @Column(name = "afectoigv")
     private Boolean afectoIgv;
 
-    @Column(name = "fechafinexoner")
-    @Temporal(javax.persistence.TemporalType.DATE)
     private Date fechaFinExoneracion;
 
-    @Column(name = "codbarras")
     private String codBarras;
 
-    @Column(name = "coddigemid")
     private String codDigemid;
 
-    @Column(name = "codigo")
     private String codigo;
 
-    @Column(name = "codlaboratorio")
     private String codLaboratorio;
 
-    @Column(name = "codTrama")
     private String codtrama;
 
-    @Column(name = "costopromedio")
     private BigDecimal costoPromedio;
 
-    @Column(name = "ctacontable")
     private String ctaContable;
 
-    @Column(name = "esalcohol")
     private Boolean esAlcohol;
 
-    @Column(name = "esdroga")
     private Boolean esDroga;
 
-    @Column(name = "esestupefaciente")
     private Boolean esEstupefaciente;
 
-    @Column(name = "esmedicamento")
     private Boolean esMedicamento;
 
-    @Column(name = "esotros")
     private Boolean esOtros;
 
-    @Column(name = "esinsumo ")
     private Boolean esInsumo;
 
-    @Column(name = "margen")
     private BigDecimal margen;
 
-    @Column(name = "nombre")
     private String nombre;
 
-    @Column(name = "observacion")
     private String observacion;
 
-    @Column(name = "preciokairos")
     private BigDecimal precioKairos;
 
-    @Column(name = "precioventa")
     private BigDecimal precioVenta;
 
-    @Column(name = "stockmin")
     private BigDecimal stockMin;
 
-    @Column(name = "prioridadventa")
     private Integer prioridadVenta;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idfuncion")
     private FuncionFarmac funcionFarmac;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idunidad")
     private Unidad unidad;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idlaboratorio")
     private Laboratorio laboratorio;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idpresentacion")
     private Presentacion presentacion;
 
-    @Detalle
-    @JsonIgnoreProperties("producto")
-    @OneToMany(mappedBy = "producto")
     private List<ProductoContGenerico> productoContGenericos;
 
-    @Detalle
-    @JsonIgnoreProperties("producto")
-    @OneToMany(mappedBy = "producto")
     private List<InforMedicoTratamiento> inforMedicoProductos;
 
-    @JsonIgnoreProperties("producto")
-    @OneToMany(mappedBy = "producto")
     private List<ProductoNoCubierto> productoNoCubiertos;
 
-    @JsonIgnoreProperties("producto")
-    @OneToMany(mappedBy = "producto")
     private List<InventarioTotal> inventario;
 
-    @JsonIgnoreProperties("documentoCabecera")
-    @OneToMany(mappedBy = "documentoCabecera", fetch = FetchType.LAZY)
     private List<DocumProductoDet> documentosProductoDet;
 
     public Producto() {

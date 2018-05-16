@@ -5,6 +5,24 @@
  */
 package algoritmos;
 
+import enums.ParametroEnum;
+import enums.TipoSeguroEnum;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import jdk.nashorn.internal.runtime.Property;
+import modelo.Aseguradora;
+import modelo.DocumProductoDet;
+import modelo.InforMedicoTratamiento;
+import modelo.Parametro;
+import modelo.Poliza;
+import modelo.Producto;
+import modelo.ProductoPrecioEspecial;
+import modelo.PromocionDetalle;
+import util.Constantes;
+import util.ProductoVentaDTO;
+import util.SistemaClinicoException;
+import util.SistemaClinicoUtil;
+
 /**
  *
  * @author nazav

@@ -1,79 +1,36 @@
 package modelo;
 
 import java.util.List;
+import util.AuditoriaBean;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SelectBeforeUpdate;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.grupocaritafeliz.sistemaclinico.util.AuditoriaBean;
-import com.grupocaritafeliz.sistemaclinico.util.Detalle;
-
-/**
- * The persistent class for the usuario database table.
- *
- */
-@Entity
-@Table(name = "usuario")
-@DynamicUpdate(value = true)
-@DynamicInsert(value = true)
-@SelectBeforeUpdate
 public class Usuario extends AuditoriaBean {
 
     private static final long serialVersionUID = 1L;
 
-    @Column(name = "apemat")
     private String apeMat;
 
-    @Column(name = "apepat")
     private String apePat;
 
-    @Column(name = "cambiarclave", nullable = false)
     private Boolean cambiarClave;
 
-    @Column(name = "dadobaja")
     private Boolean dadoBaja;
 
-    @Column(name = "celular")
     private String celular;
 
-    @JsonProperty
-    @Column(name = "clave", nullable = false)
     private String clave;
 
-    @Column(name = "direccion")
     private String direccion;
 
-    @Column(name = "dni")
     private String dni;
 
-    @Column(name = "login")
     private String login;
 
-    @Column(name = "nombre")
     private String nombre;
 
-    @Detalle
-    @JsonIgnoreProperties("usuario")
-    @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
     private List<UsuarioAcceso> usuarioAccesos;
 
-    @Detalle
-    @JsonIgnoreProperties("usuario")
-    @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
     private List<UsuarioAlmacen> usuarioAlmacenes;
 
-    @JsonIgnoreProperties("usuarioRecibe")
-    @OneToMany(mappedBy = "usuarioRecibe", fetch = FetchType.LAZY)
     private List<DocumTransferencia> documTransferencias;
 
     public Usuario() {
@@ -111,12 +68,10 @@ public class Usuario extends AuditoriaBean {
         this.celular = celular;
     }
 
-    @JsonIgnore
     public String getClave() {
         return this.clave;
     }
 
-    @JsonProperty
     public void setClave(String clave) {
         this.clave = clave;
     }

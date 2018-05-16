@@ -1,111 +1,81 @@
 package modelo;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import util.AuditoriaBean;
 
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SelectBeforeUpdate;
-
-import com.grupocaritafeliz.sistemaclinico.util.AuditoriaBean;
-
-
-/**
- * The persistent class for the informedicodetalle database table.
- * 
- */
-@Entity
-@Table(name = "informedicodetalle")
-@DynamicUpdate(value = true)
-@DynamicInsert(value = true)
-@SelectBeforeUpdate
 public class InforMedicoDetalle extends AuditoriaBean {
-	
-	private static final long serialVersionUID = 1L;
 
-	@Column(name="valorcheck")
-	private Boolean valorCheck;
+    private static final long serialVersionUID = 1L;
 
-	@Column(name="valortexto")
-	private String valorTexto;
+    private Boolean valorCheck;
 
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="idinformedico", nullable=false)
-	private InforMedico informedico;
+    private String valorTexto;
 
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="idparrafoinforme")
-	private ParrafoInforme parrafoInforme;
-  
-	@Column(name="tituloinforme", length = 100)
-	private String tituloInforme;
-  
-  	@Column(name="parrafoinforme", length = 100)
-	private String tituloParrafo;
-  
-  	@Column(name="orden")
-  	private Integer orden;
-  
-	public InforMedicoDetalle() {
-	}
+    private InforMedico informedico;
 
-	public Boolean getValorCheck() {
-		return this.valorCheck;
-	}
+    private ParrafoInforme parrafoInforme;
 
-	public void setValorCheck(Boolean valorCheck) {
-		this.valorCheck = valorCheck;
-	}
+    private String tituloInforme;
 
-	public String getValorTexto() {
-		return this.valorTexto;
-	}
+    private String tituloParrafo;
 
-	public void setValorTexto(String valorTexto) {
-		this.valorTexto = valorTexto;
-	}
+    private Integer orden;
 
-	public InforMedico getInformedico() {
-		return this.informedico;
-	}
+    public InforMedicoDetalle() {
+    }
 
-	public void setInformedico(InforMedico informedico) {
-		this.informedico = informedico;
-	}
+    public Boolean getValorCheck() {
+        return this.valorCheck;
+    }
 
-	public ParrafoInforme getParrafoInforme() {
-		return this.parrafoInforme;
-	}
+    public void setValorCheck(Boolean valorCheck) {
+        this.valorCheck = valorCheck;
+    }
 
-	public void setParrafoInforme(ParrafoInforme parrafoInforme) {
-		this.parrafoInforme = parrafoInforme;
-	}
+    public String getValorTexto() {
+        return this.valorTexto;
+    }
 
-	public String getTituloInforme() {
-		return tituloInforme;
-	}
+    public void setValorTexto(String valorTexto) {
+        this.valorTexto = valorTexto;
+    }
 
-	public void setTituloInforme(String tituloInforme) {
-		this.tituloInforme = tituloInforme;
-	}
+    public InforMedico getInformedico() {
+        return this.informedico;
+    }
 
-	public String getTituloParrafo() {
-		return tituloParrafo;
-	}
+    public void setInformedico(InforMedico informedico) {
+        this.informedico = informedico;
+    }
 
-	public void setTituloParrafo(String tituloParrafo) {
-		this.tituloParrafo = tituloParrafo;
-	}
+    public ParrafoInforme getParrafoInforme() {
+        return this.parrafoInforme;
+    }
 
-	public Integer getOrden() {
-		return orden;
-	}
+    public void setParrafoInforme(ParrafoInforme parrafoInforme) {
+        this.parrafoInforme = parrafoInforme;
+    }
 
-	public void setOrden(Integer orden) {
-		this.orden = orden;
-	}
+    public String getTituloInforme() {
+        return tituloInforme;
+    }
+
+    public void setTituloInforme(String tituloInforme) {
+        this.tituloInforme = tituloInforme;
+    }
+
+    public String getTituloParrafo() {
+        return tituloParrafo;
+    }
+
+    public void setTituloParrafo(String tituloParrafo) {
+        this.tituloParrafo = tituloParrafo;
+    }
+
+    public Integer getOrden() {
+        return orden;
+    }
+
+    public void setOrden(Integer orden) {
+        this.orden = orden;
+    }
 }

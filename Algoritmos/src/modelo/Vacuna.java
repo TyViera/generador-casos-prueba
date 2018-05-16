@@ -1,137 +1,105 @@
 package modelo;
 
 import java.util.List;
+import util.AuditoriaBean;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SelectBeforeUpdate;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.grupocaritafeliz.sistemaclinico.util.AuditoriaBean;
-
-
-/**
- * The persistent class for the vacuna database table.
- * 
- */
-@Entity
-@Table(name = "vacuna")
-@DynamicUpdate(value = true)
-@DynamicInsert(value = true)
-@SelectBeforeUpdate
 public class Vacuna extends AuditoriaBean {
-	
-	private static final long serialVersionUID = 1L;
 
-	@Column(name="descripcion")
-	private String descripcion;
+    private static final long serialVersionUID = 1L;
 
-	@Column(name="nombre",nullable=false)
-	private String nombre;
+    private String descripcion;
 
-	@Column(name="periodicidad")
-	private String periodicidad;
+    private String nombre;
 
-	@Column(name="anioini")
-	private Integer anioIni;
-	
-	@Column(name="aniofin")
-	private Integer anioFin;
-	
-	@Column(name="mesini")
-	private Integer mesIni;
-	
-	
-	@Column(name="mesfin")
-	private Integer mesFin;
+    private String periodicidad;
 
-	@JsonIgnoreProperties("vacuna")
-	@OneToMany(mappedBy="vacuna",fetch=FetchType.LAZY)
-	private List<PacienteVacuna> pacienteVacunas;
+    private Integer anioIni;
 
-	public Vacuna() {
-	}
+    private Integer anioFin;
 
-	public String getDescripcion() {
-		return this.descripcion;
-	}
+    private Integer mesIni;
 
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
-	}
+    private Integer mesFin;
 
-	public String getNombre() {
-		return this.nombre;
-	}
+    private List<PacienteVacuna> pacienteVacunas;
 
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
+    public Vacuna() {
+    }
 
-	public String getPeriodicidad() {
-		return this.periodicidad;
-	}
+    public String getDescripcion() {
+        return this.descripcion;
+    }
 
-	public void setPeriodicidad(String periodicidad) {
-		this.periodicidad = periodicidad;
-	}
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
 
-	public Integer getAnioIni() {
-		return anioIni;
-	}
+    public String getNombre() {
+        return this.nombre;
+    }
 
-	public void setAnioIni(Integer anioIni) {
-		this.anioIni = anioIni;
-	}
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
 
-	public Integer getAnioFin() {
-		return anioFin;
-	}
+    public String getPeriodicidad() {
+        return this.periodicidad;
+    }
 
-	public void setAnioFin(Integer anioFin) {
-		this.anioFin = anioFin;
-	}
+    public void setPeriodicidad(String periodicidad) {
+        this.periodicidad = periodicidad;
+    }
 
-	public Integer getMesIni() {
-		return mesIni;
-	}
+    public Integer getAnioIni() {
+        return anioIni;
+    }
 
-	public void setMesIni(Integer mesIni) {
-		this.mesIni = mesIni;
-	}
+    public void setAnioIni(Integer anioIni) {
+        this.anioIni = anioIni;
+    }
 
-	public Integer getMesFin() {
-		return mesFin;
-	}
+    public Integer getAnioFin() {
+        return anioFin;
+    }
 
-	public void setMesFin(Integer mesFin) {
-		this.mesFin = mesFin;
-	}
+    public void setAnioFin(Integer anioFin) {
+        this.anioFin = anioFin;
+    }
 
-	public List<PacienteVacuna> getPacienteVacunas() {
-		return this.pacienteVacunas;
-	}
+    public Integer getMesIni() {
+        return mesIni;
+    }
 
-	public void setPacienteVacunas(List<PacienteVacuna> pacienteVacunas) {
-		this.pacienteVacunas = pacienteVacunas;
-	}
+    public void setMesIni(Integer mesIni) {
+        this.mesIni = mesIni;
+    }
 
-	public PacienteVacuna addPacienteVacuna(PacienteVacuna pacienteVacuna) {
-		getPacienteVacunas().add(pacienteVacuna);
-		pacienteVacuna.setVacuna(this);
-		return pacienteVacuna;
-	}
+    public Integer getMesFin() {
+        return mesFin;
+    }
 
-	public PacienteVacuna removePacienteVacuna(PacienteVacuna pacienteVacuna) {
-		getPacienteVacunas().remove(pacienteVacuna);
-		pacienteVacuna.setVacuna(null);
-		return pacienteVacuna;
-	}
+    public void setMesFin(Integer mesFin) {
+        this.mesFin = mesFin;
+    }
+
+    public List<PacienteVacuna> getPacienteVacunas() {
+        return this.pacienteVacunas;
+    }
+
+    public void setPacienteVacunas(List<PacienteVacuna> pacienteVacunas) {
+        this.pacienteVacunas = pacienteVacunas;
+    }
+
+    public PacienteVacuna addPacienteVacuna(PacienteVacuna pacienteVacuna) {
+        getPacienteVacunas().add(pacienteVacuna);
+        pacienteVacuna.setVacuna(this);
+        return pacienteVacuna;
+    }
+
+    public PacienteVacuna removePacienteVacuna(PacienteVacuna pacienteVacuna) {
+        getPacienteVacunas().remove(pacienteVacuna);
+        pacienteVacuna.setVacuna(null);
+        return pacienteVacuna;
+    }
 
 }

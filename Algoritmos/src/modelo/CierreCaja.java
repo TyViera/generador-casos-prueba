@@ -3,75 +3,38 @@ package modelo;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
+import util.AuditoriaBean;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SelectBeforeUpdate;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.grupocaritafeliz.sistemaclinico.util.AuditoriaBean;
-import com.grupocaritafeliz.sistemaclinico.util.Detalle;
-
-@Entity
-@Table(name = "cierrecaja")
-@DynamicUpdate(value = true)
-@DynamicInsert(value = true)
-@SelectBeforeUpdate
 public class CierreCaja extends AuditoriaBean {
 
     private static final long serialVersionUID = 1L;
 
-    @Column(name = "serie", nullable = false)
     private String serie;
 
-    @Column(name = "montoapertura", nullable = false)
     private BigDecimal montoApertura;
 
-    @Column(name = "fechaapertura")
     private Timestamp fechaApertura;
 
-    @Column(name = "efectivo", nullable = false)
     private BigDecimal efectivo;
 
-    @Column(name = "tarjetas", nullable = false)
     private BigDecimal tarjetas;
 
-    @Column(name = "deposito", nullable = false)
     private BigDecimal deposito;
 
-    @Column(name = "faltante", nullable = false)
     private BigDecimal faltante;
 
-    @Column(name = "sobrante", nullable = false)
     private BigDecimal sobrante;
 
-    @Column(name = "tipoimpresora", nullable = false)
     private String tipoImpresora;
 
-    @Column(name = "impresoracaja", nullable = false)
     private String impresoraCaja;
 
-    @Column(name = "fechacierre")
     private Timestamp fechaCierre;
 
-    @Column(name = "cerrado", nullable = false)
     private Boolean cerrado;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idusuario")
     private Usuario usuario;
 
-    @Detalle
-    @JsonIgnoreProperties("cierreCaja")
-    @OneToMany(mappedBy = "cierreCaja", fetch = FetchType.LAZY)
     private List<CierreCajaMoneda> cierreCajaMonedas;
 
     public CierreCaja() {

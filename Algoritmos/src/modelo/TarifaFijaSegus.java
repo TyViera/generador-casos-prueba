@@ -1,35 +1,16 @@
 package modelo;
 
-import com.grupocaritafeliz.sistemaclinico.util.AuditoriaBean;
 import java.math.BigDecimal;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SelectBeforeUpdate;
+import util.AuditoriaBean;
 
-@Entity
-@Table(name = "tarifafijasegus")
-@DynamicUpdate(value = true)
-@DynamicInsert(value = true)
-@SelectBeforeUpdate
 public class TarifaFijaSegus extends AuditoriaBean {
 
     private static final long serialVersionUID = 1L;
 
-    @Column(name = "monto", precision = 9, scale = 2)
     private BigDecimal monto;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idsegus")
     private Tarifario tarifario;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idaseguradora")
     private Aseguradora aseguradora;
 
     public TarifaFijaSegus() {

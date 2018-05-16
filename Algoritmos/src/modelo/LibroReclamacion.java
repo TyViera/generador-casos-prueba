@@ -1,92 +1,47 @@
 package modelo;
 
+import util.AuditoriaBean;
 
-import com.grupocaritafeliz.sistemaclinico.util.AuditoriaBean;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SelectBeforeUpdate;
-
-import javax.persistence.Column;
-import javax.persistence.JoinColumn;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
-
-/**
- * The persistent class for the libroreclamacion database table.
- *
- */
-@Entity
-@Table(name = "libroreclamacion")
-@DynamicUpdate(value = true)
-@DynamicInsert(value = true)
-@SelectBeforeUpdate
-public class LibroReclamacion  extends AuditoriaBean{
-
+public class LibroReclamacion extends AuditoriaBean {
 
     private static final long serialVersionUID = 1L;
 
-
-    @Column(name="tipo",nullable=false)
     private String tipo;
 
-    @ManyToOne(fetch= FetchType.LAZY)
-    @JoinColumn(name="idtipodocumento",nullable=false)
     private TipoDocumento tipoDocumento;
 
-    @Column(name = "numdocumento")
     private String numDocumento;
 
-    @Column(name = "nombre", nullable = false)
     private String nombre;
 
-    @Column(name = "direccion")
     private String direccion;
 
-    @Column(name = "email")
     private String email;
 
-    @Column(name="celular")
     private String celular;
 
-    @Column(name = "telefono")
     private String telefono;
 
-
-    @ManyToOne(fetch= FetchType.LAZY)
-    @JoinColumn(name="idtipodocumentopres",nullable=false)
     private TipoDocumento tipoDocumentoPres;
 
-    @Column(name = "numdocumentopres")
     private String numDocumentoPres;
 
-    @Column(name = "nombrepres", nullable = false)
     private String nombrePres;
 
-    @Column(name = "direccionpres")
     private String direccionPres;
 
-    @Column(name = "emailpres")
     private String emailPres;
 
-    @Column(name="celularpres")
     private String celularPres;
 
-    @Column(name = "telefonopres")
     private String telefonoPres;
 
-    @Column(name = "detalle")
     private String detalle;
 
-    @Column(name="resultadoxemail")
     private Boolean resultadoPorEmail;
 
-    @Column(name = "respuesta")
     private String respuesta;
 
-    @Column(name="notificado")
     private Boolean notificado;
 
     public String getTipo() {

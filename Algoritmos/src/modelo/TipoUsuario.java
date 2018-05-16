@@ -1,94 +1,67 @@
 package modelo;
 
 import java.util.List;
+import util.AuditoriaBean;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SelectBeforeUpdate;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.grupocaritafeliz.sistemaclinico.util.AuditoriaBean;
-
-
-/**
- * The persistent class for the tipousuario database table.
- * 
- */
-@Entity
-@Table(name = "tipousuario")
-@DynamicUpdate(value = true)
-@DynamicInsert(value = true)
-@SelectBeforeUpdate
 public class TipoUsuario extends AuditoriaBean {
-	
-	private static final long serialVersionUID = 1L;
 
-	@Column(name="nombre",nullable=false)
-	private String nombre;
+    private static final long serialVersionUID = 1L;
 
-	@JsonIgnoreProperties("tipoUsuario")
-	@OneToMany(mappedBy="tipoUsuario",fetch=FetchType.LAZY)
-	private List<TipoUsuarioMenuOpcion> tipoUsuarioMenuOpciones;
+    private String nombre;
 
-	@JsonIgnoreProperties("tipoUsuario")
-	@OneToMany(mappedBy="tipoUsuario",fetch=FetchType.LAZY)
-	private List<UsuarioAcceso> usuarioAccesos;
+    private List<TipoUsuarioMenuOpcion> tipoUsuarioMenuOpciones;
 
-	public TipoUsuario() {
-	}
+    private List<UsuarioAcceso> usuarioAccesos;
 
-	public String getNombre() {
-		return this.nombre;
-	}
+    public TipoUsuario() {
+    }
 
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
+    public String getNombre() {
+        return this.nombre;
+    }
 
-	public List<TipoUsuarioMenuOpcion> getTipoUsuarioMenuOpciones() {
-		return this.tipoUsuarioMenuOpciones;
-	}
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
 
-	public void setTipoUsuarioMenuOpciones(List<TipoUsuarioMenuOpcion> tipoUsuarioMenuOpciones) {
-		this.tipoUsuarioMenuOpciones = tipoUsuarioMenuOpciones;
-	}
+    public List<TipoUsuarioMenuOpcion> getTipoUsuarioMenuOpciones() {
+        return this.tipoUsuarioMenuOpciones;
+    }
 
-	public TipoUsuarioMenuOpcion addTipoUsuarioMenuOpcione(TipoUsuarioMenuOpcion tipoUsuarioMenuOpcione) {
-		getTipoUsuarioMenuOpciones().add(tipoUsuarioMenuOpcione);
-		tipoUsuarioMenuOpcione.setTipoUsuario(this);
-		return tipoUsuarioMenuOpcione;
-	}
+    public void setTipoUsuarioMenuOpciones(List<TipoUsuarioMenuOpcion> tipoUsuarioMenuOpciones) {
+        this.tipoUsuarioMenuOpciones = tipoUsuarioMenuOpciones;
+    }
 
-	public TipoUsuarioMenuOpcion removeTipoUsuarioMenuOpcione(TipoUsuarioMenuOpcion tipoUsuarioMenuOpcione) {
-		getTipoUsuarioMenuOpciones().remove(tipoUsuarioMenuOpcione);
-		tipoUsuarioMenuOpcione.setTipoUsuario(null);
-		return tipoUsuarioMenuOpcione;
-	}
+    public TipoUsuarioMenuOpcion addTipoUsuarioMenuOpcione(TipoUsuarioMenuOpcion tipoUsuarioMenuOpcione) {
+        getTipoUsuarioMenuOpciones().add(tipoUsuarioMenuOpcione);
+        tipoUsuarioMenuOpcione.setTipoUsuario(this);
+        return tipoUsuarioMenuOpcione;
+    }
 
-	public List<UsuarioAcceso> getUsuarioAccesos() {
-		return this.usuarioAccesos;
-	}
+    public TipoUsuarioMenuOpcion removeTipoUsuarioMenuOpcione(TipoUsuarioMenuOpcion tipoUsuarioMenuOpcione) {
+        getTipoUsuarioMenuOpciones().remove(tipoUsuarioMenuOpcione);
+        tipoUsuarioMenuOpcione.setTipoUsuario(null);
+        return tipoUsuarioMenuOpcione;
+    }
 
-	public void setUsuarioAccesos(List<UsuarioAcceso> usuarioAccesos) {
-		this.usuarioAccesos = usuarioAccesos;
-	}
+    public List<UsuarioAcceso> getUsuarioAccesos() {
+        return this.usuarioAccesos;
+    }
 
-	public UsuarioAcceso addUsuarioAcceso(UsuarioAcceso usuarioAcceso) {
-		getUsuarioAccesos().add(usuarioAcceso);
-		usuarioAcceso.setTipoUsuario(this);
-		return usuarioAcceso;
-	}
+    public void setUsuarioAccesos(List<UsuarioAcceso> usuarioAccesos) {
+        this.usuarioAccesos = usuarioAccesos;
+    }
 
-	public UsuarioAcceso removeUsuarioAcceso(UsuarioAcceso usuarioAcceso) {
-		getUsuarioAccesos().remove(usuarioAcceso);
-		usuarioAcceso.setTipoUsuario(null);
-		return usuarioAcceso;
-	}
+    public UsuarioAcceso addUsuarioAcceso(UsuarioAcceso usuarioAcceso) {
+        getUsuarioAccesos().add(usuarioAcceso);
+        usuarioAcceso.setTipoUsuario(this);
+        return usuarioAcceso;
+    }
+
+    public UsuarioAcceso removeUsuarioAcceso(UsuarioAcceso usuarioAcceso) {
+        getUsuarioAccesos().remove(usuarioAcceso);
+        usuarioAcceso.setTipoUsuario(null);
+        return usuarioAcceso;
+    }
 
 }

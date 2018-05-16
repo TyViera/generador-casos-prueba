@@ -5,31 +5,14 @@
  */
 package modelo;
 
-import com.grupocaritafeliz.sistemaclinico.util.AuditoriaBean;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SelectBeforeUpdate;
+import util.AuditoriaBean;
 
-@Entity
-@Table(name = "usuarioalmacen")
-@DynamicUpdate(value = true)
-@DynamicInsert(value = true)
-@SelectBeforeUpdate
 public class UsuarioAlmacen extends AuditoriaBean {
 
     private static final long serialVersionUID = 1L;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idalmacen", nullable = false)
     private Almacen almacen;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idusuario", nullable = false)
     private Usuario usuario;
 
     public Almacen getAlmacen() {

@@ -1,70 +1,34 @@
 package modelo;
 
 import java.math.BigDecimal;
+import util.AuditoriaBean;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SelectBeforeUpdate;
-
-import com.grupocaritafeliz.sistemaclinico.util.AuditoriaBean;
-
-@Entity
-@Table(name = "prefacturaaseguradora")
-@DynamicUpdate(value = true)
-@DynamicInsert(value = true)
-@SelectBeforeUpdate
 public class PreFacturaAseguradora extends AuditoriaBean {
 
     private static final long serialVersionUID = 1L;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "iddocumentocab")
     private DocumentoCabecera documentoCabecera;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idservicio")
     private Servicio servicio;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idadmision")
     private Admision admision;
-    
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idadmisionmedico")
+
     private AdmisionMedico admisionMedico;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idpersona")
     private Persona persona;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idmedico")
     private Medico medico;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idaseguradora")
     private Aseguradora aseguradora;
 
-    @Column(name = "bruto", precision = 9, scale = 2)
     private BigDecimal bruto;
 
-    @Column(name = "descuento", precision = 9, scale = 2)
     private BigDecimal descuento;
 
-    @Column(name = "coaseguro", precision = 9, scale = 2)
     private BigDecimal coaseguro;
 
-    @Column(name = "deducible", precision = 9, scale = 2)
     private BigDecimal deducible;
 
-    @Column(name = "neto", precision = 9, scale = 2)
     private BigDecimal neto;
 
     public PreFacturaAseguradora() {
@@ -158,12 +122,12 @@ public class PreFacturaAseguradora extends AuditoriaBean {
         this.medico = medico;
     }
 
-	public AdmisionMedico getAdmisionMedico() {
-		return admisionMedico;
-	}
+    public AdmisionMedico getAdmisionMedico() {
+        return admisionMedico;
+    }
 
-	public void setAdmisionMedico(AdmisionMedico admisionMedico) {
-		this.admisionMedico = admisionMedico;
-	}
-  
+    public void setAdmisionMedico(AdmisionMedico admisionMedico) {
+        this.admisionMedico = admisionMedico;
+    }
+
 }

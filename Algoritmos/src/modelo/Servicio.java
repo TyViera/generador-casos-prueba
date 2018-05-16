@@ -1,52 +1,22 @@
 package modelo;
 
 import java.util.List;
+import util.AuditoriaBean;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SelectBeforeUpdate;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.grupocaritafeliz.sistemaclinico.util.AuditoriaBean;
-import javax.persistence.FetchType;
-
-@Entity
-@Table(name = "servicio")
-@DynamicUpdate(value = true)
-@DynamicInsert(value = true)
-@SelectBeforeUpdate
 public class Servicio extends AuditoriaBean {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
 
-    @Column(name = "nombre")
     private String nombre;
 
-    @Column(name = "codigoenvio")
     private String codigoEnvio;
 
-    @JsonIgnoreProperties("servicio")
-    @OneToMany(mappedBy = "servicio")
     private List<TarifaParticular> tarifaParticulares;
 
-    @JsonIgnoreProperties("servicio")
-    @OneToMany(mappedBy = "servicio", fetch = FetchType.LAZY)
     private List<Tarifario> tarifarios;
 
-    @JsonIgnoreProperties("servicio")
-    @OneToMany(mappedBy = "servicio", fetch = FetchType.LAZY)
     private List<DocumServicioDet> documentosServicioDet;
 
-    @JsonIgnoreProperties("servicio")
-    @OneToMany(mappedBy = "servicio", fetch = FetchType.LAZY)
     private List<PreFacturaAseguradora> preFacturasAseguradora;
 
     public String getNombre() {

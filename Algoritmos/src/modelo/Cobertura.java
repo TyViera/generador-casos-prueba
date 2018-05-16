@@ -1,48 +1,20 @@
 package modelo;
 
 import java.util.List;
+import util.AuditoriaBean;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SelectBeforeUpdate;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.grupocaritafeliz.sistemaclinico.util.AuditoriaBean;
-
-/**
- * The persistent class for the cobertura database table.
- *
- */
-@Entity
-@Table(name = "cobertura")
-@DynamicUpdate(value = true)
-@DynamicInsert(value = true)
-@SelectBeforeUpdate
 public class Cobertura extends AuditoriaBean {
 
     private static final long serialVersionUID = 1L;
 
-    @Column(name = "codigo", nullable = false)
     private String codigo;
 
-    @Column(name = "nombre", nullable = false)
     private String nombre;
 
-    @Column(name = "tipocobertura")
     private String tipoCobertura;
 
-    @JsonIgnoreProperties("cobertura")
-    @OneToMany(mappedBy = "cobertura", fetch = FetchType.LAZY)
     private List<PolizaCobertura> polizaCoberturas;
 
-    @JsonIgnoreProperties("cobertura")
-    @OneToMany(mappedBy = "cobertura", fetch = FetchType.LAZY)
     private List<Tarifario> tarifarios;
 
     public Cobertura() {

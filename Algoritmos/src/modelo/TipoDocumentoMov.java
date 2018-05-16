@@ -1,50 +1,24 @@
 package modelo;
 
 import java.util.List;
+import util.AuditoriaBean;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SelectBeforeUpdate;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.grupocaritafeliz.sistemaclinico.util.AuditoriaBean;
-
-@Entity
-@Table(name = "tipodocumovim")
-@DynamicUpdate(value = true)
-@DynamicInsert(value = true)
-@SelectBeforeUpdate
 public class TipoDocumentoMov extends AuditoriaBean {
 
     private static final long serialVersionUID = 1L;
 
-    @Column(name = "abreviatura")
     private String abreviatura;
 
-    @Column(name = "codsunat")
     private String codigoSunat;
 
-    @Column(name = "nombre", nullable = false)
     private String nombre;
-    
-    @Column(name = "impresora")
+
     private String impresora;
-    
-    @Column(name = "escomprobante")
+
     private Boolean esComprobante;
 
-    @JsonIgnoreProperties("tipoDocumentoMov")
-    @OneToMany(mappedBy = "tipoDocumentoMov", fetch = FetchType.LAZY)
     private List<DocumentoCabecera> documentosCabecera;
-    
-    @JsonIgnoreProperties("tipoDocumentoMov")
-    @OneToMany(mappedBy = "tipoDocumentoMov", fetch = FetchType.LAZY)
+
     private List<CorrelativoDocum> correlativos;
 
     public TipoDocumentoMov() {

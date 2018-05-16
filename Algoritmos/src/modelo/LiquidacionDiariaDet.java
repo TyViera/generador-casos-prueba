@@ -1,45 +1,22 @@
 package modelo;
 
-import com.grupocaritafeliz.sistemaclinico.util.AuditoriaBean;
 import java.math.BigDecimal;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SelectBeforeUpdate;
+import util.AuditoriaBean;
 
-@Entity
-@Table(name = "liquidaciondiariadet")
-@DynamicUpdate(value = true)
-@DynamicInsert(value = true)
-@SelectBeforeUpdate
 public class LiquidacionDiariaDet extends AuditoriaBean {
 
     private static final long serialVersionUID = 1L;
 
-    @Column(name = "importetotal")
     private BigDecimal importeTotal;
 
-    @Column(name = "descuentos")
     private BigDecimal descuentos;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idliquidaciondiariacab")
     private LiquidacionDiariaCab liquidacionDiariaCab;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idporcentdscto")
     private PorcentajeDescuento porcentajeDescuento;
 
-    @Transient
     private BigDecimal totalDescuentos;
 
-    @Transient
     private BigDecimal totalTope;
 
     public LiquidacionDiariaDet() {

@@ -1,57 +1,28 @@
 package modelo;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SelectBeforeUpdate;
-import com.grupocaritafeliz.sistemaclinico.util.AuditoriaBean;
 import java.math.BigDecimal;
+import util.AuditoriaBean;
 
-/**
- * The persistent class for the tipoadmision database table.
- *
- */
-@Entity
-@Table(name = "tipoadmision")
-@DynamicUpdate(value = true)
-@DynamicInsert(value = true)
-@SelectBeforeUpdate
 public class TipoAdmision extends AuditoriaBean {
 
     private static final long serialVersionUID = 1L;
 
-    @Column(name = "nombre")
     private String nombre;
 
-    @Column(name = "porcenthonorario")
     private BigDecimal porcentajeHonorario;
 
-    @Column(name = "incluyecita")
     private Boolean incluyeCita;
 
-    @Column(name = "modificaprecio")
     private Boolean modificaPrecio;
 
-    @Column(name = "comprobante")
     private Boolean emiteComprobante;
 
-    @Column(name = "hospitalizacion")
     private Boolean esHospitalizacion;
 
-    @Column(name = "odontologia")
     private Boolean esOdontologia;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idservicio")
     private Servicio servicio;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idserviciocontable")
     private ServicioContable servicioContable;
 
     public TipoAdmision() {

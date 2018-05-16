@@ -2,116 +2,56 @@ package modelo;
 
 import java.math.BigDecimal;
 import java.util.List;
+import util.AuditoriaBean;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SelectBeforeUpdate;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.grupocaritafeliz.sistemaclinico.util.AuditoriaBean;
-
-/**
- * The persistent class for the informedico database table.
- *
- */
-@Entity
-@Table(name = "informedico")
-@DynamicUpdate(value = true)
-@DynamicInsert(value = true)
-@SelectBeforeUpdate
 public class InforMedico extends AuditoriaBean {
 
     private static final long serialVersionUID = 1L;
 
-    @Column(nullable = false, length = 4)
     private String anio;
 
-    @Column(nullable = false)
     private Integer numero;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idmedico", nullable = false)
     private Medico medico;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idpersona", nullable = false)
     private Persona persona;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idtipoinforme", nullable = false)
     private TipoInforme tipoInforme;
 
-    @JsonIgnoreProperties("informedico")
-    @OneToMany(mappedBy = "informedico", fetch = FetchType.LAZY)
     private List<InforMedicoDetalle> informedicodetalles;
 
-    @JsonIgnoreProperties("informedico")
-    @OneToMany(mappedBy = "informedico", fetch = FetchType.LAZY)
     private List<InforMedicoDiagnostico> inforMedicoDiagnosticos;
 
-    @JsonIgnoreProperties("informedico")
-    @OneToMany(mappedBy = "informedico", fetch = FetchType.LAZY)
     private List<InforMedicoExamen> inforMedicoExamenes;
 
-    @JsonIgnoreProperties("informedico")
-    @OneToMany(mappedBy = "informedico", fetch = FetchType.LAZY)
     private List<InforMedicoTratamiento> inforMedicoTratamientos;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idadmisionmedico")
     private AdmisionMedico admisionMedico;
 
-    @JsonIgnoreProperties("informedico")
-    @OneToMany(mappedBy = "informedico", fetch = FetchType.LAZY)
     private List<InforMedicoTopico> inforMedicoTopicos;
 
-    @JsonIgnoreProperties("informedico")
-    @OneToMany(mappedBy = "informedico", fetch = FetchType.LAZY)
     private List<InforMedicoTratamientoAdicional> inforMedicoTratamientosAdicional;
 
-    @JsonIgnoreProperties("informedico")
-    @OneToMany(mappedBy = "informedico", fetch = FetchType.LAZY)
     private List<InformedicoTratamientoPiezaDental> informedicoTratamientoPiezasDentales;
 
-    @JsonIgnoreProperties("informedico")
-    @OneToMany(mappedBy = "informedico", fetch = FetchType.LAZY)
     private List<InforMedicoAnotacion> inforMedicoAnotaciones;
 
-    @JsonIgnoreProperties("informedico")
-    @OneToMany(mappedBy = "informedico", fetch = FetchType.LAZY)
     private List<InforMedicoEvolucion> inforMedicoEvoluciones;
 
-    @JsonIgnoreProperties("informedico")
-    @OneToMany(mappedBy = "informedico", fetch = FetchType.LAZY)
     private List<InforMedicoIndicacion> inforMedicoIndicaciones;
 
-    @Column
     private BigDecimal peso;
 
-    @Column
     private BigDecimal talla;
 
-    @Column
     private BigDecimal temperatura;
 
-    @Column(name = "pressistolica")
     private Integer presSistolica;
 
-    @Column(name = "presdiastolica")
     private Integer presDiastolica;
 
-    @Column(name = "freccard")
     private Integer frecCardiaca;
 
-    @Column(name = "frecresp")
     private Integer frecRespiratoria;
 
     public InforMedico() {

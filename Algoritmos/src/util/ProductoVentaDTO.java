@@ -7,6 +7,7 @@ package util;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import modelo.DocumProductoDet;
 
 /**
  *

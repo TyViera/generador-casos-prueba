@@ -1,65 +1,36 @@
 package modelo;
 
-import com.grupocaritafeliz.sistemaclinico.util.AuditoriaBean;
 import java.math.BigDecimal;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SelectBeforeUpdate;
+import util.AuditoriaBean;
 
-@Entity
-@Table(name = "documserviciodet")
-@DynamicUpdate(value = true)
-@DynamicInsert(value = true)
-@SelectBeforeUpdate
 public class DocumServicioDet extends AuditoriaBean {
 
     private static final long serialVersionUID = 1L;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "iddocumentocab")
     private DocumentoCabecera documentoCabecera;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idservicio")
     private Servicio servicio;
 
-    @Column(name = "valototal", precision = 9, scale = 2)
     private BigDecimal valorTotal;
 
-    @Column(name = "valordscto", precision = 9, scale = 2)
     private BigDecimal valorDescuento;
 
-    @Column(name = "valorcoaseguro", precision = 9, scale = 2)
     private BigDecimal valorCoaseguro;
 
-    @Column(name = "valordeducible", precision = 9, scale = 2)
     private BigDecimal valorDeducible;
 
-    @Column(name = "valorneto", precision = 9, scale = 2)
     private BigDecimal valorNeto;
 
-    @Column(name = "valototalop", precision = 9, scale = 2)
     private BigDecimal valorTotalOperacion;
 
-    @Column(name = "valordsctoop", precision = 9, scale = 2)
     private BigDecimal valorDescuentoOperacion;
 
-    @Column(name = "valorcoaseguroop", precision = 9, scale = 2)
     private BigDecimal valorCoaseguroOperacion;
 
-    @Column(name = "valordeducibleop", precision = 9, scale = 2)
     private BigDecimal valorDeducibleOperacion;
 
-    @Column(name = "valornetoop", precision = 9, scale = 2)
     private BigDecimal valorNetoOperacion;
 
-    @Column(name = "afacturar")
     private Boolean aFacturar;
 
     public DocumServicioDet() {

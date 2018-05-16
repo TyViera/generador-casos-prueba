@@ -1,105 +1,73 @@
 package modelo;
 
 import java.util.List;
+import util.AuditoriaBean;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SelectBeforeUpdate;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.grupocaritafeliz.sistemaclinico.util.AuditoriaBean;
-
-
-/**
- * The persistent class for the tituloinforme database table.
- * 
- */
-@Entity
-@Table(name = "tituloinforme")
-@DynamicUpdate(value = true)
-@DynamicInsert(value = true)
-@SelectBeforeUpdate
 public class TituloInforme extends AuditoriaBean {
-	
-	private static final long serialVersionUID = 1L;
 
-	@Column(name="descripcion",nullable=false)
-	private String descripcion;
+    private static final long serialVersionUID = 1L;
 
-	@Column(name="orden",nullable=false)
-	private Integer orden;
+    private String descripcion;
 
-	@JsonIgnoreProperties("tituloInforme")
-	@OneToMany(mappedBy="tituloInforme",fetch=FetchType.LAZY)
-	private List<ParrafoInforme> parrafoInformes;
+    private Integer orden;
 
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="idtipoinforme", nullable=false)
-	private TipoInforme tipoInforme;
+    private List<ParrafoInforme> parrafoInformes;
 
-	public TituloInforme() {
-	}
+    private TipoInforme tipoInforme;
 
-	public String getDescripcion() {
-		return this.descripcion;
-	}
+    public TituloInforme() {
+    }
 
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
-	}
+    public String getDescripcion() {
+        return this.descripcion;
+    }
 
-	public Integer getOrden() {
-		return this.orden;
-	}
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
 
-	public void setOrden(Integer orden) {
-		this.orden = orden;
-	}
+    public Integer getOrden() {
+        return this.orden;
+    }
 
-	public List<ParrafoInforme> getParrafoInformes() {
-		return this.parrafoInformes;
-	}
+    public void setOrden(Integer orden) {
+        this.orden = orden;
+    }
 
-	public void setParrafoInformes(List<ParrafoInforme> parrafoInformes) {
-		this.parrafoInformes = parrafoInformes;
-	}
+    public List<ParrafoInforme> getParrafoInformes() {
+        return this.parrafoInformes;
+    }
 
-	public ParrafoInforme addParrafoInforme(ParrafoInforme parrafoInforme) {
-		getParrafoInformes().add(parrafoInforme);
-		parrafoInforme.setTituloInforme(this);
+    public void setParrafoInformes(List<ParrafoInforme> parrafoInformes) {
+        this.parrafoInformes = parrafoInformes;
+    }
 
-		return parrafoInforme;
-	}
+    public ParrafoInforme addParrafoInforme(ParrafoInforme parrafoInforme) {
+        getParrafoInformes().add(parrafoInforme);
+        parrafoInforme.setTituloInforme(this);
 
-	public ParrafoInforme removeParrafoInforme(ParrafoInforme parrafoInforme) {
-		getParrafoInformes().remove(parrafoInforme);
-		parrafoInforme.setTituloInforme(null);
+        return parrafoInforme;
+    }
 
-		return parrafoInforme;
-	}
+    public ParrafoInforme removeParrafoInforme(ParrafoInforme parrafoInforme) {
+        getParrafoInformes().remove(parrafoInforme);
+        parrafoInforme.setTituloInforme(null);
 
-	public TipoInforme getTipoInforme() {
-		return this.tipoInforme;
-	}
+        return parrafoInforme;
+    }
 
-	public void setTipoInforme(TipoInforme tipoInforme) {
-		this.tipoInforme = tipoInforme;
-	}
+    public TipoInforme getTipoInforme() {
+        return this.tipoInforme;
+    }
 
-	@Override
-	public String toString() {
-		return "TituloInforme [id="+getId() + "descripcion=" + descripcion + ", orden=" + orden
-				+ ", tipoInforme=" + tipoInforme + "]";
-	}
-	
-	
+    public void setTipoInforme(TipoInforme tipoInforme) {
+        this.tipoInforme = tipoInforme;
+    }
+
+    @Override
+    public String toString() {
+        return "TituloInforme [id=" + getId() + "descripcion=" + descripcion + ", orden=" + orden
+                + ", tipoInforme=" + tipoInforme + "]";
+    }
 
 }

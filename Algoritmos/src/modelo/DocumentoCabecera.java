@@ -3,192 +3,108 @@ package modelo;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SelectBeforeUpdate;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.grupocaritafeliz.sistemaclinico.util.AuditoriaBean;
+import util.AuditoriaBean;
 
-@Entity
-@Table(name = "documentocab")
-@DynamicUpdate(value = true)
-@DynamicInsert(value = true)
-@SelectBeforeUpdate
 public class DocumentoCabecera extends AuditoriaBean {
 
     private static final long serialVersionUID = 1L;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idtipodocum")
     private TipoDocumentoMov tipoDocumentoMov;
 
-    @Column(name = "serie", nullable = false)
     private String serie;
 
-    @Column(name = "moneda", nullable = false, length = 1)
     private String moneda;
 
-    @Column(name = "numero", nullable = false)
     private Long numero;
 
-    @Column(name = "fechaemision", nullable = false)
     private Timestamp fechaEmision;
 
-    @Column(name = "fechaing", nullable = true)
     private Timestamp fechaIngreso;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idpersona")
     private Persona persona;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idalmacen")
     private Almacen almacen;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idadmision")
     private Admision admision;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idoperacion")
     private Operacion operacion;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idusuario")
     private Usuario usuario;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idmotivo")
     private Motivo motivo;
 
-    @Column(name = "valorventa")
     private BigDecimal valorVenta;
 
-    @Column(name = "valorexonerado", nullable = false)
     private BigDecimal valorExonerado;
 
-    @Column(name = "valordscto", nullable = false)
     private BigDecimal valorDescuento;
 
-    @Column(name = "valorigv", nullable = false)
     private BigDecimal valorIgv;
 
-    @Column(name = "valortotal", nullable = false)
     private BigDecimal valorTotal;
 
-    @Column(name = "valorinafecto")
     private BigDecimal valorInafecto;
 
-    @Column(name = "preciototal", nullable = false)
     private BigDecimal precioTotal;
 
-    @Column(name = "porcdscto", nullable = false)
     private BigDecimal porcentajeDescuento;
 
-    @Column(name = "tipocambio", nullable = false)
     private BigDecimal tipoCambio;
 
-    @Column(name = "tipoitem", nullable = false)
     private String tipoItem;
 
-    @Column(name = "tiposervicio", nullable = false)
     private String tipoServicio;
 
-    @Column(name = "tipopersona")
     private String tipoPersona;
 
-    @Column(name = "anulado", nullable = false)
     private Boolean anulado;
 
-    @Column(name = "incluyeigv")
     private Boolean incluyeIGV;
 
-    @Column(name = "porcentigv")
     private BigDecimal porcentajeIGV;
 
-    @Column(name = "observacion")
     private String observacion;
 
-    @Column(name = "motivosunat")
     private String motivoSunat;
 
-    @Column(name = "proveedor")
     private String proveedor;
 
-    @JsonIgnoreProperties("documentoCabecera")
-    @OneToMany(mappedBy = "documentoCabecera", fetch = FetchType.LAZY)
     private List<DocumServicioDet> documentosServicioDet;
 
-    @JsonIgnoreProperties("documentoCabecera")
-    @OneToMany(mappedBy = "documentoCabecera", fetch = FetchType.LAZY)
     private List<DocumExamenesDet> documentosExamenesDet;
 
-    @JsonIgnoreProperties("documentoCabecera")
-    @OneToMany(mappedBy = "documentoCabecera", fetch = FetchType.LAZY)
     private List<DocumProductoDet> documentosProductoDet;
 
-    @JsonIgnoreProperties("documentoCabecera")
-    @OneToMany(mappedBy = "documentoCabecera", fetch = FetchType.LAZY)
     private List<PagoEfectivo> pagosEfectivo;
 
-    @JsonIgnoreProperties("documentoCabecera")
-    @OneToMany(mappedBy = "documentoCabecera", fetch = FetchType.LAZY)
     private List<PagoTarjeta> pagosTarjeta;
 
-    @JsonIgnoreProperties("documentoCabecera")
-    @OneToMany(mappedBy = "documentoCabecera", fetch = FetchType.LAZY)
     private List<PagoContraGarantia> pagosContraGarantia;
 
     //COMPROBANTE
     //SI EL DOCUMENTO ES UN COMPROBANTE, ESTO DEBERIA ESTAR VACIO
-    @JsonIgnoreProperties("documentoCabecera")
-    @OneToMany(mappedBy = "documentoCabecera", fetch = FetchType.LAZY)
     private List<DocumentoCabeceraRef> documentoCabeceraRefs;
 
     //HOJAS DE CONSUMO
     //SI EL DOCUMENTO NO ES UN COMPROBANTE, ESTO DEBERIA ESTAR VACIO
-    @JsonIgnoreProperties("documentoCabeceraReferencia")
-    @OneToMany(mappedBy = "documentoCabeceraReferencia", fetch = FetchType.LAZY)
     private List<DocumentoCabeceraRef> documentoCabeceraReferencias;
 
-    @JsonIgnoreProperties("documentoCabecera")
-    @OneToMany(mappedBy = "documentoCabecera", fetch = FetchType.LAZY)
     private List<PreFacturaAseguradora> preFacturasAseguradora;
 
-    @JsonIgnoreProperties("documentoCabecera")
-    @OneToMany(mappedBy = "documentoCabecera", fetch = FetchType.LAZY)
     private List<DocumTransferencia> documTransferencias;
 
-    @JsonIgnoreProperties("documentoCabecera")
-    @OneToMany(mappedBy = "documentoCabecera", fetch = FetchType.LAZY)
     private List<LoteFactura> lotesFactura;
 
-    @JsonIgnoreProperties("documentoCabecera")
-    @OneToMany(mappedBy = "documentoCabecera", fetch = FetchType.LAZY)
     private List<DocumentoMedico> documentosMedicos;
 
-    @JsonIgnoreProperties("documentoCabecera")
-    @OneToMany(mappedBy = "documentoCabecera", fetch = FetchType.LAZY)
     private List<DocumentoSunat> documentosSunat;
 
-    @Transient
     private List<InforMedicoExamen> examenes;
 
-    @Transient
     private List<InforMedicoTopico> topicos;
 
-    @Transient
     private Long idRelacionado;
 
-    @Transient
     private String medico;
 
     public DocumentoCabecera() {

@@ -1,69 +1,41 @@
 package modelo;
 
-import com.grupocaritafeliz.sistemaclinico.util.AuditoriaBean;
 import java.math.BigDecimal;
 import java.util.Date;
-import javax.persistence.*;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SelectBeforeUpdate;
+import util.AuditoriaBean;
 
-@Entity
-@Table(name = "documproductodet")
-@DynamicUpdate(value = true)
-@DynamicInsert(value = true)
-@SelectBeforeUpdate
 public class DocumProductoDet extends AuditoriaBean {
 
     private static final long serialVersionUID = 1L;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "iddocumentocab")
     private DocumentoCabecera documentoCabecera;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idproducto")
     private Producto producto;
 
-    @Column(name = "cantidad", precision = 9, scale = 2)
     private BigDecimal cantidad;
 
-    @Column(name = "costounitario", precision = 9, scale = 2)
     private BigDecimal costoUnitario;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idoperacion")
     private Operacion operacion;
 
-    @Column(name = "valorventa", precision = 9, scale = 2)
     private BigDecimal valorVenta;
 
-    @Column(name = "valorexonerado", precision = 9, scale = 2)
     private BigDecimal valorExonerado;
 
-    @Column(name = "valordscto", precision = 9, scale = 2)
     private BigDecimal valorDscto;
 
-    @Column(name = "valorigv", precision = 9, scale = 2)
     private BigDecimal valorIgv;
 
-    @Column(name = "valortotal", precision = 9, scale = 2)
     private BigDecimal valortotal;
 
-    @Column(name = "valorinafecto", precision = 9, scale = 2)
     private BigDecimal valorInfecto;
 
-    @Temporal(TemporalType.DATE)
-    @Column(name = "fecvencim")
     private Date fechaVencimiento;
 
-    @Column(name = "costopromedio", precision = 9, scale = 2)
     private BigDecimal costoPromedio;
 
-    @Column(name = "idinformedicotratamiento")
     private Long idInformedicoTratamiento;
 
-    @Transient
     private BigDecimal cantDevuelta;
 
     public DocumProductoDet() {

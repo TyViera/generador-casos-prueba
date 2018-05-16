@@ -1,62 +1,25 @@
 package modelo;
 
+import com.grupocaritafeliz.sistemaclinico.entidad.PolizaTarifaDiferenciada;
 import java.util.List;
+import util.AuditoriaBean;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SelectBeforeUpdate;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.grupocaritafeliz.sistemaclinico.util.AuditoriaBean;
-import com.grupocaritafeliz.sistemaclinico.util.Detalle;
-
-/**
- * The persistent class for the poliza database table.
- *
- */
-@Entity
-@Table(name = "poliza")
-@DynamicUpdate(value = true)
-@DynamicInsert(value = true)
-@SelectBeforeUpdate
 public class Poliza extends AuditoriaBean {
 
     private static final long serialVersionUID = 1L;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idAseguradora", nullable = false)
     private Aseguradora aseguradora;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idpersona")
     private Persona persona;
 
-    @Column(name = "moneda", nullable = false)
     private String moneda;
 
-    @Column(name = "plansalud")
     private String planSalud;
 
-    @Detalle
-    @JsonIgnoreProperties("poliza")
-    @OneToMany(mappedBy = "poliza", fetch = FetchType.LAZY)
     private List<PolizaCobertura> polizaCoberturas;
 
-    @Detalle
-    @JsonIgnoreProperties("poliza")
-    @OneToMany(mappedBy = "poliza", fetch = FetchType.LAZY)
     private List<PolizaTarifaDiferenciada> tarifasDiferenciadas;
 
-    @JsonIgnoreProperties("poliza")
-    @OneToMany(mappedBy = "poliza", fetch = FetchType.LAZY)
     private List<PolizaPaciente> polizaPacientes;
 
     public Poliza() {

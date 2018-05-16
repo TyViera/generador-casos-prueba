@@ -1,40 +1,16 @@
 package modelo;
 
 import java.util.List;
+import util.AuditoriaBean;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SelectBeforeUpdate;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.grupocaritafeliz.sistemaclinico.util.AuditoriaBean;
-
-/**
- * The persistent class for the funcionfarmac database table.
- *
- */
-@Entity
-@Table(name = "funcionfarmac")
-@DynamicUpdate(value = true)
-@DynamicInsert(value = true)
-@SelectBeforeUpdate
 public class FuncionFarmac extends AuditoriaBean {
 
     private static final long serialVersionUID = 1L;
 
-    @Column(name = "nombre")
     private String nombre;
 
-    @Column(name = "ctacontable")
     private String cuentaContable;
 
-    @JsonIgnoreProperties("funcionFarmac")
-    @OneToMany(mappedBy = "funcionFarmac")
     private List<Producto> productos;
 
     public FuncionFarmac() {

@@ -1,54 +1,28 @@
 package modelo;
 
-import com.grupocaritafeliz.sistemaclinico.util.AuditoriaBean;
 import java.math.BigDecimal;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SelectBeforeUpdate;
+import util.AuditoriaBean;
 
-@Entity
-@Table(name = "liquidaaseguradoradet")
-@DynamicUpdate(value = true)
-@DynamicInsert(value = true)
-@SelectBeforeUpdate
 public class LiquidacionAseguradoraDet extends AuditoriaBean {
 
     private static final long serialVersionUID = 1L;
-    @Column(name = "serie", nullable = false)
+    
     private String serie;
 
-    @Column(name = "numero", nullable = false)
     private Long numero;
 
-    @Column(name = "importe")
     private BigDecimal importe;
 
-    @Column(name = "importeneto")
     private BigDecimal importeNeto;
 
-    @Column(name = "descuento")
     private BigDecimal descuento;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idliquidaaseguradoracab")
     private LiquidacionAseguradoraCab liquidacionAseguradoraCab;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idpaciente")
     private Paciente paciente;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idservicio")
     private Servicio servicio;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idmedico")
     private Medico medico;
 
     public LiquidacionAseguradoraDet() {

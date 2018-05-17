@@ -358,4 +358,9 @@ public class Producto extends AuditoriaBean {
         this.prioridadVenta = prioridadVenta;
     }
 
+    @Override
+    public String toString() {
+        return "Producto{" + "afectoIgv=" + afectoIgv + ", fechaFinExoneracion=" + fechaFinExoneracion + ", codBarras=" + codBarras + ", codDigemid=" + codDigemid + ", codigo=" + codigo + ", codLaboratorio=" + codLaboratorio + ", codtrama=" + codtrama + ", costoPromedio=" + costoPromedio + ", ctaContable=" + ctaContable + ", esAlcohol=" + esAlcohol + ", esDroga=" + esDroga + ", esEstupefaciente=" + esEstupefaciente + ", esMedicamento=" + esMedicamento + ", esOtros=" + esOtros + ", esInsumo=" + esInsumo + ", margen=" + margen + ", nombre=" + nombre + ", observacion=" + observacion + ", precioKairos=" + precioKairos + ", precioVenta=" + precioVenta + ", stockMin=" + stockMin + ", prioridadVenta=" + prioridadVenta + ", funcionFarmac=" + funcionFarmac + ", unidad=" + unidad + ", laboratorio=" + laboratorio + ", presentacion=" + presentacion + ", productoContGenericos=" + productoContGenericos + ", inforMedicoProductos=" + inforMedicoProductos + ", productoNoCubiertos=" + productoNoCubiertos + ", inventario=" + inventario + ", documentosProductoDet=" + documentosProductoDet + '}';
+    }
+
 }

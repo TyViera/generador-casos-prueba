@@ -161,4 +161,9 @@ public class DocumProductoDet extends AuditoriaBean {
         this.idInformedicoTratamiento = idInformedicoTratamiento;
     }
 
+    @Override
+    public String toString() {
+        return "DocumProductoDet{" + "documentoCabecera=" + documentoCabecera + ", producto=" + producto + ", cantidad=" + cantidad + ", costoUnitario=" + costoUnitario + ", operacion=" + operacion + ", valorVenta=" + valorVenta + ", valorExonerado=" + valorExonerado + ", valorDscto=" + valorDscto + ", valorIgv=" + valorIgv + ", valortotal=" + valortotal + ", valorInfecto=" + valorInfecto + ", fechaVencimiento=" + fechaVencimiento + ", costoPromedio=" + costoPromedio + ", idInformedicoTratamiento=" + idInformedicoTratamiento + ", cantDevuelta=" + cantDevuelta + '}';
+    }
+
 }

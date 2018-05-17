@@ -55,4 +55,9 @@ public class ProductoVentaDTO implements Serializable {
         this.tipoNoCubierto = tipoNoCubierto;
     }
 
+    @Override
+    public String toString() {
+        return "ProductoVentaDTO{" + "productoDet=" + productoDet + ", idDeInformeMedicoTratamiento=" + idDeInformeMedicoTratamiento + ", stock=" + stock + ", tipoNoCubierto=" + tipoNoCubierto + '}';
+    }
+
 }

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package util;
 
 import enums.DiaEnum;
@@ -18,6 +13,7 @@ import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Time;
@@ -38,7 +34,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import javafx.scene.control.Cell;
 import modelo.Parametro;
 import modelo.TipoDocumentoMov;
 
@@ -1087,4 +1082,7 @@ public class SistemaClinicoUtil {
         auditoriaEntidad.setPcmod("127.0.0.1");
     }
 
+    public static BigDecimal obtenerBigDecimal(Double max) {
+        return new BigDecimal(Math.abs(Math.random()) * max).setScale(2, RoundingMode.HALF_UP);
+    }
 }

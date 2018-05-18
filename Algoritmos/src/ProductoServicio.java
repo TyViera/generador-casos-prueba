@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 
 import enums.TipoSeguroEnum;
 import java.math.BigDecimal;
@@ -16,11 +10,8 @@ import util.Constantes;
 import util.ProductoVentaDTO;
 import util.SistemaClinicoException;
 import util.SistemaClinicoUtil;
+import static util.SistemaClinicoUtil.obtenerBigDecimal;
 
-/**
- *
- * @author nazav
- */
 public class ProductoServicio {
 
     public ProductoVentaDTO obtenerProductoParaVenta(Long productoId, Long personaId, Long inforMedicoTratamientoId, Long almacenId,
@@ -199,15 +190,15 @@ public class ProductoServicio {
         return resultado;
     }
 
-    private BigDecimal obtenerStockDeProducto(Long productoId, Long almacenId) {
+    public BigDecimal obtenerStockDeProducto(Long productoId, Long almacenId) {
         return obtenerBigDecimal(100.00);
     }
 
-    private BigDecimal obtenerStockDeProducto(Long productoId) {
+    public BigDecimal obtenerStockDeProducto(Long productoId) {
         return obtenerStockDeProducto(productoId, null);
     }
 
-    private Producto obtenerInclusoEliminado(Long productoId) {
+    public Producto obtenerInclusoEliminado(Long productoId) {
         Producto producto;
         producto = new Producto();
         producto.setAfectoIgv(Boolean.FALSE);
@@ -227,23 +218,19 @@ public class ProductoServicio {
         return producto;
     }
 
-    private InforMedicoTratamiento obtenerInformedicoTratamiento(Long inforMedicoTratamientoId) {
+    public InforMedicoTratamiento obtenerInformedicoTratamiento(Long inforMedicoTratamientoId) {
         InforMedicoTratamiento imt;
         imt = new InforMedicoTratamiento();
         imt.setCantidad(obtenerBigDecimal(100.00));
         return imt;
     }
 
-    private BigDecimal obtenerDescuentoFarmacia() {
+    public BigDecimal obtenerDescuentoFarmacia() {
         return obtenerBigDecimal(100.00);
     }
 
-    private String obtenerTipoDePersonaAdmision(Long admisionId) {
+    public String obtenerTipoDePersonaAdmision(Long admisionId) {
         return ((Math.abs(Math.random()) < 0.5) ? TipoSeguroEnum.PARTICULAR.getValue() : TipoSeguroEnum.ASEGURADO.getValue());
-    }
-
-    private BigDecimal obtenerBigDecimal(Double max) {
-        return new BigDecimal(Math.abs(Math.random()) * max).setScale(2, RoundingMode.HALF_UP);
     }
 
 }

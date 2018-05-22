@@ -1,6 +1,5 @@
 package modelo;
 
-import com.grupocaritafeliz.sistemaclinico.entidad.PolizaTarifaDiferenciada;
 import java.util.List;
 import util.AuditoriaBean;
 

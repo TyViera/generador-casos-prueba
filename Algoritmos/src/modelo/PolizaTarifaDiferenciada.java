@@ -1,13 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package com.grupocaritafeliz.sistemaclinico.entidad;
+package modelo;
 
 import java.math.BigDecimal;
-import modelo.Poliza;
-import modelo.Tarifario;
 import util.AuditoriaBean;
 
 public class PolizaTarifaDiferenciada extends AuditoriaBean {

@@ -16,6 +16,7 @@ import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.jfree.ui.RefineryUtilities;
@@ -35,6 +36,7 @@ import pe.edu.unp.generadorpruebas.servicio.BusquedaSolucionesServicio;
 import pe.edu.unp.generadorpruebas.servicio.CompilacionServicio;
 import pe.edu.unp.generadorpruebas.servicio.ModeladoServicio;
 import pe.edu.unp.generadorpruebas.servicio.PruebaServicio;
+import pe.edu.unp.generadorpruebas.util.ConfiguracionProperties;
 import pe.edu.unp.generadorpruebas.util.Constantes;
 import pe.edu.unp.generadorpruebas.util.FolderFileFilter;
 import pe.edu.unp.generadorpruebas.util.GeneradorUtil;
@@ -59,6 +61,8 @@ public class FormularioPrincipal extends javax.swing.JFrame {
     @Autowired
     private BusquedaSolucionesServicio busquedaSolucionesServicio;
 
+    private final ConfiguracionProperties properties;
+
     /**
      * Creates new form FormularioPrincipal
      */
@@ -74,6 +78,7 @@ public class FormularioPrincipal extends javax.swing.JFrame {
 //            LOGGER.error(ex, ex);
             ex.printStackTrace();
         }
+        properties = ConfiguracionProperties.getInstance();
         initComponents();
         limpiarFormulario();
         RefineryUtilities.centerFrameOnScreen(this);
@@ -412,10 +417,38 @@ public class FormularioPrincipal extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnSeleccionarCarpetaArchivosActionPerformed
 
+    private String copiarArchivosAUbicacionSegura(String rutaCarpeta) throws IOException {
+        File carpetaBase, destino;
+        String base;
+        base = properties.getRutaSalida();
+        if (!base.endsWith(File.separator)) {
+            base = base + File.separator;
+        }
+        base = base + "asddas" + File.separator;
+        carpetaBase = new File(base);
+        if (carpetaBase.exists()) {
+            carpetaBase.mkdirs();
+        }
+
+        carpetaBase = new File(rutaCarpeta);
+        if (carpetaBase.exists()) {
+            for (File origen : carpetaBase.listFiles()) {
+                destino = new File(base + origen.getName());
+                if (origen.isFile()) {
+                    FileUtils.copyFile(origen, destino);
+                } else if (origen.isDirectory()) {
+                    FileUtils.copyDirectory(origen, destino);
+                }
+            }
+            return base;
+        }
+        return null;
+    }
+
     private boolean ejecutarPruebasDeCarpetaArchivos() {
         List<CasoDePrueba> solucionesOptimas;
         ResultadoComando resultadoPruebas;
-        String rutaCarpeta, rutaArchivo2, nombreClase, nombreMetodo;
+        String rutaCarpeta, rutaComp, rutaArchivo2, nombreClase, nombreMetodo;
         RecursoJava proyecto;
         Result result;
         Metodo metodo;
@@ -427,14 +460,28 @@ public class FormularioPrincipal extends javax.swing.JFrame {
 
         inicio = System.currentTimeMillis();
         rutaCarpeta = txtCarpetaArchivos.getText();
+
+        try {
+            rutaCarpeta = copiarArchivosAUbicacionSegura(rutaCarpeta);
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+            ex.printStackTrace();
+            return false;
+        }
+
         carpeta = new File(rutaCarpeta);
         listaArchivos = carpeta.listFiles((File pathname) -> {
             return pathname.getName().endsWith(Constantes.EXTENSION_JAVA);
         });
-        listaResultados = new ArrayList<>();
-
         jpbBarraProgreso.setValue(0);
         jpbBarraProgreso.setMaximum(obtenerMaximo(listaArchivos, rutaCarpeta));
+        System.out.println("Se ejecutaran: " + jpbBarraProgreso.getMaximum());
+
+//        carpeta = new File(rutaCarpeta);
+//        listaArchivos = carpeta.listFiles((File pathname) -> {
+//            return pathname.getName().endsWith(Constantes.EXTENSION_JAVA);
+//        });
+        listaResultados = new ArrayList<>();
         for (File javaFile : listaArchivos) {
             rutaArchivo2 = javaFile.getAbsolutePath();
             nombreClase = FilenameUtils.removeExtension(javaFile.getName());
@@ -466,9 +513,11 @@ public class FormularioPrincipal extends javax.swing.JFrame {
                 }
                 //3.- busqueda de soluciones optimas
                 solucionesOptimas = busquedaSolucionesServicio.buscarSolucionesOptimas(metodo);
+                System.out.println("Soluciones optimas: " + solucionesOptimas.size());
                 jpbBarraProgreso.setValue(jpbBarraProgreso.getValue() + 1);
                 //4.- Creacion de pruebas
                 prueba = pruebaServicio.crearPruebas(metodo, solucionesOptimas);
+                System.out.println("Pruebas: " + prueba.getTestsCode().size());
                 jpbBarraProgreso.setValue(jpbBarraProgreso.getValue() + 1);
                 //5.- Ejecucion de pruebas
                 resultadoPruebas = resultadoPruebas(proyecto, prueba);
@@ -482,6 +531,7 @@ public class FormularioPrincipal extends javax.swing.JFrame {
                     jpbBarraProgreso.setValue(0);
                     return false;
                 }
+                System.out.println("Exito de una prueba....");
                 //6.- Resultados
                 result = obtenerResultadoDePruebasDeArchivo();
                 jpbBarraProgreso.setValue(jpbBarraProgreso.getValue() + 1);
@@ -648,6 +698,7 @@ public class FormularioPrincipal extends javax.swing.JFrame {
     private ResultadoComando resultadoPruebas(RecursoJava proyecto, Prueba prueba) {
         ResultadoComando resultadoPruebas;
         try {
+            System.out.println("Ejecutando prueba: " + prueba.getTestClassName());
             resultadoPruebas = pruebaServicio.ejecutarPrueba(proyecto, prueba);
         } catch (EjecucionPruebaException ex) {
             logger.error(ex, ex);
@@ -756,9 +807,12 @@ public class FormularioPrincipal extends javax.swing.JFrame {
             i++;
             //OBTENER LOS METODOS
             try {
+//                
+                RecursoJava obtenerProyecto = modeladoServicio.obtenerProyecto(javaFile.getAbsolutePath());
+                compilacionServicio.compilar(obtenerProyecto);
                 List<Method> lista = modeladoServicio.obtenerMetodosDeClaseEjecucion(rutaCarpeta, nombreClase);
                 i = i + (lista.size() * 5);
-            } catch (ModeladoException ex) {
+            } catch (CompilacionException | ModeladoException ex) {
                 logger.error(ex, ex);
                 JOptionPane.showMessageDialog(this, ex.getMessage());
             }

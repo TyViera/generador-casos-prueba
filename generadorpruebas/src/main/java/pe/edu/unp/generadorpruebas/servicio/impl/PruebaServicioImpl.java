@@ -169,10 +169,26 @@ public class PruebaServicioImpl implements PruebaServicio {
         fileDestino = new File(rutaDestino);
 
 //        Files.deleteIfExists(Paths.get(Constantes.BASE_PATH_OUTPUT_TEST));
-        Files.deleteIfExists(fileDestino.toPath());
+        String base;
+        base = properties.getRutaSalida();
+        if (!base.endsWith(File.separator)) {
+            base = base + File.separator;
+        }
+        base = base + "src" + File.separator;
+        File file = new File(base);
 
+        Files.deleteIfExists(file.toPath());
         if (fileOrigen.exists()) {
-            Files.copy(Paths.get(fileOrigen.getAbsolutePath()), Paths.get(fileDestino.getAbsolutePath()), StandardCopyOption.REPLACE_EXISTING);
+            File parent = new File(fileOrigen.getParent());
+            for (File listFile : parent.listFiles()) {
+                if (listFile.isFile()) {
+                    Files.copy(Paths.get(listFile.getAbsolutePath()), Paths.get((new File(properties.getRutaSalida() + File.separator + listFile.getName())).getAbsolutePath()), StandardCopyOption.REPLACE_EXISTING);
+                } else if (listFile.isDirectory()) {
+                    FileUtils.copyDirectory(listFile, new File(properties.getRutaSalida() + File.separator + listFile.getName()));
+                }
+            }
+//            Files.copy(Paths.get(fileOrigen.getAbsolutePath()), Paths.get(fileDestino.getAbsolutePath()), StandardCopyOption.REPLACE_EXISTING);
+
         } else {
             throw new FileNotFoundException("El archivo no existe");
         }
@@ -242,7 +258,7 @@ public class PruebaServicioImpl implements PruebaServicio {
             if (esDatoPrimitivo(clasePar) || esDatoString(clasePar)) {
                 codigoMetodo += clasePar + " " + var + " = " + parametro.getValue() + ";\n";
             } else {
-                codigoMetodo += clasePar + " " + var + " = new " + clasePar + "(" + parametro.getValue() + ");\n";
+                codigoMetodo += parametro.getType().getName() + " " + var + " = new " + parametro.getType().getName() + "(" + parametro.getValue() + ");\n";
             }
             parametrosEntradaMetodo.add(var);
             indexVar++;
@@ -289,7 +305,13 @@ public class PruebaServicioImpl implements PruebaServicio {
     }
 
     private void comprobarExistenciaCarpetaSalida() throws IOException {
-        File file = new File(properties.getRutaSalida());
+        String base;
+        base = properties.getRutaSalida();
+        if (!base.endsWith(File.separator)) {
+            base = base + File.separator;
+        }
+        base = base + "src" + File.separator;
+        File file = new File(base);
         if (file.exists()) {
             FileUtils.deleteDirectory(file);
         }

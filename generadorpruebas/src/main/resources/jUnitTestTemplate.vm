@@ -38,7 +38,11 @@ public class $testClassName {
 #foreach( $test in $testsCode )
     @Test
     public void $test.getNombre()() {
-        $test.getCodigo()
+        try{
+            $test.getCodigo()
+        }catch(Exception ex){
+            fail(ex.getMessage());
+        }
     }
 
 #end

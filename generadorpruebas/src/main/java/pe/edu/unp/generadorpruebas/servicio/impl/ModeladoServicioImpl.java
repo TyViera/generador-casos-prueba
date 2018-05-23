@@ -8,6 +8,8 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -433,9 +435,9 @@ public class ModeladoServicioImpl implements ModeladoServicio {
         } else if (clase.equals(Long.class) || clase.equals(long.class)) {
             lista = new ArrayList() {
                 {
-                    add(Long.MIN_VALUE);
-                    add(Long.MAX_VALUE);
-                    add(0);
+                    add(Long.MIN_VALUE + "L");
+                    add(Long.MAX_VALUE + "L");
+                    add(0 + "L");
                 }
             };
         } else if (clase.equals(Float.class) || clase.equals(float.class)) {
@@ -454,18 +456,36 @@ public class ModeladoServicioImpl implements ModeladoServicio {
                     add(0);
                 }
             };
+        } else if (clase.equals(BigDecimal.class)) {
+            lista = new ArrayList() {
+                {
+                    add("1");
+                    add("0");
+                    add("10");
+                    add(Math.random() * 100000);
+                }
+            };
+        } else if (clase.equals(Timestamp.class)) {
+            lista = new ArrayList() {
+                {
+                    add(0);
+                    add("System.currentTimeMillis()");
+                    add("(long)" + (Math.random() * 1000000L));
+                }
+            };
         } else {
             lista = obtenerValoresCriticosObjeto(clase);
         }
         if (!clase.equals(boolean.class) && !clase.equals(byte.class) && !clase.equals(short.class) && !clase.equals(int.class)
-                && !clase.equals(long.class) && !clase.equals(float.class) && !clase.equals(double.class)) {
+                && !clase.equals(long.class) && !clase.equals(float.class) && !clase.equals(double.class)
+                && !clase.equals(BigDecimal.class) && !clase.equals(Timestamp.class)) {
             lista.add(null);
         }
         return lista;
     }
 
     private List obtenerValoresCriticosObjeto(Class clase) {
-        return null;
+        return new ArrayList();
     }
 
     private void calcularDiversidadCalidadPrueba(CasoDePrueba casoDePrueba) {
@@ -477,7 +497,8 @@ public class ModeladoServicioImpl implements ModeladoServicio {
             ParametroMetodo first = copia.remove(0);
             for (int j = 0; j < copia.size(); j++) {
                 ParametroMetodo value = copia.get(j);
-                if (first.getType().equals(value.getType()) && first.getValue().equals(value.getValue())) {
+                if (first != null && value != null && first.getValue() != null && first.getType() != null
+                        && first.getType().equals(value.getType()) && first.getValue().equals(value.getValue())) {
                     //si son iguales en tipo y valor
                     //eliminar j
                     copia.remove(j);

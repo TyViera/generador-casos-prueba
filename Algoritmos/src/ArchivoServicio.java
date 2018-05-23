@@ -19,7 +19,7 @@ public class ArchivoServicio {
         return null;
     }
 
-    public byte[] leerArchivo(String ruta) throws IOException {
+    private byte[] leerArchivo(String ruta) throws IOException {
         File file = new File(ruta);
         if (file.exists()) {
             return Files.readAllBytes(Paths.get(ruta));

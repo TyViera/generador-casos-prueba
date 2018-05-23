@@ -15,8 +15,7 @@ import static util.SistemaClinicoUtil.obtenerBigDecimal;
 
 public class AdmisionServicio {
 
-    public List<Map<String, Object>> obtenerHonorarioParaNuevaAdmision(Long personaId,
-            TipoAdmision tipoAdmisionEntidad, Long medicoId, Timestamp hora, Long polizaId, Long admisionId) {
+    public List<Map<String, Object>> obtenerHonorarioParaNuevaAdmision(Long personaId, Long medicoId, Timestamp hora, Long polizaId, Long admisionId) {
         BigDecimal porcHonorarioTipoAdmision, porcIncr, auxPrecio, montoParticular, precioBaseParticular;
         List<Map<String, Object>> listaResultado;
         Map<String, Object> resultado;
@@ -42,13 +41,12 @@ public class AdmisionServicio {
                 porcIncr = obtenerBigDecimal(1.00);
             }
 
-            porcHonorarioTipoAdmision = tipoAdmisionEntidad.getPorcentajeHonorario();
-            if (porcHonorarioTipoAdmision == null) {
-                porcHonorarioTipoAdmision = Constantes.CIEN;
-            }
-
+//            porcHonorarioTipoAdmision = tipoAdmisionEntidad.getPorcentajeHonorario();
+//            if (porcHonorarioTipoAdmision == null) {
+//                porcHonorarioTipoAdmision = Constantes.CIEN;
+//            }
             Admision admision = new Admision();
-            admision.setTipoAdmision(tipoAdmisionEntidad);
+//            admision.setTipoAdmision(tipoAdmisionEntidad);
             if (!esAdmisionDeCortesia(admision)) {
                 //SI NO ES CORTESIA, CONSULTE HONORARIOS MEDICOS
                 precioBaseParticular = obtenerHonorarioMaximoDeMedico(medicoId);
@@ -157,10 +155,6 @@ public class AdmisionServicio {
         return (Math.random() < 0.5);
     }
 
-    public Boolean esAdmisionDeCortesia(Admision admision) {
-        return (Math.random() < 0.5);
-    }
-
     public BigDecimal obtenerHonorarioMaximoDeMedico(Long medicoId) {
         return obtenerBigDecimal(100.00);
     }
@@ -174,6 +168,10 @@ public class AdmisionServicio {
     }
 
     public Boolean tieneTarjetaDescuento(Long personaId) {
+        return (Math.random() < 0.5);
+    }
+
+    private Boolean esAdmisionDeCortesia(Admision admision) {
         return (Math.random() < 0.5);
     }
 

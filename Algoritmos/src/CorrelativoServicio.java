@@ -7,24 +7,24 @@ public class CorrelativoServicio {
     public Integer siguienteNroCorrelativo(String nombre, String anio) {
         Integer numero = null;
         String anioAnterior;
-        try {
-            Correlativo correlativo;
-            correlativo = obtenerPorNombreYAnio(nombre, anio);
-            if (correlativo == null) {
-                //BUSCAR EL DEL AÑO PASADO
-                anioAnterior = String.valueOf(Integer.valueOf(anio) - 1);
-                correlativo = obtenerPorNombreYAnio(nombre, anioAnterior);
-            }
-            if (correlativo == null) {
-                correlativo = new Correlativo();
-                correlativo.setNombre(nombre);
-                correlativo.setAnio(anio);
-                correlativo.setNumero(0);
-            }
-            numero = correlativo.siguienteNumero();
-        } catch (Exception e) {
-            e.printStackTrace();
+//        try {
+        Correlativo correlativo;
+        correlativo = obtenerPorNombreYAnio(nombre, anio);
+        if (correlativo == null) {
+            //BUSCAR EL DEL AÑO PASADO
+            anioAnterior = String.valueOf(Integer.valueOf(anio) - 1);
+            correlativo = obtenerPorNombreYAnio(nombre, anioAnterior);
         }
+        if (correlativo == null) {
+            correlativo = new Correlativo();
+            correlativo.setNombre(nombre);
+            correlativo.setAnio(anio);
+            correlativo.setNumero(0);
+        }
+        numero = correlativo.siguienteNumero();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
         return numero;
     }
 

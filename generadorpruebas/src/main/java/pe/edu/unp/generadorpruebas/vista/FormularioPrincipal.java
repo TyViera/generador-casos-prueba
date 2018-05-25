@@ -445,6 +445,19 @@ public class FormularioPrincipal extends javax.swing.JFrame {
         return null;
     }
 
+    private void limpiarCarpetaSalida() throws IOException {
+        File carpetaBase;
+        String base;
+        base = properties.getRutaSalida();
+        if (!base.endsWith(File.separator)) {
+            base = base + File.separator;
+        }
+        carpetaBase = new File(base);
+        if (carpetaBase.exists()) {
+            FileUtils.cleanDirectory(carpetaBase);
+        }
+    }
+
     private boolean ejecutarPruebasDeCarpetaArchivos() {
         List<CasoDePrueba> solucionesOptimas;
         ResultadoComando resultadoPruebas;
@@ -462,6 +475,7 @@ public class FormularioPrincipal extends javax.swing.JFrame {
         rutaCarpeta = txtCarpetaArchivos.getText();
 
         try {
+            limpiarCarpetaSalida();
             rutaCarpeta = copiarArchivosAUbicacionSegura(rutaCarpeta);
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage());
@@ -475,7 +489,6 @@ public class FormularioPrincipal extends javax.swing.JFrame {
         });
         jpbBarraProgreso.setValue(0);
         jpbBarraProgreso.setMaximum(obtenerMaximo(listaArchivos, rutaCarpeta));
-        System.out.println("Se ejecutaran: " + jpbBarraProgreso.getMaximum());
 
 //        carpeta = new File(rutaCarpeta);
 //        listaArchivos = carpeta.listFiles((File pathname) -> {
@@ -513,11 +526,9 @@ public class FormularioPrincipal extends javax.swing.JFrame {
                 }
                 //3.- busqueda de soluciones optimas
                 solucionesOptimas = busquedaSolucionesServicio.buscarSolucionesOptimas(metodo);
-                System.out.println("Soluciones optimas: " + solucionesOptimas.size());
                 jpbBarraProgreso.setValue(jpbBarraProgreso.getValue() + 1);
                 //4.- Creacion de pruebas
                 prueba = pruebaServicio.crearPruebas(metodo, solucionesOptimas);
-                System.out.println("Pruebas: " + prueba.getTestsCode().size());
                 jpbBarraProgreso.setValue(jpbBarraProgreso.getValue() + 1);
                 //5.- Ejecucion de pruebas
                 resultadoPruebas = resultadoPruebas(proyecto, prueba);
@@ -531,7 +542,6 @@ public class FormularioPrincipal extends javax.swing.JFrame {
                     jpbBarraProgreso.setValue(0);
                     return false;
                 }
-                System.out.println("Exito de una prueba....");
                 //6.- Resultados
                 result = obtenerResultadoDePruebasDeArchivo();
                 jpbBarraProgreso.setValue(jpbBarraProgreso.getValue() + 1);
@@ -566,6 +576,14 @@ public class FormularioPrincipal extends javax.swing.JFrame {
         jpbBarraProgreso.setMaximum(6);
 
         rutaArchivo = txtNombreClase.getText();
+        try {
+            limpiarCarpetaSalida();
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+            ex.printStackTrace();
+            return false;
+        }
+        
         nombreMetodo = txtNombreMetodo.getText();
         if (!validarNombreMetodo(nombreMetodo)) {
             return false;
@@ -698,7 +716,6 @@ public class FormularioPrincipal extends javax.swing.JFrame {
     private ResultadoComando resultadoPruebas(RecursoJava proyecto, Prueba prueba) {
         ResultadoComando resultadoPruebas;
         try {
-            System.out.println("Ejecutando prueba: " + prueba.getTestClassName());
             resultadoPruebas = pruebaServicio.ejecutarPrueba(proyecto, prueba);
         } catch (EjecucionPruebaException ex) {
             logger.error(ex, ex);

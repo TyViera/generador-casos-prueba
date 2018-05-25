@@ -70,9 +70,6 @@ public class ResultadosCarpetaJDialog extends javax.swing.JDialog {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jPanel2 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        tbDetallePruebas = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -81,56 +78,14 @@ public class ResultadosCarpetaJDialog extends javax.swing.JDialog {
         txtNumeroPruebas = new javax.swing.JTextField();
         txtTiempoEjecucion = new javax.swing.JTextField();
         jsPanelGrafico = new javax.swing.JScrollPane();
+        btnMostrarDetalle = new javax.swing.JButton();
+        btnVerResumen = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(959, 650));
 
         jLabel1.setFont(new java.awt.Font("Ubuntu", 1, 24)); // NOI18N
         jLabel1.setText("Resultados de las pruebas");
-
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Detalle de pruebas"));
-
-        tbDetallePruebas.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "Archivo", "Metodo", "Pruebas ejecutadas", "Errores", "Detalle"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Object.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, true
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jScrollPane1.setViewportView(tbDetallePruebas);
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 907, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
-                .addContainerGap())
-        );
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Resumen de ejecucion"));
 
@@ -148,6 +103,20 @@ public class ResultadosCarpetaJDialog extends javax.swing.JDialog {
 
         txtTiempoEjecucion.setEditable(false);
         txtTiempoEjecucion.setText("X MILISEGUNDOS");
+
+        btnMostrarDetalle.setText("Ver detalle");
+        btnMostrarDetalle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMostrarDetalleActionPerformed(evt);
+            }
+        });
+
+        btnVerResumen.setText("Ver resumen");
+        btnVerResumen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVerResumenActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -171,7 +140,11 @@ public class ResultadosCarpetaJDialog extends javax.swing.JDialog {
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(txtTiempoEjecucion, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                        .addGap(18, 18, 18)
+                        .addComponent(btnMostrarDetalle)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnVerResumen)
+                        .addGap(0, 11, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -183,9 +156,11 @@ public class ResultadosCarpetaJDialog extends javax.swing.JDialog {
                     .addComponent(jLabel3)
                     .addComponent(txtNumeroPruebas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4)
-                    .addComponent(txtTiempoEjecucion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtTiempoEjecucion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnMostrarDetalle)
+                    .addComponent(btnVerResumen))
                 .addGap(18, 18, 18)
-                .addComponent(jsPanelGrafico, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
+                .addComponent(jsPanelGrafico, javax.swing.GroupLayout.DEFAULT_SIZE, 347, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -201,9 +176,7 @@ public class ResultadosCarpetaJDialog extends javax.swing.JDialog {
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -213,12 +186,20 @@ public class ResultadosCarpetaJDialog extends javax.swing.JDialog {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnMostrarDetalleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMostrarDetalleActionPerformed
+        ResultadosCarpetaTableDialog dialog = new ResultadosCarpetaTableDialog(this.principal, Boolean.TRUE);
+        dialog.showDialog(this.lista);
+    }//GEN-LAST:event_btnMostrarDetalleActionPerformed
+
+    private void btnVerResumenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerResumenActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnVerResumenActionPerformed
 
     public void showDialog(List<PruebaView> lista, Long tiempoTranscurrido) throws EjecucionPruebaException {
         this.lista = lista;
@@ -246,7 +227,7 @@ public class ResultadosCarpetaJDialog extends javax.swing.JDialog {
     }
 
     private static JFreeChart createChart(CategoryDataset paramCategoryDataset) {
-        JFreeChart localJFreeChart = ChartFactory.createBarChart("Bar Chart Demo 7", "Prueba", "Casos", paramCategoryDataset);
+        JFreeChart localJFreeChart = ChartFactory.createBarChart("Ejecución de casos de prueba", "Prueba", "Casos", paramCategoryDataset);
         localJFreeChart.removeLegend();
         CategoryPlot localCategoryPlot = (CategoryPlot) localJFreeChart.getPlot();
         localCategoryPlot.setRangePannable(true);
@@ -262,7 +243,7 @@ public class ResultadosCarpetaJDialog extends javax.swing.JDialog {
         ItemLabelPosition localItemLabelPosition2 = new ItemLabelPosition(ItemLabelAnchor.OUTSIDE12, TextAnchor.CENTER_LEFT, TextAnchor.CENTER_LEFT, -1.5707963267948966D);
         localBarRenderer.setPositiveItemLabelPositionFallback(localItemLabelPosition2);
         CategoryAxis localCategoryAxis = localCategoryPlot.getDomainAxis();
-        localCategoryAxis.setCategoryLabelPositions(CategoryLabelPositions.STANDARD);
+        localCategoryAxis.setCategoryLabelPositions(CategoryLabelPositions.UP_90);
         return localJFreeChart;
     }
 
@@ -288,7 +269,6 @@ public class ResultadosCarpetaJDialog extends javax.swing.JDialog {
         txtNumeroArchivos.setText(obtenerCantidadArchivos() + " archivos");
         txtTiempoEjecucion.setText(tiempoTranscurrido + " milisegundos");
         dibujarDiagrama();
-        llenarTabla();
     }
 
     private Integer obtenerCantidadPruebas() {
@@ -350,37 +330,16 @@ public class ResultadosCarpetaJDialog extends javax.swing.JDialog {
         return mapa.size();
     }
 
-    private void llenarTabla() {
-        DefaultTableModel model = (DefaultTableModel) tbDetallePruebas.getModel();
-        List<ActionListener> listaAcciones = new ArrayList<>();
-        model.setRowCount(0);
-        for (PruebaView pruebaView : lista) {
-            listaAcciones.add((ActionListener) (ActionEvent e) -> {
-                //open
-                ResultadosDialog dialog = new ResultadosDialog(ResultadosCarpetaJDialog.this.principal, Boolean.TRUE);
-                try {
-                    dialog.showDialog(pruebaView.getResult(), pruebaView.getPrueba());
-                } catch (EjecucionPruebaException ex) {
-                    logger.error(ex, ex);
-                    JOptionPane.showMessageDialog(this, ex.getMessage());
-                }
-            });
-            model.addRow(new Object[]{pruebaView.getArchivo(), pruebaView.getMetodo(), pruebaView.getResult().getRunCount(), pruebaView.getResult().getFailureCount(), "Ver Detalles"});
-        }
-        tbDetallePruebas.getColumn("Detalle").setCellRenderer(new JTableButtonRenderer());
-        tbDetallePruebas.getColumn("Detalle").setCellEditor(new ButtonEditor(new JCheckBox(), listaAcciones, tbDetallePruebas.getColumnCount() - 1));
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnMostrarDetalle;
+    private javax.swing.JButton btnVerResumen;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jsPanelGrafico;
-    private javax.swing.JTable tbDetallePruebas;
     private javax.swing.JTextField txtNumeroArchivos;
     private javax.swing.JTextField txtNumeroPruebas;
     private javax.swing.JTextField txtTiempoEjecucion;

@@ -9,10 +9,13 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
@@ -489,6 +492,39 @@ public class ModeladoServicioImpl implements ModeladoServicio {
     }
 
     private void calcularDiversidadCalidadPrueba(CasoDePrueba casoDePrueba) {
+        List<ParametroMetodo> parametrosCopia;
+        Map<String, Integer> mapa;
+        BigDecimal resultado, k;
+        int maxDecimales;
+
+        maxDecimales = 10;
+        mapa = new HashMap<>();
+        parametrosCopia = new ArrayList<>(casoDePrueba.getCaminoEjecucion().getParametros());
+        parametrosCopia
+                .stream()
+                .map(parametroMetodo -> parametroMetodo.getType().getName() + parametroMetodo.getValue())
+                .forEach(clave -> {
+                    Integer valorAnterior;
+                    if (mapa.containsKey(clave)) {
+                        valorAnterior = mapa.get(clave);
+                    } else {
+                        valorAnterior = 0;
+                    }
+                    mapa.put(clave, valorAnterior + 1);
+                });
+
+        k = new BigDecimal(mapa.size());
+        resultado = mapa.values().stream().filter(x -> (x > 1)).map(x -> new BigDecimal(x))
+                .map(x -> x.divide(k, maxDecimales, RoundingMode.HALF_UP)).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
+        if (!casoDePrueba.getCaminoEjecucion().getParametros().isEmpty()) {
+            resultado = resultado.divide(new BigDecimal(casoDePrueba.getCaminoEjecucion().getParametros().size()), maxDecimales, RoundingMode.HALF_UP);
+        } else {
+            System.err.println("resultado " + resultado);
+        }
+        casoDePrueba.setDiversidad(resultado.doubleValue());
+    }
+
+    private void calcularDiversidadCalidadPrueba2(CasoDePrueba casoDePrueba) {
         List<ParametroMetodo> copia = new ArrayList<>(casoDePrueba.getCaminoEjecucion().getParametros());
         List<Integer> listaEnteros = new ArrayList<>();
         int k = 0;

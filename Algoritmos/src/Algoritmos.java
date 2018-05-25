@@ -18,10 +18,11 @@ public class Algoritmos {
      */
     public static void main(String[] args) {
         try {
-            ProductoVentaDTO dto = (new ProductoServicio()).obtenerProductoParaVenta(Long.MIN_VALUE, Long.MIN_VALUE, Long.MIN_VALUE,
-                    Long.MIN_VALUE, Boolean.TRUE, BigDecimal.TEN, Boolean.TRUE, Long.MAX_VALUE,
-                    Long.MIN_VALUE, Long.MIN_VALUE);
-            System.out.println(dto);
+//            ProductoVentaDTO dto = (new ProductoServicio()).obtenerProductoParaVenta(Long.MIN_VALUE, Long.MIN_VALUE, Long.MIN_VALUE,
+//                    Long.MIN_VALUE, Boolean.TRUE, BigDecimal.TEN, Boolean.TRUE, Long.MAX_VALUE,
+//                    Long.MIN_VALUE, Long.MIN_VALUE);
+//            System.out.println(dto);
+            (new DocumentoCabeceraServicio()).comprobarTotalesDeDocumento(null, false, false, new BigDecimal(10), false, false, false, false, false);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

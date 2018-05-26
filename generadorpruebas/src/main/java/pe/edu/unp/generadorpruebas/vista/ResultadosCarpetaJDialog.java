@@ -8,16 +8,10 @@ package pe.edu.unp.generadorpruebas.vista;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.swing.JCheckBox;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.table.DefaultTableModel;
 import org.apache.log4j.Logger;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -34,9 +28,7 @@ import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.ui.TextAnchor;
 import pe.edu.unp.generadorpruebas.exception.EjecucionPruebaException;
-import pe.edu.unp.generadorpruebas.util.ButtonEditor;
 import pe.edu.unp.generadorpruebas.util.GeneradorUtil;
-import pe.edu.unp.generadorpruebas.util.JTableButtonRenderer;
 import pe.edu.unp.generadorpruebas.util.PruebaView;
 
 /**
@@ -198,7 +190,8 @@ public class ResultadosCarpetaJDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_btnMostrarDetalleActionPerformed
 
     private void btnVerResumenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerResumenActionPerformed
-        // TODO add your handling code here:
+        ResultadosResumenDialog dialog = new ResultadosResumenDialog(this.principal, Boolean.TRUE);
+        dialog.showDialog(this.lista);
     }//GEN-LAST:event_btnVerResumenActionPerformed
 
     public void showDialog(List<PruebaView> lista, Long tiempoTranscurrido) throws EjecucionPruebaException {

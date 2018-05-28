@@ -131,7 +131,7 @@ public class DocumentoCabeceraServicio {
         return det;
     }
 
-    public void comprobarTotalesDeDocumento(Long admisionId, Boolean esOdontologia, Boolean esAsegurado, BigDecimal coaseguro, Boolean compararProductos, Boolean compararServicios, Boolean compararExamenes, Boolean compararPagos, Boolean saltarCalculoCoaseguro) throws SistemaClinicoException {
+    private void comprobarTotalesDeDocumento(Long admisionId, Boolean esOdontologia, Boolean esAsegurado, BigDecimal coaseguro, Boolean compararProductos, Boolean compararServicios, Boolean compararExamenes, Boolean compararPagos, Boolean saltarCalculoCoaseguro) throws SistemaClinicoException {
         DocumentoCabecera cabecera;
         cabecera = new DocumentoCabecera();
         cabecera.setSerie("");

@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import modelo.Admision;
-import modelo.TipoAdmision;
 import util.Constantes;
 import util.SistemaClinicoUtil;
 import static util.SistemaClinicoUtil.obtenerBigDecimal;

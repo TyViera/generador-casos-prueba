@@ -110,7 +110,6 @@ public class FormularioPrincipal extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jlListaArchivos = new javax.swing.JList<>();
         btnSeleccionarCarpetaArchivos = new javax.swing.JButton();
-        jPanel3 = new javax.swing.JPanel();
         jpbBarraProgreso = new javax.swing.JProgressBar();
         jLabel3 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
@@ -252,19 +251,6 @@ public class FormularioPrincipal extends javax.swing.JFrame {
         );
 
         jtbPanelTabs.addTab("Carpeta archivos", jPanel2);
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 770, Short.MAX_VALUE)
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 411, Short.MAX_VALUE)
-        );
-
-        jtbPanelTabs.addTab("Proyecto maven", jPanel3);
 
         jpbBarraProgreso.setMaximum(6);
 
@@ -797,7 +783,6 @@ public class FormularioPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JList<String> jlListaArchivos;

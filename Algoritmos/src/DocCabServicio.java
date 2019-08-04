@@ -24,7 +24,7 @@ import util.RespuestaControlador;
 import util.SistemaClinicoException;
 import util.SistemaClinicoUtil;
 
-public class DocumentoCabeceraServicio {
+public class DocCabServicio {
 
     public RespuestaControlador liquidacionEmergencia(Boolean liquidado, BigDecimal porcentajeIgv, Long admisionId) {
         return liquidacionEmergencia(liquidado, porcentajeIgv, obtenerLista(admisionId));

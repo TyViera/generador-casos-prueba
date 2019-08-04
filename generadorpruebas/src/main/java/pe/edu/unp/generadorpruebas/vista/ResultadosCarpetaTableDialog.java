@@ -44,6 +44,7 @@ public class ResultadosCarpetaTableDialog extends javax.swing.JDialog {
     private void llenarTabla() {
         DefaultTableModel model = (DefaultTableModel) tbDetallePruebas.getModel();
         List<ActionListener> listaAcciones = new ArrayList<>();
+        int index = 1;
         model.setRowCount(0);
         for (PruebaView pruebaView : lista) {
             listaAcciones.add((ActionListener) (ActionEvent e) -> {
@@ -56,7 +57,7 @@ public class ResultadosCarpetaTableDialog extends javax.swing.JDialog {
                     JOptionPane.showMessageDialog(this, ex.getMessage());
                 }
             });
-            model.addRow(new Object[]{pruebaView.getArchivo(), pruebaView.getMetodo(), pruebaView.getResult().getRunCount(), pruebaView.getResult().getFailureCount(), "Ver Detalles"});
+            model.addRow(new Object[]{index++, pruebaView.getArchivo(), pruebaView.getMetodo(), pruebaView.getResult().getRunCount(), pruebaView.getResult().getFailureCount(), pruebaView.getResult().getRunTime(), "Ver Detalles"});
         }
         tbDetallePruebas.getColumn("Detalle").setCellRenderer(new JTableButtonRenderer());
         tbDetallePruebas.getColumn("Detalle").setCellEditor(new ButtonEditor(new JCheckBox(), listaAcciones, tbDetallePruebas.getColumnCount() - 1));
@@ -86,14 +87,14 @@ public class ResultadosCarpetaTableDialog extends javax.swing.JDialog {
 
             },
             new String [] {
-                "Archivo", "Metodo", "Pruebas ejecutadas", "Errores", "Detalle"
+                "N°", "Archivo", "Metodo", "Pruebas ejecutadas", "Errores", "Tiempo(ms)", "Detalle"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Object.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Long.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, true
+                false, false, false, false, false, false, true
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -115,12 +116,13 @@ public class ResultadosCarpetaTableDialog extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 822, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 822, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel1)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

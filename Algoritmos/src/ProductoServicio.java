@@ -190,7 +190,7 @@ public class ProductoServicio {
         return resultado;
     }
 
-    public BigDecimal obtenerStockDeProducto(Long productoId, Long almacenId) {
+    private BigDecimal obtenerStockDeProducto(Long productoId, Long almacenId) {
         return obtenerBigDecimal(100.00);
     }
 
@@ -229,7 +229,7 @@ public class ProductoServicio {
         return obtenerBigDecimal(100.00);
     }
 
-    public String obtenerTipoDePersonaAdmision(Long admisionId) {
+    private String obtenerTipoDePersonaAdmision(Long admisionId) {
         return ((Math.abs(Math.random()) < 0.5) ? TipoSeguroEnum.PARTICULAR.getValue() : TipoSeguroEnum.ASEGURADO.getValue());
     }
 

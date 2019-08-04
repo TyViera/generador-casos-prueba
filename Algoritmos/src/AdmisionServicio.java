@@ -14,7 +14,7 @@ import static util.SistemaClinicoUtil.obtenerBigDecimal;
 
 public class AdmisionServicio {
 
-    public List<Map<String, Object>> obtenerHonorarioParaNuevaAdmision(Long personaId, Long medicoId, Timestamp hora, Long polizaId, Long admisionId) {
+    public List<Map<String, Object>> obtenerHonorarioAdmision(Long personaId, Long medicoId, Timestamp hora, Long polizaId2, Long admisionId) {
         BigDecimal porcHonorarioTipoAdmision, porcIncr, auxPrecio, montoParticular, precioBaseParticular;
         List<Map<String, Object>> listaResultado;
         Map<String, Object> resultado;
@@ -35,7 +35,7 @@ public class AdmisionServicio {
 
         if (!esAdmisionAsegurado) {
             // DESCUENTOS E INCREMENTOS
-            estaEnIncremento = admisionEstaEnHorarioIncremento(hora);
+            estaEnIncremento = admisionEnHorarioIncremento(hora);
             if (estaEnIncremento) {
                 porcIncr = obtenerBigDecimal(1.00);
             }
@@ -48,7 +48,7 @@ public class AdmisionServicio {
 //            admision.setTipoAdmision(tipoAdmisionEntidad);
             if (!esAdmisionDeCortesia(admision)) {
                 //SI NO ES CORTESIA, CONSULTE HONORARIOS MEDICOS
-                precioBaseParticular = obtenerHonorarioMaximoDeMedico(medicoId);
+                precioBaseParticular = obtenerHonorarioMaximo(medicoId);
             } else {
                 //SI ES CORTESIA, CONSULTE TARIFA CORTESIA
                 precioBaseParticular = obtenerBigDecimal(10.00);
@@ -150,11 +150,11 @@ public class AdmisionServicio {
         return TipoSeguroEnum.TARJETA_DCTO.getValue();
     }
 
-    public Boolean admisionEstaEnHorarioIncremento(Timestamp hora) {
+    public Boolean admisionEnHorarioIncremento(Timestamp hora) {
         return (Math.random() < 0.5);
     }
 
-    public BigDecimal obtenerHonorarioMaximoDeMedico(Long medicoId) {
+    public BigDecimal obtenerHonorarioMaximo(Long medicoId) {
         return obtenerBigDecimal(100.00);
     }
 

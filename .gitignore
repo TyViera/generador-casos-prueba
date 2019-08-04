@@ -3,3 +3,6 @@
 /Algoritmos/build/
 /Algoritmos/dist/
 *.class
+.classpath
+.project
+**/.settings/**
